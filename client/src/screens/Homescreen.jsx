@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import {useState} from 'react';
-import { useRef } from 'react';
+import { useRef ,useEffect} from 'react';
 // import { LocationMarkerIcon } from "@heroicons/react/solid";'
 import Loading from "../components/Loading"
 
@@ -19,6 +19,12 @@ const Homescreen = () => {
    const [distance,setDistance]=useState("");
    const [duration,setDuration]=useState("");
 
+   useEffect(()=>{
+      
+     if(distance){
+       calculatePrice()
+     }
+   },[distance])
   const map_key= import.meta.env.VITE_MAP_API_KEY
 
   const { isLoaded } = useJsApiLoader({
@@ -29,7 +35,7 @@ const Homescreen = () => {
   if (!isLoaded) {
     return <Loading/>
   }
-
+  
   function calculatePrice(){
     const distanceInKm = parseFloat(distance); 
     // console.log(typeof distanceInKm)
@@ -40,8 +46,6 @@ const Homescreen = () => {
       const cost = Math.round((30) + (distanceInKm-3)* (7));
       setPrice(cost);
      }
-     originRef.current.value="";
-     destiantionRef.current.value="";
   }
 
   async function calculateRoute() {
@@ -58,14 +62,12 @@ const Homescreen = () => {
     setDuration(results.routes[0].legs[0].duration.text)
     console.log(distance);
     console.log(duration);
-
-    calculatePrice();
   }
 
 
   return (
     <>
-   <div className='flex absolute'>
+   <div className='flex'>
     <div className="max-w-md mx-20 mt-12 bg-white p-6 rounded-md">
 
        <div className='flex'>
@@ -124,8 +126,8 @@ const Homescreen = () => {
          )}
       </div>
       
-      <div>
-        <img  className=" mx-32 my-12 h-2/3 rounded-lg" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
+      <div className="flex justify-center mt-6">
+        <img  className=" mx-32 my-12 h-1/2 rounded-lg" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
       </div>
     </div>
     </>
