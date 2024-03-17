@@ -7,12 +7,26 @@ import LoginForm from "./screens/LoginForm.jsx"
 import RegisterForm from "./screens/RegisterForm.jsx"
 import DeliveryPartnerForm from "./screens/DeliveryPartnerForm.jsx"
 import MyOrders from "./screens/MyOrders.jsx"
+import Adminscreen from "./screens/Adminscreen.jsx"
+import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
 export default function App() {
+  
+  const user =useSelector(state=>state.status);
+  const [Admin,setAdmin]=useState(false);
+  useEffect(()=>{
+    if(user)
+    {
+       const boolAdmin= (JSON.parse(localStorage.getItem("user"))).isAdmin;
+       setAdmin(boolAdmin);
+    }
+  },[user])
   return (
     <>
     <BrowserRouter>
       <NavigationBar/>
       <Routes>
+         {Admin && <Route path="/Admin" exact element={<Adminscreen/>}/>}
          <Route path="/DeliveryPartnerForm" exact element ={<DeliveryPartnerForm/>}/>
          <Route path="/MyOrders" exact element={<MyOrders/>} />
          <Route path="/login" exact element={<LoginForm/>}/>

@@ -3,7 +3,7 @@ const mongoose=require("mongoose");
 const orderSchema=mongoose.Schema({
     
     userPhone:{
-        type:Number,
+        type:String,
         required:true
     },
      Item:{

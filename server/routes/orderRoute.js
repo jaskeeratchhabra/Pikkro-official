@@ -19,13 +19,14 @@ router.post("/neworder",async(req,res)=>{
 )
 
 router.post("/myorder", async (req, res) => {
-  const { userPhone } = req.body; 
+    const { userPhone } = req.body; 
+    console.log(req.body);
 
   try {
-      const orders = await Order.find(userPhone);
+      const orders = await Order.find({userPhone});
       if (orders) {
           res.send(orders);
-          console.log(orders)
+        //   console.log(orders)
       } else {
           res.status(404).send("No orders found for the given phone number");
       }

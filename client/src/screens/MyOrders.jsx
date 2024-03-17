@@ -10,7 +10,7 @@ function MyOrders() {
   const [orders,setOrders] =useState([]);
   const [loading,setLoading] = useState(false);
   const loggedIn= useSelector((state)=>state.status);
-
+  const [message,setMessage] = useState(false);
     useEffect(()=>{
    
     async function getOrders(){
@@ -20,14 +20,20 @@ function MyOrders() {
      const userPhone = (JSON.parse(localStorage.getItem("user"))).phone
      try{
         setLoading(true);
-         const data = (await axios.post("/api/orders/myorder",userPhone)).data;
-         if(data){
-           setOrders(data);
+        const result = (await axios.post("/api/orders/myorder",{userPhone}));
+        console.log(result.status)
+        if(result.data.length===0){
+          setLoading(false);
+          setMessage("No orders found")
+          return;
+        }
+         if(result){
+           setOrders(result.data);
          }
-         setLoading(false);
      }
      catch(error){
         setLoading(false);
+        console.log(error.message)
      }
     }
     getOrders();
@@ -38,7 +44,9 @@ function MyOrders() {
 }, [orders]);
   return (
     <div>
+      
       {loading && <Loading/>}
+      { message  && <h1 className='text-center text-xl p-2'>{message}</h1>}
       {!loggedIn && <h1>Login to view you orders</h1>}
       <div>
         {

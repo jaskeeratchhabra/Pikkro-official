@@ -67,12 +67,13 @@ const Homescreen = () => {
 
   return (
     <>
-   <div className='flex'>
-    <div className="max-w-md mx-20 mt-12 bg-white p-6 rounded-md">
+   <div className='grid md:grid-cols-2 my-4'>
 
+
+      <div className="max-w-lg mx-auto bg-white p-6 rounded-md">
        <div className='flex'>
          <label>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="w-6 h-6">
                 <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
               </svg>
            </label>
@@ -89,7 +90,7 @@ const Homescreen = () => {
        
        <div className='flex'>
          <label>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="w-6 h-6">
                 <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
               </svg>
            </label>
@@ -103,7 +104,7 @@ const Homescreen = () => {
            </Autocomplete>
        </div>
          
-         <div>
+         <div className='flex flex-col'>
            <button 
              onClick={calculateRoute} 
              className="ml-6 min-w-96 mb-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -125,10 +126,10 @@ const Homescreen = () => {
            </div>
          )}
       </div>
+       <div className="h-2/3 my-5">
+         <img className="h-full mx-32 rounded-lg" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
+       </div>
       
-      <div className="flex justify-center mt-6">
-        <img  className=" mx-32 my-12 h-1/2 rounded-lg" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
-      </div>
     </div>
     </>
   );

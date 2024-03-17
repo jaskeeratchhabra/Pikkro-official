@@ -68,7 +68,8 @@ useEffect(() => {
   return (
     <nav className="bg-gray-800">
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between">
+    <div className="grid md:grid-cols-2 px-8 mx-12">
+
         <div className="flex items-center h-16">
           <div className="text-2xl mx-4 flex">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
@@ -81,10 +82,8 @@ useEffect(() => {
             </svg>
             <a href="/" className="text-lg text-gray-200 font-semibold">{city}</a>
           </div>
-          </div>
-
           {location.pathname === "/" && (
-             <div className="flex justify-center">
+             <div className=" mx-12">
                <Link to="/create-order">
                  <button className="mt-4 w-48 mb-2 py-2 bg-green-600 text-white rounded-md animate-pulse">
                    Book Delivery Now
@@ -92,37 +91,44 @@ useEffect(() => {
                </Link>
              </div>
            )}
-            <div className="ml-4 flex items-center md:ml-6 my-4">
-              <a href="/DeliveryPartnerForm" className="text-gray-300 hover:text-white py-2 text-sm font-medium mr-6">Become a Delivery Partner</a>
-              
-              <Link to="/login">
-                {
-                  !loggedIn && <button className='text-gray-300  hover:text-white tex-sm font-medium'>Login/Sign up</button>
-                }
-              </Link>
-               
-                {
-                  (loggedIn) && <button onClick={handleLogout} className='text-gray-300  hover:text-white tex-sm font-medium'>Logout</button>
-                }
-              
-              
-              <div className="ml-4 relative">
-                <div>
-                  <button className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                   onClick={handleDropdown}>Hi, {username} ▼</button>
-                </div>
-                
-                {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                  <div className="py-1 flex flex-col items-center" role="none">
-                    <a href="/MyOrders" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
-                    <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
-                    <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
-                    <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
-                  </div>
-                </div>
-                }
-          </div>
         </div>
+
+      
+      <div className="relative hidden lg:block">
+        <div className="flex items-center md:ml-6 my-4 absolute right-0">
+          <a href="/DeliveryPartnerForm" className="text-gray-300 hover:text-white py-2 text-sm font-medium mr-6">Become a Delivery Partner</a>
+         
+          <Link to="/login">
+            {
+              !loggedIn && <button className='text-gray-300  hover:text-white tex-sm font-medium'>Login/Sign up</button>
+            }
+          </Link>
+          
+           {
+             (loggedIn) && <button onClick={handleLogout} className='text-gray-300  hover:text-white tex-sm font-medium'>Logout</button>
+           }
+         
+             
+           <div className="ml-4 relative">
+             <div>
+               <button className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                onClick={handleDropdown}>Hi, {username} ▼</button>
+             </div>
+             
+             {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+               <div className="py-1 flex flex-col items-center" role="none">
+                 <a href="/MyOrders" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
+                 <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
+                 <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
+                 <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
+               </div>
+              </div>
+               }
+            </div>
+        </div>
+
+       </div>
+
       </div>
     </nav>
   );

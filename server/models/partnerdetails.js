@@ -12,11 +12,15 @@ const partnerSchema=mongoose.Schema(
    },
    email:{
     type:String,
-    required:true
+    trim:true,
+    required:true,
+    unique:true
    },
    phone:{
-    type:Number,
-    required:true
+    type:String,
+    trim:true,
+    required:true,
+    unique:true
    },
    address:{
     type:String,
@@ -29,7 +33,8 @@ const partnerSchema=mongoose.Schema(
    },
    vehicleNumber:{
     type:String,
-    required:true
+    required:true,
+    unique:true
    },
    dlDocument:{
     type:String,
@@ -54,6 +59,14 @@ const partnerSchema=mongoose.Schema(
    profilePicture:{
     type:String,
     required:true
+   },
+   approved:{
+    type:Boolean,
+    default:false
+   },
+   disapproved:{
+    type:Boolean,
+    default:false
    }
 },
 {

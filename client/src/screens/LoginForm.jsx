@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-// import SuccessComponent from './SuccessComponent';
+import SuccessComponent from '../components/SuccessComponent';
 import Loading from "../components/Loading";
 // import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
@@ -24,7 +24,10 @@ const LoginForm = () => {
   // const togglePasswordVisibility = () => {
   //   setShowPassword((prevState) => !prevState);
   // }; 
-
+    
+  // useEffect(()=>{
+  
+  // },[])
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -42,8 +45,17 @@ const LoginForm = () => {
         localStorage.setItem("user",JSON.stringify(result));
         const username=result.name
         dispatch(login({username}));
-        navigate("/");
-        console.log(result.name);
+        const Admin=(JSON.parse(localStorage.getItem("user"))).isAdmin;
+        if(Admin){
+          console.log("hello")
+          if(Admin){
+           navigate("/Admin");
+          }
+        }
+        else{
+           navigate("/");
+        }
+        // console.log(result.name);
       }
     } catch (error) {
       setError(error.message);
@@ -53,9 +65,10 @@ const LoginForm = () => {
   };
 
   return (
+       <>
+      {success ? <SuccessComponent className="top" message="Logged In SuccessFully"/> : <h1>{error}</h1>}
       <div className="flex justify-center items-center h-screen bg-gray-100">
       {loading && <Loading/>}
-      {/* {success ? <SuccessComponent /> : <h1>{error}</h1>} */}
       <div className="bg-white shadow-md rounded-md p-8 w-full max-w-sm">
         <h2 className="text-3xl font-semibold mb-4 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -103,6 +116,7 @@ const LoginForm = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

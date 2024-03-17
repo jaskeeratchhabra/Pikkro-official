@@ -2,6 +2,7 @@ import React, {useState } from 'react';
 import axios from 'axios';
 import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
+import SuccessComponent from '../components/SuccessComponent';
 // import { EyeIcon,EyeOffIcon } from '@heroicons/react/solid';
 
 const RegisterForm = () => {
@@ -11,6 +12,7 @@ const RegisterForm = () => {
   const navigate=useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [success,setSuccess]=useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
       name: '',
@@ -46,8 +48,10 @@ const RegisterForm = () => {
     try {
       setLoading(true);
       const data = (await axios.post("/api/users/register", user)).data;
-      alert(data);
-         navigate("/");
+      if(data){
+        setSuccess(true);
+      }
+      navigate("/");
       console.log(data);
     } catch (error) {
       console.log(error.message);
@@ -57,9 +61,11 @@ const RegisterForm = () => {
     }
     setLoading(false);
     console.log(formData);
-  };
+  }
 
   return (
+    <>
+     {success && <SuccessComponent message="User Redistered SuccessFully"/>}
     <div className="flex justify-center items-center h-screen">
       {error&&<h1>User already registered go to login</h1>}
       {loading && <Loading />}
@@ -137,6 +143,7 @@ const RegisterForm = () => {
         </button>
       </form>
     </div>
+    </>
   );
 };
 

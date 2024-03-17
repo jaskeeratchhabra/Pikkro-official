@@ -9,7 +9,6 @@ const userSchema=mongoose.Schema({
        type:String,
        unique:true,
        required:true,
-
        trim:true
     },
     email:{
@@ -24,6 +23,10 @@ const userSchema=mongoose.Schema({
         required:true
     },
     isAdmin:{
+        type:Boolean,
+        default:false
+    },
+    isRider:{
         type:Boolean,
         default:false
     }
