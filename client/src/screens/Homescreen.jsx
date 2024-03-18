@@ -70,7 +70,7 @@ const Homescreen = () => {
    <div className='grid md:grid-cols-2 my-4'>
 
 
-      <div className="max-w-lg mx-auto bg-white p-6 rounded-md">
+      <div className="mx-auto  bg-white p-6 rounded-md">
        <div className='flex'>
          <label>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="w-6 h-6">
@@ -126,8 +126,8 @@ const Homescreen = () => {
            </div>
          )}
       </div>
-       <div className="h-2/3 my-5">
-         <img className="h-full mx-32 rounded-lg" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
+       <div className="  h-4/6 my-5 mx-auto ">
+         <img className="h-full rounded-lg" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
        </div>
       
     </div>

@@ -203,7 +203,7 @@ function Orderscreen() {
   };
   
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-auto">
       <h1 className="text-3xl font-bold m-12">Create Your Order</h1>
       
       <div className="w-full md:w-2/3">
