@@ -46,11 +46,16 @@ const LoginForm = () => {
         const username=result.name
         dispatch(login({username}));
         const Admin=(JSON.parse(localStorage.getItem("user"))).isAdmin;
+        const Rider =(JSON.parse(localStorage.getItem("user"))).isRider;
         if(Admin){
-          console.log("hello")
+          // console.log("hello")
           if(Admin){
            navigate("/Admin");
           }
+        }
+        else
+        if(Rider){
+          navigate("/Rider")
         }
         else{
            navigate("/");

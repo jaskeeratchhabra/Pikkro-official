@@ -83,7 +83,7 @@ useEffect(() => {
             <a href="/" className="text-lg text-gray-200 font-semibold">{city}</a>
           </div>
           {location.pathname === "/" && (
-             <div className=" lg:mx-auto ml-6">
+             <div className=" lg:ml-auto ml-6">
                <Link to="/create-order">
                  <button className="mt-4 w-28  lg:w-48 mb-2 py-2 bg-green-600 text-white rounded-md animate-pulse ">
                    Book Delivery
@@ -95,7 +95,7 @@ useEffect(() => {
 
       
       <div className="relative hidden lg:block">
-        <div className="flex items-center md:ml-6 my-4 absolute right-0">
+        <div className="flex items-center md:ml-6 my-4 absolute right-10">
           <a href="/DeliveryPartnerForm" className="text-gray-300 hover:text-white py-2 text-sm font-medium mr-6">Become a Delivery Partner</a>
          
           <Link to="/login">
@@ -117,10 +117,10 @@ useEffect(() => {
              
              {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                <div className="py-1 flex flex-col items-center" role="none">
-                 <a href="/MyOrders" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
-                 <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
-                 <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
-                 <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
+                 <a href="/MyOrders" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
+                 <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
+                 <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
+                 <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
                </div>
               </div>
                }
@@ -135,19 +135,19 @@ useEffect(() => {
             {dropdown && (
               <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                 <div className="py-1 flex flex-col items-center" role="none">
-                  <a href="/DeliveryPartnerForm" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Become a Delivery Partner</a>
+                  <a href="/DeliveryPartnerForm" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Become a Delivery Partner</a>
+                  <a href="/MyOrders" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
+                  <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
+                  <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
+                  <a href="#" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
                   {!loggedIn && (
                     <Link to="/login">
-                      <button className='border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Login/Sign up</button>
+                      <button className=' my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Login/Sign up</button>
                     </Link>
                   )}
                   {loggedIn && (
-                    <button onClick={handleLogout} className='border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Logout</button>
+                    <button onClick={handleLogout} className=' my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Logout</button>
                   )}
-                  <a href="/MyOrders" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
-                  <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
-                  <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
-                  <a href="#" className="border  my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
                 </div>
               </div>
            )}

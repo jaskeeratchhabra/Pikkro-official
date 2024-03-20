@@ -5,21 +5,24 @@ const User = require("../models/users");
 
 router.post("/register",async(req,res)=>{
     
+    console.log(req.body);
     const newuser=new User({
         name:req.body.name,
         phone:req.body.phone,
         email:req.body.email,
-        password:req.body.password
+        password:req.body.password,
+        isAdmin :req.body.isAdmin,
+        isRider:req.body.isRider
        });
       try{
         const prevUser=await User.findOne({phone:req.body.phone});
         if(prevUser){
          console.log("already registered")
-            res.send("user already registered go to login");
+            res.send(prevUser);
         }
         else{
           const user =await newuser.save()
-          res.send("User Registered SuccessFully");
+          res.send(newuser);
         }
      }
      catch(error){

@@ -22,8 +22,8 @@ function MyOrders() {
         setLoading(true);
         const result = (await axios.post("/api/orders/myorder",{userPhone}));
         console.log(result.status)
+        setLoading(false);
         if(result.data.length===0){
-          setLoading(false);
           setMessage("No orders found")
           return;
         }

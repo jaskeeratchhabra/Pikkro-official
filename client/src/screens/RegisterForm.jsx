@@ -3,10 +3,13 @@ import axios from 'axios';
 import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import SuccessComponent from '../components/SuccessComponent';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/authSlice';
 // import { EyeIcon,EyeOffIcon } from '@heroicons/react/solid';
 
 const RegisterForm = () => {
     
+  const dispatch = useDispatch();
   const [emailValid, setEmailValid] = useState(true);
 
   const navigate=useNavigate();
@@ -43,16 +46,21 @@ const RegisterForm = () => {
       email,
       phone,
       password,
-      cpassword
+      cpassword,
+      isAdmin:false,
+      isRider:false
     };
     try {
       setLoading(true);
-      const data = (await axios.post("/api/users/register", user)).data;
-      if(data){
+      const result = (await axios.post("/api/users/register", user)).data;
+      if(result){
         setSuccess(true);
+        localStorage.setItem("user",JSON.stringify(result));
+        const username=result.name
+        dispatch(login({username}));
       }
       navigate("/");
-      console.log(data);
+      console.log(result);
     } catch (error) {
       console.log(error.message);
       setLoading(false);

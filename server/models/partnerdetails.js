@@ -67,6 +67,10 @@ const partnerSchema=mongoose.Schema(
    disapproved:{
     type:Boolean,
     default:false
+   },
+   registered:{
+    type:Boolean,
+    default:false
    }
 },
 {

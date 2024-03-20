@@ -63,6 +63,18 @@ const orderSchema=mongoose.Schema({
      Date:{
         type:String,
         required:true
+     },
+     completed:{
+        type:Boolean,
+        default:false
+     },
+     canceled:{
+        type:Boolean,
+        default:false
+     },
+     picked:{
+      type:Boolean,
+      default:false
      }
     },
     {
