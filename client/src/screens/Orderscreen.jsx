@@ -220,6 +220,8 @@ function Orderscreen() {
           calendarClassName="horizontal-calendar"
         />
     </div>
+
+    
       <div className="my-8 shadow-lg">
           <p className="font-semibold mb-2">Select Item:</p>
           <div className="flex text-blue-500 ">
@@ -264,12 +266,12 @@ function Orderscreen() {
           <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Phone Number" value={pickupPhoneNumber}
           onChange={handlePickupPhoneNumberChange} />
 
-          <Autocomplete>
+          {/* <Autocomplete> */}
             <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Flat No/Locality/Street/area" 
               value={pickupFlatDetails}
               onChange={handlePickupFlatDetailsChange}
             />
-          </Autocomplete>
+          {/* </Autocomplete> */}
         </div>
  
         <div className="mb-4 flex flex-col shadow-lg">
@@ -281,12 +283,12 @@ function Orderscreen() {
             value={deliveryPhoneNumber}
             onChange={handleDeliveryPhoneNumberChange}
           />
-          <Autocomplete>
+          {/* <Autocomplete> */}
            <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Flat No/Locality/Street/area" 
              value={deliveryFlatDetails}
              onChange={handleDeliveryFlatDetailsChange}
            />
-          </Autocomplete>
+          {/* </Autocomplete> */}
         </div>
         <div className="mb-96 mt-12 flex flex-col">
           <label className="font-semibold mb-2">Delivery Instructions:</label>

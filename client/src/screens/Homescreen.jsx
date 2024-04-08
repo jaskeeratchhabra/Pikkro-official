@@ -12,7 +12,7 @@ import {
 
 const Homescreen = () => {
   
-  
+   const [ libraries ] = useState(['places']);
    const originRef = useRef()
    const destiantionRef = useRef()   
    const [price, setPrice] = useState(null);
@@ -29,7 +29,7 @@ const Homescreen = () => {
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: map_key,
-    libraries: ['places'],
+    libraries
   })
   
   if (!isLoaded) {

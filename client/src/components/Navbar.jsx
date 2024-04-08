@@ -31,7 +31,7 @@ const handleLogout=()=>{
 }
 
 useEffect(() => {
-  // Check if user is logged in from localStorage
+
   const user = JSON.parse(localStorage.getItem('user'));
   if (user) {
     // console.log(username);
@@ -40,30 +40,44 @@ useEffect(() => {
   }
 }, [dispatch]);
 
-  useEffect(()=>{
-    function getCurrentCityLocation() {
-       if ("geolocation" in navigator) {
-           navigator.geolocation.getCurrentPosition(function (position) {
-               const latitude = position.coords.latitude;
-               const longitude = position.coords.longitude;   
-               // Use a reverse geocoding service to get the city from the coordinates.
-               const geocodingApiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`;
-               fetch(geocodingApiUrl)
-                 .then(response => response.json())
-                 .then(data => {
-                   const city = data.address.city || data.address.town || data.address.village;
-                   setCity(city);
-                 })
-                 .catch(error => console.error(error));
+useEffect(() => {
+  function getCurrentCityLocation() {
+      if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
 
-           });
-       } 
-       else {
-           console.log("no location available");
-       }
-    }
-    getCurrentCityLocation();
-  },[])
+              // Use a reverse geocoding service to get the city from the coordinates.
+              const geocodingApiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`;
+              
+              // Request high accuracy location
+              const options = {
+                  enableHighAccuracy: true,
+                  maximumAge: 10000, // Maximum age of cached position
+                  timeout: 10000 // Timeout in milliseconds
+              };
+
+              fetch(geocodingApiUrl, options)
+                  .then(response => response.json())
+                  .then(data => {
+                      const city = data.address.city || data.address.town || data.address.village;
+                      const area = data.address.neighbourhood || data.address.suburb || data.address.county;
+                      // console.log(data.address)
+                      // console.log(area);
+                      setCity(city);
+                  })
+                  .catch(error => console.error(error));
+          }, function (error) {
+              console.error(error.message);
+          }, {
+              enableHighAccuracy: true
+          });
+      } else {
+          console.log("Geolocation is not supported by this browser.");
+      }
+  }
+  getCurrentCityLocation();
+}, []);
 
   return (
     <nav className="bg-gray-800">

@@ -71,7 +71,8 @@ const partnerSchema=mongoose.Schema(
    registered:{
     type:Boolean,
     default:false
-   }
+   },
+   orders:[]
 },
 {
     timestamps:true

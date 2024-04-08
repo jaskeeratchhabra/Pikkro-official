@@ -6,6 +6,14 @@ const orderSchema=mongoose.Schema({
         type:String,
         required:true
     },
+     RiderPhone:{
+      type:String,
+      default:null
+     },
+     RiderName:{
+      type:String,
+      default:null
+     }, 
      Item:{
         type:String,
         required:true
@@ -33,7 +41,7 @@ const orderSchema=mongoose.Schema({
             required:true
         },
         Phone:{
-            type:Number,
+            type:String,
             required:true
         },
         Locality:{
@@ -49,7 +57,7 @@ const orderSchema=mongoose.Schema({
             required:true
         },
         Phone:{
-            type:Number,
+            type:String,
             required:true
         },
         Locality:{
@@ -64,6 +72,14 @@ const orderSchema=mongoose.Schema({
         type:String,
         required:true
      },
+     accepted:{
+       type:Boolean,
+       default:false
+     },
+     picked:{
+      type:Boolean,
+      default:false
+     },
      completed:{
         type:Boolean,
         default:false
@@ -71,10 +87,6 @@ const orderSchema=mongoose.Schema({
      canceled:{
         type:Boolean,
         default:false
-     },
-     picked:{
-      type:Boolean,
-      default:false
      }
     },
     {
