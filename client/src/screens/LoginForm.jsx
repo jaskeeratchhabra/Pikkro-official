@@ -44,6 +44,7 @@ const LoginForm = () => {
         setSuccess(true);
         localStorage.setItem("user",JSON.stringify(result));
         const username=result.name
+        // console.log(result);
         dispatch(login({username}));
         const Admin=(JSON.parse(localStorage.getItem("user"))).isAdmin;
         const Rider =(JSON.parse(localStorage.getItem("user"))).isRider;

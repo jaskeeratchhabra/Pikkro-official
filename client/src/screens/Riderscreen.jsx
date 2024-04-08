@@ -12,7 +12,7 @@ const OrderCard=({orders , ordersInRange})=>{
   const [loading,setLoading] = useState(false);
   const [distanceToPickup, setDistanceToPickup] = useState(0);
 
- 
+  const riderName = (JSON.parse(localStorage.getItem("user"))).name
   const paymentType = orders.paymentType;
   
   const handlePickupDistance = (distance)=>{
@@ -48,18 +48,21 @@ const OrderCard=({orders , ordersInRange})=>{
   // function to handle status and to add rider details on state update
   const handleStatus = async (value)=>{
 
-    const userInfo = (JSON.parse(localStorage.getItem("user"))).user;
+    const userInfo = (JSON.parse(localStorage.getItem("user")));
     console.log(userInfo)
+    // console.log(userInfo)
     const _id = orders._id;
-    const statusValue = { value: value,
+    const statusValue = { 
+                          value: value,
                           RiderPhone: userInfo.phone,
                           RiderName: userInfo.name
                         }
     try{
     setLoading(true);
-    const result = (await axios.patch(`/api/orders/${_id}`,{statusValue})).data;
-    console.log(result)
+    const result = (await axios.patch(`/api/orders/${_id}`,statusValue)).data;
+    // console.log(result)
     if(result.updatedDocument[value]===true){
+      
        setStatus(value)
      }
      setLoading(false);
@@ -88,6 +91,7 @@ const OrderCard=({orders , ordersInRange})=>{
     <div className='w-2/3 mx-auto rounded-lg'>
        <div className= "w-full shadow-xl p-4 m-4 border border-gray-300 relative"> 
           
+          {status!=="new" && <SuccessComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
           {
             status === "new" && <div>
 
@@ -124,7 +128,7 @@ const OrderCard=({orders , ordersInRange})=>{
             </div>
           }
           {status!=="new" && <div>
-             <div className='absolute top-1 right-4 font-semibold'>order value:  ₹{orders.price}</div>
+             <div className='absolute top-3 right-4 font-semibold'>order value:  ₹{orders.price}</div>
              <div>
               <MapContainer pickupAddress={orders.PickupDetails.address} deliveryAddress={orders.DeliveryDetails.address} status ={status} setDistanceToPickupProp={(distance)=>{handlePickupDistance(distance)}}/>
              </div>

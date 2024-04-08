@@ -6,17 +6,19 @@ const Order = require("../models/order")
 
 router.patch('/:_id', async (req, res) => {
   const { _id } = req.params;
-  const { statusValue } = req.body;
   console.log(req.body);
+  const { value, RiderPhone, RiderName } = req.body;
   try {
     const updateQuery = {};
 
     // Check the value of updatedField and construct the update query accordingly
-    if (statusValue === 'accepted') {
+    if (value === 'accepted') {
       updateQuery.accepted= true;
-    } else if (statusValue === 'picked') {
+      updateQuery.RiderName= RiderName;
+      updateQuery.RiderPhone= RiderPhone;
+    } else if (value === 'picked') {
       updateQuery.picked = true;
-    } else if(statusValue==="completed"){
+    } else if(value==="completed"){
       updateQuery.completed= true;
     }
     else {
