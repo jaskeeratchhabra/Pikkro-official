@@ -146,7 +146,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
       <p className="text-sm text-gray-600 mb-2">Vehicle Type: {deliveryPartner.vehicleType}</p>
       <p className="text-sm text-gray-600 mb-2">Vehicle Number: {deliveryPartner.vehicleNumber}</p>
       <div className="flex flex-wrap -mx-1 mb-2">
-        {Object.entries(deliveryPartner).slice(9,15 ).map(([fieldName, image], index) => (
+        {Object.entries(deliveryPartner).slice(10,16 ).map(([fieldName, image], index) => (
           <div key={index} className="w-1/2 p-1">
             <img
               src={image}

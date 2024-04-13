@@ -144,7 +144,7 @@ useEffect(() => {
         <div className='my-auto ml-auto mr-20'>
           <div className="lg:hidden">
             <button className="text-gray-300 hover:text-white text-sm font-medium" onClick={handleDropdown}>
-            Hi, {username.split(' ')[0]} ▼
+            Hi, {username && username.split(' ')[0]} ▼
             </button>
             {dropdown && (
               <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">

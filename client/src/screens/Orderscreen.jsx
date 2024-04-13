@@ -22,8 +22,6 @@ function Orderscreen() {
   const [instruction,addInstruction]=useState("");
   const [Item,setItem] =useState("");
   const [paymentType,setPaymentType]=useState("");
-
-  const [selectedDate, setSelectedDate] = useState("");
   
   const [added,setAdded]=useState(false);
   
@@ -39,6 +37,22 @@ function Orderscreen() {
    const [deliveryFlatDetails, setDeliveryFlatDetails] = useState('');
 
    const [success,setSuccess]=useState(false);
+
+  const [hour, setHour] = useState('1');
+  const [minute, setMinute] = useState('00');
+  const [ampm, setAMPM] = useState('AM');
+
+  const handleHourChange = (event) => {
+    setHour(event.target.value);
+  };
+
+  const handleMinuteChange = (event) => {
+    setMinute(event.target.value);
+  };
+
+  const handleAMPMChange = (event) => {
+    setAMPM(event.target.value);
+  };
 
 
    // Function to handle changes in pickup phone number
@@ -179,7 +193,7 @@ function Orderscreen() {
         Locality: deliveryFlatDetails
       },
       instruction,
-      Date: String(selectedDate)
+      Date: Date.now()
     };
     console.log(orderData);
     try{
@@ -196,33 +210,37 @@ function Orderscreen() {
     }
   }
 
-  const today = new Date();
-  
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  
+
   return (
     <div className="flex flex-col items-center w-auto">
       <h1 className="text-3xl font-bold m-12">Create Your Order</h1>
-      
       <div className="w-full md:w-2/3">
-      <div className="flex mx-4 ">
-        <p className="font-semibold mr-2 my-4">Select delivery date:</p>
-        <DatePicker
-          selected={selectedDate}
-          onChange={handleDateChange}
-          minDate={today}
-          inline
-          dateFormat="MM/dd/yyyy"
-          placeholderText="Select a date"
-          wrapperClassName="horizontal-datepicker"
-          calendarClassName="horizontal-calendar"
-        />
-    </div>
-
+       <div className='shadow-md'>
+        <div className="flex">
+          <p className="font-semibold mr-4 my-4">Select pickup time:</p>
+          <select value={hour} onChange={handleHourChange} className="border border-gray-500 mr-2 ">
+            {[...Array(12)].map((_, index) => (
+              <option key={index + 1} value={(index + 1).toString().padStart(2, '0')}>
+                {(index + 1).toString().padStart(2, '0')}
+              </option>
+            ))}
+          </select>
+          <span className='font-semibold my-4 mr-2'>:</span>
+          <select value={minute} onChange={handleMinuteChange} className="border border-gray-500 mr-2">
+            <option value="00">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+          </select>
+          <select value={ampm} onChange={handleAMPMChange} className="border border-gray-500 ml-2 ">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+       </div>
+        <p className='text-gray-700 my-2'>Ideal delivery time is <b>90 minutes</b> from the time of pickup</p>
+       </div>
     
-      <div className="my-8 shadow-lg">
+      <div className="my-8 shadow-md">
           <p className="font-semibold mb-2">Select Item:</p>
           <div className="flex text-blue-500 ">
             <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Food" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Food")}>Food</button>
@@ -236,9 +254,9 @@ function Orderscreen() {
         </div>
 
 
-        <div className="my-8 shadow-lg">
+        <div className="shadow-md">
           <p className="font-semibold mb-2">Weight:</p>
-          <div className="flex text-blue-500 ">
+          <div className="flex text-blue-500">
             <button className={`border border-gray-400 rounded p-2 mx-4 ${weight === '0kg' && 'bg-blue-500 text-white'}`} onClick={() => handleWeightChange('0kg')}>Up to 10 kg</button>
             <button className={`border border-gray-400 rounded p-2 mx-4 ${weight === '10kg' && 'bg-blue-500 text-white'}`} onClick={() => handleWeightChange('10kg')}>10-15 kg</button>
             <button className={`border border-gray-400 rounded p-2 mx-4 ${weight === '15kg' && 'bg-blue-500 text-white'}`} onClick={() => handleWeightChange('15kg')}>15-20 kg</button>
@@ -248,17 +266,17 @@ function Orderscreen() {
         
 
 
-        <div className="my-8 shadow-lg">
+        <div className="my-8 shadow-md">
           <div className="flex text-gray-700">
-          <p className="font-semibold mb-2 mr-4">Parcel Value:</p>
-           <input className='border border-gray-500' value={parcelValue} placeholder='   optional'  onChange={handleParcelValueChange}/>
+          <p className="font-semibold mb-2 mr-4 text-black">Parcel Value:</p>
+           <input className='border border-gray-500' value={parcelValue} placeholder=' optional'  onChange={handleParcelValueChange}/>
           </div>
-          <div className='text-gray-700 my-36 mt-5 '>
+          <div className='text-gray-700 my-28 mt-5 '>
              <p> We ask for parcel value to provide most secure delivery fascilities to you , we charge only 1% extra according to parcel value for secure delivery <b>Max Parcel Value: ₹50,000</b></p>
           </div>
         </div>
 
-        <div className="mb-4 flex flex-col shadow-lg">
+        <div className="mb-4 flex flex-col shadow-md">
           <p className="font-semibold mb-2 bg-gray-700 text-white text-center">Pickup details:</p>
           <Autocomplete>
             <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Pickup address" ref={originRef} required />
@@ -274,7 +292,7 @@ function Orderscreen() {
           {/* </Autocomplete> */}
         </div>
  
-        <div className="mb-4 flex flex-col shadow-lg">
+        <div className="mb-4 flex flex-col shadow-md">
           <p className="font-semibold mb-2 bg-gray-700 text-white text-center">Delivery details:</p>
           <Autocomplete>
             <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Delivery address" ref={destinationRef} required/>

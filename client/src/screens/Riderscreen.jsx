@@ -4,6 +4,7 @@ import SuccessComponent from '../components/SuccessComponent'
 import axios from 'axios';
 import Loading from "../components/Loading"
 import MapContainer from '../components/MapContainer';
+import PopupComponent from '../components/PopupComponent';
 const OrderCard=({orders , ordersInRange})=>{
   
   const [toggleP,settoggleP] = useState(false);
@@ -11,8 +12,10 @@ const OrderCard=({orders , ordersInRange})=>{
   const [status,setStatus] = useState("new");
   const [loading,setLoading] = useState(false);
   const [distanceToPickup, setDistanceToPickup] = useState(0);
+  const [RiderAccepted,setRider] = useState("");
 
   const riderName = (JSON.parse(localStorage.getItem("user"))).name
+  const riderPhone = (JSON.parse(localStorage.getItem("user"))).phone
   const paymentType = orders.paymentType;
   
   const handlePickupDistance = (distance)=>{
@@ -61,9 +64,13 @@ const OrderCard=({orders , ordersInRange})=>{
     setLoading(true);
     const result = (await axios.patch(`/api/orders/${_id}`,statusValue)).data;
     // console.log(result)
+    if(result.updatedDocument["accepted"]===true){
+      setRider(result.updatedDocument.RiderPhone)
+      console.log(result.updatedDocument.RiderPhone)
+    }
     if(result.updatedDocument[value]===true){
-      
        setStatus(value)
+
      }
      setLoading(false);
     }
@@ -89,9 +96,9 @@ const OrderCard=({orders , ordersInRange})=>{
     <>
     {loading  &&  <Loading/>}
     <div className='w-2/3 mx-auto rounded-lg'>
+      {status!=="new" && <PopupComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
        <div className= "w-full shadow-xl p-4 m-4 border border-gray-300 relative"> 
           
-          {status!=="new" && <SuccessComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
           {
             status === "new" && <div>
 
@@ -166,7 +173,7 @@ const OrderCard=({orders , ordersInRange})=>{
          <div className='flex'>
           
            {/* {status === "new" && <button onClick={()=>{handleStatus("accepted")}} className='rounded-md bg-green-500 text-white p-1 absolute right-5 bottom-5 '>Accept</button>} */}
-           {status === "accepted" && <button onClick={()=>{handleStatus("picked")}} className='rounded-md bg-blue-500 text-white p-1 absolute right-5 bottom-5 '>Picked</button>}
+           {RiderAccepted===riderPhone && status === "accepted" && <button onClick={()=>{handleStatus("picked")}} className='rounded-md bg-blue-500 text-white p-1 absolute right-5 bottom-5 '>Picked</button>}
            { status==="picked" && <button onClick={()=>{handleStatus("completed")}}className='rounded-md bg-red-500 text-white p-1 absolute right-5 bottom-5 '>Delivered</button> }
            { status==="completed"  && <h1 className=' text-red-700 p-1 absolute right-3 bottom-3 '> delivered</h1>}
           {/* <button className='rounded-sm bg-red-500 text-white mx-auto p-1'>Deny</button> */}
@@ -208,7 +215,9 @@ function Riderscreen() {
         setLoading(true)
         const result =  (await axios.get("/api/orders/getorder")).data;
 
-        const filteredOrders= result.filter((order)=>(order.accepted !== true ));
+        const filteredOrders= result.filter((order)=>(order.completed !== true ));
+
+        
         setLoading(false);
         // console.log(result);
         setNeworders(filteredOrders);

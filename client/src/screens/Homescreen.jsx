@@ -125,7 +125,7 @@ const Homescreen = () => {
          {price !== null && (
            <div className="mt-4">
              <span className='text-gray-800'>Estimated charges if parcel weight is less than 10 kg</span>
-             <p className="text-lg font-semibold text-gray-900">: ₹{price}</p>
+             <p className="text-lg font-semibold text-gray-900">: ₹{price} Your distance is {distance}</p>
               {/* <button className='bg-gray-500' onClick={setPrice(null)}>clear</button> */}
            </div>
          )}
