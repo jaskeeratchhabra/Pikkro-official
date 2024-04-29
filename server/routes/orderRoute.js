@@ -21,6 +21,10 @@ router.patch('/:_id', async (req, res) => {
     } else if(value==="completed"){
       updateQuery.completed= true;
     }
+    else if(value === "canceled")
+    {
+      updateQuery.canceled = true
+    }
     else {
       return res.status(400).json({ message: 'Invalid updatedField value' });
     }

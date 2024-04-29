@@ -1,11 +1,16 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router"
-function OrderCard({ order }) {
+import Loading from './Loading';
+import axios from 'axios';
+import SuccessComponent from './SuccessComponent';
+import PopupComponent from './PopupComponent';
+function OrderCard({ order}) {
 
     const navigate  = useNavigate();
     const [showDetails, setShowDetails] = useState(false);
-
+    const [loading,setLoading] = useState(false);
+    const [orderStatus,setStatus]  = useState("");
     const toggleDetails = () => {
         setShowDetails(!showDetails);
     };
@@ -15,26 +20,65 @@ function OrderCard({ order }) {
         console.log(date)
         navigate("/create-order")
     }
-
+    const handleCancel = async (value)=>{
+        if(order.picked === true){
+            console.log("order  can't be canceled")
+            setStatus("picked");
+            return ;
+        }
+        const userInfo = (JSON.parse(localStorage.getItem("user")));
+        const _id = order._id;
+        const statusValue = { 
+                              value: value,
+                              RiderPhone: userInfo.phone,
+                              RiderName: userInfo.name
+                            }
+        try{
+        setLoading(true);
+        const result = (await axios.patch(`/api/orders/${_id}`,statusValue)).data;
+        if(result.updatedDocument["canceled"]===true){
+          console.log(result.message , "order has been canceled")
+          setStatus("canceled");
+        }
+         setLoading(false);
+        }
+        catch(error){
+          console.log(error.message);
+        }
+        setLoading(false);
+    }
     return (
-        <div className="bg-gray-100 shadow-lg rounded-lg overflow-hidden mb-4 relative">
-             <div className="absolute top-1 right-1 text-red-500" onClick={handleEdit}>
-                Edit
+        <div className="bg-gray-100 shadow-lg rounded-lg overflow-hidden mb-4  mt-4 relative">
+             {loading && <Loading/>}
+             {orderStatus==="picked"  &&  <SuccessComponent message= "Order picked can't be canceled at this moment"/>}
+             {orderStatus==="canceled" && <PopupComponent message="Order has been canceled"/> }
+             <div className="absolute top-1 right-1 text-red-500" >
+                <button onClick={handleEdit}>Edit</button>
+                {
+                  (orderStatus==="canceled" || order.canceled===true) ? <button className="text-red-700 py-2 px-4  ml-4 rounded focus:outline-none focus:shadow-outline">
+                  Cancelled</button>:
+                  <button className="text-red-700 py-2 px-4  ml-4 rounded focus:outline-none focus:shadow-outline"
+                  onClick = {()=>(handleCancel("canceled"))}>
+                  Cancel</button>
+                }
              </div>
-            <div className="px-6 py-4 text-lg font-semibold">
-                {order.Item} - Order ID: {order._id}
-            </div>
+             <div className='flex'>
+               <div className="mx-2 py-4 text-lg text-blue-500">
+                   {order.Item} 
+               </div>
+               <div className="py-4 text-lg text-blue-500">
+                   ({order.Date} )
+               </div>
+             </div>
             <div className="px-6 py-4 flex">
                 <button
-                    className=" border-b-4 border-blue-700  text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-4 "
+                    className="  text-gray-700 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-4 "
                     onClick={toggleDetails}
                 >
                     {showDetails ? "Hide Details" : "Show Details"}
                 </button>
-                <button className="border-b-4 border-blue-700  text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button className="text-gray-700 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Track Order</button>
-                <button className="border-b-4 border-blue-700  text-gray-700 font-bold py-2 px-4  ml-4 rounded focus:outline-none focus:shadow-outline">
-                Cancel Order</button>
             </div>
             {showDetails && (
                 <div className="px-6 py-4">
@@ -53,10 +97,10 @@ function OrderCard({ order }) {
                     <div>
                         <p>Weight: {order.weight}</p>
                         <p>Parcel Value: {order.parcelValue}</p>
-                        <p>Price: {order.price}</p>
+                        <p>charges: {order.price}</p>
                         <p>Payment Type: {order.paymentType}</p>
                         <p>Instruction: {order.instruction}</p>
-                        <p>Date: {order.Date}</p>
+                        <p>Order ID: {order._id}</p>
                     </div>
                 </div>
             )}

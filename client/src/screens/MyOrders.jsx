@@ -11,6 +11,7 @@ function MyOrders() {
   const [loading,setLoading] = useState(false);
   const loggedIn= useSelector((state)=>state.status);
   const [message,setMessage] = useState(false);
+  // const [status, handleStatus] = useState("");
     useEffect(()=>{
    
     async function getOrders(){

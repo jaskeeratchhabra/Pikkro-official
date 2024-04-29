@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import { useRef ,useEffect} from 'react';
 // import { LocationMarkerIcon } from "@heroicons/react/solid";'
-import Loading from "../components/Loading"
+import Loading from '../components/Loading';
 
 
 import {
@@ -24,7 +24,7 @@ const Homescreen = () => {
      if(distance){
        calculatePrice()
      }
-   },[distance])
+   },[distance,calculatePrice])
   const map_key= import.meta.env.VITE_MAP_API_KEY
 
   const { isLoaded } = useJsApiLoader({

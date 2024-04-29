@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, Marker , DirectionsRenderer, LoadScript } from '@react-google-maps/api';
-import Loading from './Loading';
 
 const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPickupProp }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -9,13 +8,9 @@ const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPick
   const [deliveryLocation, setDeliveryLocation] = useState(null);
   const [pickupDirections, setPickupDirections] = useState(null);
   const [deliveryDirections, setDeliveryDirections] = useState(null);
-  const map_key = import.meta.env.VITE_MAP_API_KEY;
-  const [loading, setLoading] = useState(true);
-  const [ libraries ] = useState(['places']);
 
   useEffect(() => {
     // Get user's current location
-    if (!loading) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -61,11 +56,10 @@ const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPick
           }
         });
       }
-    }
-  }, [pickupAddress, deliveryAddress, loading]);
+  }, [pickupAddress, deliveryAddress]);
 
   useEffect(() => {
-    if (!loading && currentLocation && pickupLocation) {
+    if (currentLocation && pickupLocation) {
       const directionsService = new window.google.maps.DirectionsService();
       directionsService.route(
         {
@@ -82,10 +76,10 @@ const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPick
         }
       );
     }
-  }, [currentLocation, pickupLocation, loading]);
+  }, [currentLocation, pickupLocation]);
 
   useEffect(() => {
-    if (!loading && pickupLocation && deliveryLocation) {
+    if (pickupLocation && deliveryLocation) {
       const directionsService = new window.google.maps.DirectionsService();
       directionsService.route(
         {
@@ -102,21 +96,21 @@ const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPick
         }
       );
     }
-  }, [pickupLocation, deliveryLocation, loading]);
+  }, [pickupLocation, deliveryLocation]);
 
   //to calculate distance to pickup to handle orders in range
   useEffect(() => {
-    if (!loading && currentLocation && pickupLocation) {
+    if (currentLocation && pickupLocation) {
       const distance = calculateDistance(currentLocation, pickupLocation);
       setDistanceToPickupProp(distance);
       // console.log(distance);
       // console.log(typeof distance);
     }
-  }, [currentLocation, pickupLocation, loading]);
+  }, [currentLocation, pickupLocation]);
 
-  const handleLoad = () => {
-    setLoading(false);
-  };
+  // const handleLoad = () => {
+  //   setLoading(false);
+  // };
 
   const calculateDistance = (location1, location2) => {
     if (!location1 || !location2) return null;
@@ -136,8 +130,7 @@ const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPick
 
 return (
     <div className=''>
-      {loading && <Loading />}
-      <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}>
+      {/* <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}> */}
         <div className='my-5 flex justify-between'>
           {currentLocation && pickupLocation && (
             <p className='font-semibold '>Current to Pickup: <span className='text-blue-500'>{calculateDistance(currentLocation, pickupLocation)} km</span></p>
@@ -170,7 +163,7 @@ return (
 
              </GoogleMap>
         }
-      </LoadScript>
+      {/* </LoadScript> */}
     </div>
   );
 };

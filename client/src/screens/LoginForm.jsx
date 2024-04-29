@@ -49,10 +49,7 @@ const LoginForm = () => {
         const Admin=(JSON.parse(localStorage.getItem("user"))).isAdmin;
         const Rider =(JSON.parse(localStorage.getItem("user"))).isRider;
         if(Admin){
-          // console.log("hello")
-          if(Admin){
-           navigate("/Admin");
-          }
+         navigate("/Admin");
         }
         else
         if(Rider){
@@ -73,9 +70,9 @@ const LoginForm = () => {
   return (
        <>
       {success ? <SuccessComponent className="top" message="Logged In SuccessFully"/> : <h1>{error}</h1>}
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="relative flex justify-center items-center h-screen bg-gray-100">
       {loading && <Loading/>}
-      <div className="bg-white shadow-md rounded-md p-8 w-full max-w-sm">
+      <div className="bg-white shadow-md rounded-md p-8 mb-3 w-full max-w-sm">
         <h2 className="text-3xl font-semibold mb-4 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -117,8 +114,9 @@ const LoginForm = () => {
           >
             Sign In
           </button>
-          <span>Don't have an account 
-          <Link to="/register" className="mx-2 text-blue-500 font-semibold">Sign Up</Link></span>
+             <span>Don't have an account 
+             <Link to="/register" className="mx-2 text-blue-500 font-semibold">Sign Up</Link></span>
+             <Link to="/register" className="absolute mt-5  text-blue-800">Forgot password?</Link>
         </form>
       </div>
     </div>

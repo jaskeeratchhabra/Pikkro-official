@@ -27,12 +27,12 @@ const OrderCard=({orders , ordersInRange})=>{
       let distance = parseFloat(distanceToPickup);
   
       if(distance <= 7){
-        console.log(orders.userPhone);
+        // console.log(orders.userPhone);
         ordersInRange(orders);
       }
     }
 
-  },[distanceToPickup])
+  },[distanceToPickup , ordersInRange])
 
   // to update state of the order
   useEffect(()=>{  
@@ -45,7 +45,7 @@ const OrderCard=({orders , ordersInRange})=>{
       else if(orders.accepted===true){
         setStatus("accepted")
       }
-  },[status])
+  },[status, orders.completed,orders.picked, orders.accepted])
   
 
   // function to handle status and to add rider details on state update
@@ -94,10 +94,10 @@ const OrderCard=({orders , ordersInRange})=>{
 
   return (
     <>
-    {loading  &&  <Loading/>}
     <div className='w-2/3 mx-auto rounded-lg'>
+    {loading  &&  <Loading/>}
       {status!=="new" && <PopupComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
-       <div className= "w-full shadow-xl p-4 m-4 border border-gray-300 relative"> 
+       <div className= "w-full shadow-xl p-2 m-2 border border-gray-300 relative"> 
           
           {
             status === "new" && <div>
@@ -232,22 +232,23 @@ function Riderscreen() {
   return (
     <div>
         {loading && <Loading/>}
-        <div className='p-4 flex'>
+        <div className='flex'>
+         <div className="w-1/6 p-2 bg-gray-100">
           <button
             onClick={()=>handleClick("new orders")}
-            className={`${option==="new orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md mx-4 px-4 py-2`}
+            className={`${option==="new orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
            >New Orders</button>
             <button
             onClick={()=>handleClick("filtered orders")}
-            className={`${option==="filtered orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md mx-4 px-4 py-2`}
+            className={`${option==="filtered orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
            >Orders near you</button>
           <button
             onClick ={()=>handleClick("earning per order")}
-            className={`${option==="earning per order" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md mx-4 px-4 py-2`}
+            className={`${option==="earning per order" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >Earning per order</button>
           <button
             onClick={()=>handleClick("all time earnings")}
-            className={`${option==="all time earnings" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md mx-4 px-4 py-2`}
+            className={`${option==="all time earnings" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >All time earnings</button>
         </div>
         { 
@@ -268,6 +269,7 @@ function Riderscreen() {
             }
          </div>
          }
+        </div>
     </div>
   )
 }

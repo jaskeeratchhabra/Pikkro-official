@@ -22,8 +22,16 @@ function Orderscreen() {
   const [instruction,addInstruction]=useState("");
   const [Item,setItem] =useState("");
   const [paymentType,setPaymentType]=useState("");
-  
   const [added,setAdded]=useState(false);
+  
+  const timestamp = Date.now(); // Get the current timestamp
+  const date = new Date(timestamp); // Create a Date object from the timestamp
+  
+  const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit'
+  });
   
   let originRef = useRef("");
   let destinationRef = useRef(""); 
@@ -38,8 +46,8 @@ function Orderscreen() {
 
    const [success,setSuccess]=useState(false);
 
-  const [hour, setHour] = useState('1');
-  const [minute, setMinute] = useState('00');
+  const [hour, setHour] = useState(1);
+  const [minute, setMinute] = useState(0);
   const [ampm, setAMPM] = useState('AM');
 
   const handleHourChange = (event) => {
@@ -76,12 +84,14 @@ function Orderscreen() {
   };
   
   
-  
+  useEffect(()=>{
+     console.log(hour, minute , ampm)
+  },[hour,minute,ampm])
   useEffect(()=>{
     if(weight  && distance ){
       calculatePrice()
     }
-  },[weight ,parcelValue, distance])
+  },[weight ,parcelValue, distance, calculatePrice])
   
   // useEffect(()=>{
     //   if(originRef.current && destinationRef.current){
@@ -192,8 +202,13 @@ function Orderscreen() {
         Phone: deliveryPhoneNumber,
         Locality: deliveryFlatDetails
       },
+      Time:{
+        hours: hour,
+        minutes: minute ,
+        meridian: ampm 
+      },
       instruction,
-      Date: Date.now()
+      Date: formattedDate
     };
     console.log(orderData);
     try{
@@ -322,17 +337,28 @@ function Orderscreen() {
             
           <div className='flex justify-center'>
              {price && <span className='bg-red-500 text-white p-3 my-5 w-3/12 rounded-lg '>Payable amount : ₹ {price} </span>}
-             {!price &&  <span className='bg-green-500 text-white p-3 my-5 w-3/12 rounded-lg animate-pulse' onClick={calculateRoute}>click to know pricing details </span>}
+             {!price &&  
+              <div className=''>
+                <span className='bg-green-500 text-white p-3 my-5 w-3/12 rounded-lg animate-pulse' onClick={calculateRoute}>click to know pricing details </span>
+                <span className='flex mt-2 text-gray-500 font-semibold'> Select all the required fields first</span>
+             </div>
+          }
            </div>
 
           <div className='flex flex-col mt-12 font-semibold'>
             <p>Select payment method:</p>
             <div className='flex my-4'>
-              <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="cash" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('cash')}>
+              <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="cash on delivery" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('cash on delivery')}>
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                </svg>
                Cash on pickup
+              </button>
+              <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="cash on pickup" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('cash on pickup')}>
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+               </svg>
+               Cash on delivery
               </button>
               <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="online" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('online')}> 
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

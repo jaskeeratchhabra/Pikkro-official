@@ -72,6 +72,20 @@ const orderSchema=mongoose.Schema({
         type:String,
         required:true
      },
+     Time:{
+        hours:{
+         type:Number,
+         required:true
+        }, 
+        minutes:{
+         type:Number,
+         required:true
+        },
+        meridian:{
+         type:String,
+         required:true
+        }
+     },
      accepted:{
        type:Boolean,
        default:false

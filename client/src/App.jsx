@@ -12,13 +12,20 @@ import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import Riderscreen from "./screens/Riderscreen.jsx"
 import Loading from "./components/Loading.jsx"
+import Footer from "./components/Footer.jsx"
+import { LoadScript } from "@react-google-maps/api"
+
 export default function App() {
   
   const user =useSelector(state=>state.status);
   const [Admin,setAdmin]=useState(false);
   const [Rider,setRider]= useState(false);
   const [loading,setLoading] =useState(true);
-
+  const [ libraries ] = useState(['places']);
+  const map_key = import.meta.env.VITE_MAP_API_KEY;
+  const handleLoad=()=>{
+     setLoading(false);
+  }
   useEffect(()=>{
     if(!user){
       setLoading(false);
@@ -31,16 +38,20 @@ export default function App() {
        setRider(boolRider)
        setLoading(false);
     }
-  },[user])
+  },[user,Admin,Rider])
 
   return (
     <>
     {loading && <Loading/>}
     <BrowserRouter>
       <NavigationBar/>
+      <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}>
+        <Routes>
+          <Route path ="/Rider" exact element ={<Riderscreen/>}/>
+        </Routes>
+      </LoadScript>
       <Routes>
          {Admin && <Route path="/Admin" exact element={<Adminscreen/>}/>}
-         {Rider && <Route path ="/Rider" exact element ={<Riderscreen/>}/>}
          <Route path="/DeliveryPartnerForm" exact element ={<DeliveryPartnerForm/>}/>
          <Route path="/MyOrders" exact element={<MyOrders/>} />
          <Route path="/login" exact element={<LoginForm/>}/>
@@ -48,6 +59,7 @@ export default function App() {
          <Route path="/create-order" exact element={<Orderscreen/>}/>
          <Route path="/register" exact element ={<RegisterForm/>}/>
       </Routes>
+      <Footer/>
     </BrowserRouter>
     </>
   )

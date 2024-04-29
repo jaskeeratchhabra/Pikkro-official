@@ -7,6 +7,7 @@ import { useSelector,useDispatch}  from "react-redux"
 import { logout } from '../store/authSlice';
 import { login } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import SideScreen from './SideScreen';
 const NavigationBar = () => {
   
   const navigate=useNavigate();
@@ -15,11 +16,20 @@ const NavigationBar = () => {
   const [dropdown,setDropdown]=useState(false);
   const dispatch =useDispatch();
   const loggedIn = useSelector(state=>state.status)
+  const [isSideScreenOpen, setIsSideScreenOpen] = useState(false);
 
   const handleDropdown=(e)=>{
     e.preventDefault();
     setDropdown(!dropdown);
   }
+ 
+  const handleSideScreen=()=>{
+    setIsSideScreenOpen(!isSideScreenOpen)
+  }
+  
+  const closeSideScreen = () => {
+    setIsSideScreenOpen(false);
+  };
   
 
 let username=useSelector(state=>state.username);
@@ -85,9 +95,13 @@ useEffect(() => {
     <div className="grid sm:grid-cols-2 lg:px-4  lg:ml-12">
 
         <div className="flex items-center h-16">
-          <div className="text-2xl mx-4 flex">
+          <div className="text-4xl mx-4 flex ">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
             <a href="/" className="text-green-500 text-2xl font-extrabold my-auto">Pikkro.com</a>
+          </div>
+          <div className="text-4xl mx-4 flex sm:hidden">
+            {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
+            <a href="/" className="text-green-500 text-2xl font-extrabold my-auto">P</a>
           </div>
           <div className=" flex rounded-sm p-1 left">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
@@ -143,27 +157,17 @@ useEffect(() => {
        </div>
         <div className='my-auto ml-auto mr-20'>
           <div className="lg:hidden">
-            <button className="text-gray-300 hover:text-white text-sm font-medium" onClick={handleDropdown}>
-            Hi, {username && username.split(' ')[0]} ▼
+            <button className="text-gray-300 hover:text-white text-sm font-medium" onClick={handleSideScreen}>
+             ++
             </button>
-            {dropdown && (
-              <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                <div className="py-1 flex flex-col items-center" role="none">
-                  <a href="/DeliveryPartnerForm" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Become a Delivery Partner</a>
-                  <a href="/MyOrders" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
-                  <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
-                  <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
-                  <a href="#" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
-                  {!loggedIn && (
-                    <Link to="/login">
-                      <button className=' my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Login/Sign up</button>
-                    </Link>
-                  )}
-                  {loggedIn && (
-                    <button onClick={handleLogout} className=' my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Logout</button>
-                  )}
-                </div>
+            {isSideScreenOpen && (
+             <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+             <div className='my-auto ml-auto mr-20'>
+              <div className="lg:hidden">
+                <SideScreen isOpen={isSideScreenOpen} onClose={closeSideScreen} loggedIn={loggedIn} username={username} handleLogout={handleLogout} />
               </div>
+             </div>
+             </div>
            )}
           </div>
          </div>
