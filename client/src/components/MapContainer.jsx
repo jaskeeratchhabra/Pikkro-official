@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, Marker , DirectionsRenderer, LoadScript } from '@react-google-maps/api';
 
-const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPickupProp }) => {
+const MapContainer = ({ pickupAddress, deliveryAddress,status}) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [pickupLocation, setPickupLocation] = useState(null);
   const [deliveryLocation, setDeliveryLocation] = useState(null);
@@ -98,19 +98,6 @@ const MapContainer = ({ pickupAddress, deliveryAddress,status, setDistanceToPick
     }
   }, [pickupLocation, deliveryLocation]);
 
-  //to calculate distance to pickup to handle orders in range
-  useEffect(() => {
-    if (currentLocation && pickupLocation) {
-      const distance = calculateDistance(currentLocation, pickupLocation);
-      setDistanceToPickupProp(distance);
-      // console.log(distance);
-      // console.log(typeof distance);
-    }
-  }, [currentLocation, pickupLocation]);
-
-  // const handleLoad = () => {
-  //   setLoading(false);
-  // };
 
   const calculateDistance = (location1, location2) => {
     if (!location1 || !location2) return null;

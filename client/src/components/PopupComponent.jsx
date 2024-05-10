@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const PopupComponent = ({ message }) => {
+  if(!message) return ;
   useEffect(() => {
     toast(message);
   }, [message]);

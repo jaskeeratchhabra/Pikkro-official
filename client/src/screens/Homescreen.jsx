@@ -6,13 +6,12 @@ import Loading from '../components/Loading';
 
 
 import {
-  useJsApiLoader,
+  // useJsApiLoader,
   Autocomplete,
 } from '@react-google-maps/api'
 
 const Homescreen = () => {
   
-   const [ libraries ] = useState(['places']);
    const originRef = useRef()
    const destiantionRef = useRef()   
    const [price, setPrice] = useState(null);
@@ -24,17 +23,7 @@ const Homescreen = () => {
      if(distance){
        calculatePrice()
      }
-   },[distance,calculatePrice])
-  const map_key= import.meta.env.VITE_MAP_API_KEY
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: map_key,
-    libraries
-  })
-  
-  if (!isLoaded) {
-    return <Loading/>
-  }
+   },[distance])
   
   function calculatePrice(){
     const distanceInKm = parseFloat(distance); 

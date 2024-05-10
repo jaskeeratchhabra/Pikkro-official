@@ -7,8 +7,10 @@ const orderSchema=mongoose.Schema({
         required:true
     },
      RiderPhone:{
-      type:String,
-      default:null
+       type:String,
+       unique:true,
+       required:true,
+       trim:true
      },
      RiderName:{
       type:String,

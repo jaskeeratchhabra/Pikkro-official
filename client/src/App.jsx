@@ -47,7 +47,8 @@ export default function App() {
       <NavigationBar/>
       <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}>
         <Routes>
-          <Route path ="/Rider" exact element ={<Riderscreen/>}/>
+          {Rider && <Route path ="/Rider" exact element ={<Riderscreen/>}/>}
+          <Route path="/" exact element={<Homescreen/>}/>
         </Routes>
       </LoadScript>
       <Routes>
@@ -55,7 +56,6 @@ export default function App() {
          <Route path="/DeliveryPartnerForm" exact element ={<DeliveryPartnerForm/>}/>
          <Route path="/MyOrders" exact element={<MyOrders/>} />
          <Route path="/login" exact element={<LoginForm/>}/>
-         <Route path="/" exact element={<Homescreen/>}/>
          <Route path="/create-order" exact element={<Orderscreen/>}/>
          <Route path="/register" exact element ={<RegisterForm/>}/>
       </Routes>
