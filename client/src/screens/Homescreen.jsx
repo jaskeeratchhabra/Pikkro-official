@@ -56,13 +56,13 @@ const Homescreen = () => {
 
   return (
     <>
-    <div className='grid md:grid-cols-2 mt-4'>
+    <div className='grid md:grid-cols-2 grid-cols-1 mt-4'>
 
       <div className=" lg:mt-5 my-auto h-2/3 mx-auto md:order-2">
-        <img className="h-full" src='../../images/Pikkro 3.jpeg' alt="pikkro img"/>
+        <img className="h-full" src='../../images/Pikkro 3.jpg' alt="pikkro img"/>
       </div>
 
-      <div className="mb-20 lg:mt-5 lg:h-2/3 mx-auto bg-gray-100 px-6 rounded-sm shadow-lg md:order-1">
+      <div className="lg:mt-5 lg:h-2/3 mx-auto bg-gray-100 px-6 rounded-sm shadow-lg md:order-1">
        <h1 className='mt-4 text-2xl mb-12 text-center font-bold'> Delivery starts from Rs 7/km</h1>
        <div className='flex'>
          <label>
@@ -133,8 +133,36 @@ const Homescreen = () => {
            </div>
          </div>
       </div>
-       
     </div>
+      <div className='mb-32'>
+        <div className='text-center mx-auto text-2xl font-semibold bg-gray-100 text-green-700'> We are delivering...</div>
+        <div className='flex'>
+          <div className='text-center border border-gray-300 ml-1'>
+            <img src='../../images/clothings.jpeg' alt='' className='h-50 w-50 '></img>
+            <span className='font-semibold' >Clothings</span>
+          </div>
+          <div className='text-center border border-gray-300 ml-1'>
+            <img src='../../images/documents.jpeg' alt='' className='h-50 w-50'></img>
+            <span className='font-semibold'>Documents</span>
+          </div>
+          <div className='text-center border border-gray-300 ml-1'>
+            <img src='../../images/food.jpeg' alt='' className='h-50 w-50'></img>
+            <span className='font-semibold'>Food</span>
+          </div>
+          <div className='text-center border border-gray-300 ml-1'>
+            <img src='../../images/gifts.jpeg' alt='' className='h-50 w-50'></img>
+            <span className='font-semibold'>Gifts</span>
+          </div>
+          <div className='text-center border border-gray-300 ml-1'>
+            <img src='../../images/grocery.jpeg' alt='' className='h-50 w-50'></img>
+            <span className='font-semibold'>Grocery</span>
+          </div>
+          <div className='text-center border border-gray-300 ml-1'>
+            <img src='../../images/medicines.jpeg' alt='' className='h-50 w-50'></img>
+            <span className='font-semibold'>Medicine</span>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function PrivacyPolicy() {
+function RiderTermsAndConditions() {
   return (
     <div>
       <p>
@@ -127,4 +127,4 @@ Timings: within 48 hours of the issue's receipt and redress the same within 1 mo
   )
 }
 
-export default PrivacyPolicy
+export default RiderTermsAndConditions

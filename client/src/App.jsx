@@ -14,6 +14,7 @@ import Riderscreen from "./screens/Riderscreen.jsx"
 import Loading from "./components/Loading.jsx"
 import Footer from "./components/Footer.jsx"
 import { LoadScript } from "@react-google-maps/api"
+import Terms from "./pages/Terms"
 
 export default function App() {
   
@@ -53,6 +54,7 @@ export default function App() {
       </LoadScript>
       <Routes>
          {Admin && <Route path="/Admin" exact element={<Adminscreen/>}/>}
+         <Route path="/T&c" exact element={<Terms/>}/>
          <Route path="/DeliveryPartnerForm" exact element ={<DeliveryPartnerForm/>}/>
          <Route path="/MyOrders" exact element={<MyOrders/>} />
          <Route path="/login" exact element={<LoginForm/>}/>

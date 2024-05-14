@@ -91,7 +91,14 @@ const OrderCard=({orders, handleStatusProp})=>{
     {loading  &&  <Loading/>}
       {popup && <PopupComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
        <div className= "w-full shadow-xl p-2 m-2 border border-gray-300 relative"> 
-          
+          <div className='font-semibold text-xl text-gray-700 m-1'>
+          {orders.Time && (
+              <span>
+                Pickup Time: {orders.Time.hours}:{orders.Time.minutes}{" "}
+                <span>{orders.Time.meridian}</span>
+              </span>
+          )}
+          </div>
           {
             status === "new" && <div>
 

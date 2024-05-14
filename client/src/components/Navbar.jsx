@@ -92,16 +92,16 @@ useEffect(() => {
   return (
     <nav className="bg-gray-800">
       
-    <div className="grid sm:grid-cols-2 lg:px-4  lg:ml-12">
+    <div className="grid md:grid-cols-2 md:px-4 md:ml-12 grid-cols-3">
 
         <div className="flex items-center h-16">
-          <div className="text-4xl mx-4 flex ">
+          <div className="text-4xl mx-4 md:block hidden ">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
             <a href="/" className="text-green-500 text-2xl font-extrabold my-auto">Pikkro.com</a>
           </div>
-          <div className="text-4xl mx-4 flex sm:hidden">
+          <div className="text-4xl mx-2 flex md:hidden">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
-            <a href="/" className="text-green-500 text-2xl font-extrabold my-auto">P</a>
+            <a href="/" className="text-green-500 text-2xl font-extrabold">Pikkro</a>
           </div>
           <div className=" flex rounded-sm p-1 left">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
@@ -155,10 +155,10 @@ useEffect(() => {
             </div>
         </div>
        </div>
-        <div className='my-auto ml-auto mr-20'>
-          <div className="lg:hidden">
+        <div className='absolute right-6 mt-4'>
+          <div className="md:hidden ">
             <button className="text-gray-300 hover:text-white text-sm font-medium" onClick={handleSideScreen}>
-             ++
+               <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="40px"><path d="M 0 9 L 0 11 L 50 11 L 50 9 Z M 0 24 L 0 26 L 50 26 L 50 24 Z M 0 39 L 0 41 L 50 41 L 50 39 Z" fill="#ffffff"/></svg>
             </button>
             {isSideScreenOpen && (
              <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">

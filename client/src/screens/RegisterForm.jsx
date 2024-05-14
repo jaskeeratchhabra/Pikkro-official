@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import SuccessComponent from '../components/SuccessComponent';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
-// import { EyeIcon,EyeOffIcon } from '@heroicons/react/solid';
+import { EyeIcon,EyeOffIcon } from '@heroicons/react/solid';
 
 const RegisterForm = () => {
     
@@ -25,6 +25,13 @@ const RegisterForm = () => {
       cpassword: ''
     });
     
+    const handleVerification = async()=>{
+      const phone = formData.phone;
+      const data = (await axios.post("/api/users/generateOTP",{number:phone})).data;
+      console.log(data);
+
+    }
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -89,18 +96,24 @@ const RegisterForm = () => {
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-purple-500"
           />
         </div>
-        <div className="mb-4">
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Phone Number"
-            pattern="[0-9]{10}"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-purple-500"
-          />
+        <div className='flex items-center'>
+           <span className='text-gray-700'>+91</span>
+           <div className="">
+             <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Phone Number"
+              pattern="[0-9]{10}"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-purple-500"
+            />
+          </div>
+          {formData.phone && <button className='bg-blue-700 text-white h-fit mx-2 px-1 rounded-sm ' onClick={handleVerification}>verify</button>}
         </div>
-        <div className="mb-4">
+        <span className='text-gray-500 mx-2'>Verify your phone number to proceed further.</span>
+         
+        <div className="mb-4 mt-4">
           <input
             type="email"
             name="email"
@@ -124,15 +137,15 @@ const RegisterForm = () => {
             placeholder="Password"
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-purple-500"
           />
-          {/* <button
+          <button
             type="button"
             className="absolute top-1/2 right-2 transform -translate-y-1/2"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <EyeOffIcon className="h-6 w-6 text-gray-400" /> : <EyeIcon className="h-6 w-6 text-gray-400" />}
-          </button> */}
+          </button>
         </div>
-        <div className="mb-6">
+        <div className="mb-6 relative">
           <input
             type="password"
             name="cpassword"
@@ -142,6 +155,13 @@ const RegisterForm = () => {
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-purple-500"
             autoComplete="false"
           />
+          <button
+            type="button"
+            className="absolute top-1/2 right-2 transform -translate-y-1/2"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOffIcon className="h-6 w-6 text-gray-400" /> : <EyeIcon className="h-6 w-6 text-gray-400" />}
+          </button>
         </div>
         <button
           type="submit"

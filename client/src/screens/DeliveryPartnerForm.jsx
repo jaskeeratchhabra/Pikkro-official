@@ -137,7 +137,7 @@ const DeliveryPartnerForm = () => {
           <label className="block mb-2">Vehicle Photo:</label>
           <input type="file" name="bikePhoto" onChange={handleChange} accept="image/*" className="w-full p-2 border rounded-md" required/>
         </div>
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>
+        {success===true ? <button className="bg-green-500 text-white py-2 px-4 rounded-md">Submited</button>: <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>}
       </form>
     </div>
     </>
