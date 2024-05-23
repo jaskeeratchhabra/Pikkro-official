@@ -143,7 +143,7 @@ const Homescreen = () => {
           </div>
           <div className='text-center border border-gray-300 ml-1'>
             <img src='../../images/documents.jpeg' alt='' className='h-50 w-50'></img>
-            <span className='font-semibold'>Documents</span>
+            <span className='font-semibold'>Docs</span>
           </div>
           <div className='text-center border border-gray-300 ml-1'>
             <img src='../../images/food.jpeg' alt='' className='h-50 w-50'></img>

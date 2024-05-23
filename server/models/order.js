@@ -9,7 +9,7 @@ const orderSchema=mongoose.Schema({
      RiderPhone:{
        type:String,
        unique:true,
-       required:true,
+      //  required:true,
        trim:true
      },
      RiderName:{
@@ -103,6 +103,14 @@ const orderSchema=mongoose.Schema({
      canceled:{
         type:Boolean,
         default:false
+     },
+     paymentSettled:{
+      type:Boolean,
+      default:false
+     },
+     paymentDue:{
+      type:Boolean,
+      default:true
      }
     },
     {

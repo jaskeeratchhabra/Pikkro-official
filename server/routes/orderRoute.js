@@ -4,6 +4,32 @@ const router=express.Router();
 
 const Order = require("../models/order")
 
+router.patch('/updatepaymentfield', async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    if (!orderId) {
+      return res.status(400).json({ error: 'Order ID is required' });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    order.paymentSettled = true;
+    order.paymentDue = false;
+
+    await order.save();
+
+    res.status(200).json({ message: 'Payment status updated successfully' });
+  } catch (error) {
+    console.error("Error updating payment status", error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 router.patch('/:_id', async (req, res) => {
   const { _id } = req.params;
   console.log(req.body);

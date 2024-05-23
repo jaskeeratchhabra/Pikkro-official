@@ -15,10 +15,11 @@ import Loading from "./components/Loading.jsx"
 import Footer from "./components/Footer.jsx"
 import { LoadScript } from "@react-google-maps/api"
 import Terms from "./pages/Terms"
+import ForgotPassword from "./screens/ForgotPassword.jsx"
 
 export default function App() {
   
-  const user =useSelector(state=>state.status);
+  const user =useSelector(state=>state.authReducer.status);
   const [Admin,setAdmin]=useState(false);
   const [Rider,setRider]= useState(false);
   const [loading,setLoading] =useState(true);
@@ -38,11 +39,14 @@ export default function App() {
        const boolRider = (JSON.parse(localStorage.getItem("user"))).isRider;
        setRider(boolRider)
        setLoading(false);
-    }
+      }
+      // console.log(Rider, "hello");
+      // console.log((JSON.parse(localStorage.getItem("user"))).isRider);
+      // console.log(localStorage.getItem("user"));
   },[user,Admin,Rider])
 
   return (
-    <>
+    <div>
     {loading && <Loading/>}
     <BrowserRouter>
       <NavigationBar/>
@@ -54,6 +58,7 @@ export default function App() {
       </LoadScript>
       <Routes>
          {Admin && <Route path="/Admin" exact element={<Adminscreen/>}/>}
+         <Route path= "/forgotPassword" exact element= {<ForgotPassword/>}/>
          <Route path="/T&c" exact element={<Terms/>}/>
          <Route path="/DeliveryPartnerForm" exact element ={<DeliveryPartnerForm/>}/>
          <Route path="/MyOrders" exact element={<MyOrders/>} />
@@ -63,6 +68,6 @@ export default function App() {
       </Routes>
       <Footer/>
     </BrowserRouter>
-    </>
+    </div>
   )
 }

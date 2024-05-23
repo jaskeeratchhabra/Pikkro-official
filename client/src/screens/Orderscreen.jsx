@@ -1,17 +1,19 @@
-/* eslint-disable no-undef */
+
 import { useState ,useRef, useEffect} from 'react';
 import Loading from '../components/Loading';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from "axios";
+import Swal from "sweetalert2"
 
 import {
   useJsApiLoader,
   Autocomplete,
 } from '@react-google-maps/api'
-
+ 
+import {useNavigate} from "react-router-dom"
 function Orderscreen() {
   
+  const navigate= useNavigate();
   const map_key= import.meta.env.VITE_MAP_API_KEY;
   const [price,setPrice] = useState("");
   const [distance,setDistance]=useState("")
@@ -23,7 +25,7 @@ function Orderscreen() {
   const [Item,setItem] =useState("");
   const [paymentType,setPaymentType]=useState("");
   const [added,setAdded]=useState(false);
-  
+  const user = JSON.parse(localStorage.getItem("user"));
   const timestamp = Date.now(); // Get the current timestamp
   const date = new Date(timestamp); // Create a Date object from the timestamp
   
@@ -50,6 +52,7 @@ function Orderscreen() {
   const [minute, setMinute] = useState(0);
   const [ampm, setAMPM] = useState('AM');
 
+
   const handleHourChange = (event) => {
     setHour(event.target.value);
   };
@@ -61,6 +64,79 @@ function Orderscreen() {
   const handleAMPMChange = (event) => {
     setAMPM(event.target.value);
   };
+
+  //to load payment link in scripts
+  function loadScript(src) {
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
+}
+
+async function displayRazorpay() {
+  const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+  );
+
+  if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+  }
+
+  // creating a new order
+  const result = await axios.post("/api/payments/orders",{price});
+
+  if (!result) {
+      alert("Server error. Are you online?");
+      return;
+  }
+
+  // Getting the order details back
+  const { amount, id: order_id, currency } = result.data;
+
+  const options = {
+      key: import.meta.env.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+      amount: amount.toString(),
+      currency: currency,
+      name: "Pikkro.com",
+      description: `Your order for delivery from ${ originRef.current.value} to ${destinationRef.current.value}` ,
+      image: "../../images/PikkroLogo.jpeg",
+      order_id: order_id,
+      handler: async function (response) {
+          const data = {
+              orderCreationId: order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+          };
+
+          const result = await axios.post("/api/payments/success", data);
+
+          alert(result.data.msg);
+      },
+      prefill: {
+          name: user.name,
+          email: user.email,
+          contact: user.phone,
+      },
+      notes: {
+          address: "114, Street no 16, Wazirabad Village, New delhi, 110084",
+      },
+      theme: {
+          color: "#61dafb",
+      },
+  };
+
+  const paymentObject = new window.Razorpay(options);
+  paymentObject.open();
+}
 
 
    // Function to handle changes in pickup phone number
@@ -99,6 +175,7 @@ function Orderscreen() {
       // }
       // },[originRef , destinationRef])
       
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       function calculatePrice(){
         const distanceInKm = parseFloat(distance); 
         const itemweight=parseInt(weight);
@@ -141,6 +218,10 @@ function Orderscreen() {
 
   const handlePayment=(value)=>{
     setPaymentType(value);
+    if(value==="online")
+      {
+        displayRazorpay();
+      }
   }
   const handleItemChange = (value)=>{
       setItem(value)
@@ -182,7 +263,7 @@ function Orderscreen() {
   
     if(!localStorage.getItem("user"))
     {
-      alert("please login to place order");
+      Swal.fire("login to place orders")
       return;
     }
     const orderData = {
@@ -224,10 +305,14 @@ function Orderscreen() {
       console.log(error)
     }
   }
-
+  
+  const handleBack=()=>{
+    navigate("/")
+  }
 
   return (
-    <div className="flex flex-col items-center w-auto">
+    <div className="flex flex-col items-center w-auto relative">
+     <button className='border border-gray-500 text-black p-1 m-1 absolute left-2' onClick={handleBack}>Back</button>
       <h1 className="text-3xl font-bold m-12">Create Your Order</h1>
       <div className="w-full md:w-2/3">
        <div className='shadow-md'>
@@ -360,7 +445,7 @@ function Orderscreen() {
                </svg>
                Cash on delivery
               </button>
-              <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="online" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('online')}> 
+              <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="online" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment("online")}> 
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
                </svg>

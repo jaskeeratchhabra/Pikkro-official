@@ -15,7 +15,7 @@ const NavigationBar = () => {
   const [city,setCity]= useState("");
   const [dropdown,setDropdown]=useState(false);
   const dispatch =useDispatch();
-  const loggedIn = useSelector(state=>state.status)
+  const loggedIn = useSelector(state=>state.authReducer.status)
   const [isSideScreenOpen, setIsSideScreenOpen] = useState(false);
 
   const handleDropdown=(e)=>{
@@ -32,7 +32,7 @@ const NavigationBar = () => {
   };
   
 
-let username=useSelector(state=>state.username);
+let username=useSelector(state=>state.authReducer.username);
 const handleLogout=()=>{
    localStorage.removeItem("user");
    dispatch(logout())
@@ -42,13 +42,14 @@ const handleLogout=()=>{
 
 useEffect(() => {
 
+  // console.log(loggedIn, username)
   const user = JSON.parse(localStorage.getItem('user'));
   if (user) {
     // console.log(username);
     const username=user.name;
     dispatch(login({username}));
   }
-}, [dispatch]);
+}, [dispatch, username]);
 
 useEffect(() => {
   function getCurrentCityLocation() {
@@ -63,7 +64,7 @@ useEffect(() => {
               // Request high accuracy location
               const options = {
                   enableHighAccuracy: true,
-                  maximumAge: 10000, // Maximum age of cached position
+                  maximumAge: 0, // Maximum age of cached position
                   timeout: 10000 // Timeout in milliseconds
               };
 
@@ -72,8 +73,8 @@ useEffect(() => {
                   .then(data => {
                       const city = data.address.city || data.address.town || data.address.village;
                       const area = data.address.neighbourhood || data.address.suburb || data.address.county;
-                      // console.log(data.address)
-                      // console.log(area);
+                      console.log(data.address)
+                      console.log(area);
                       setCity(city);
                   })
                   .catch(error => console.error(error));

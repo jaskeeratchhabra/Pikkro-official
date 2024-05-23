@@ -5,24 +5,48 @@ const User = require("../models/users");
 const otpGenerator = require('otp-generator');
 require('dotenv').config();
 
+router.patch("/:phone",async(req,res)=>{
+    const {password,phone} = req.body;
+    // console.log(req.body, phone); 
+    try {
+        const user=await User.findOne({phone});
+        if(user){
+            user.password = password;
+            await user.save();
+            console.log(user)
+            return res.status(200).json({ message: "Password updated successfully" })
+        }
+        else{
+        console.log("user not found")
+        return res.status(400).json({message:"User Not Found"});4
+       }     
+      } catch (error) {
+        console.error('Error updating field:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+}
+)
+
+
 router.post("/generateOTP", async(req,res)=>{
     var otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false });
 
     var {number} = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const options  ={
         authorization : process.env.OTP_Authorization,
         message: `Hi user, this otp is sent by pikkro.com for your phone number verification your otp is ${otp} valid for 10 mins.`,
         numbers: [`${number}`]
     
     }
-    console.log(options)
+    // console.log(options)
     fast2sms.sendMessage(options)
     .then((response)=>{
         console.log(response)
         if(response.return)
         {
             console.log("otp sent successfully")
+            console.log(otp)
             res.send(otp);
         }
         else

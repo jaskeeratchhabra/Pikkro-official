@@ -135,11 +135,11 @@ const OrderCard=({orders, handleStatusProp})=>{
             </div>
           }
           {status!=="new" && <div className=''>
-             <div className='absolute top-3 right-4 font-semibold'>order value:  ₹{orders.price}</div>
+             <div className='absolute top-10 right-4 font-semibold '>order value:  ₹{orders.price}</div>
              <div className='pt-3'>
               <MapContainer pickupAddress={orders.PickupDetails.address} deliveryAddress={orders.DeliveryDetails.address} status ={status} setDistanceToPickupProp={(distance)=>{handlePickupDistance(distance)}}/>
              </div>
-             <div className=" flex justify-between m-10">
+             <div className=" flex justify-between m-10 ">
                <div>
                    <button onClick={handleToggle} name = "pickup" className='rounded-md bg-black text-white p-1'>pickup Details</button>
                    {toggleP && <div className='flex flex-col border border-gray-200 mx-auto'>
@@ -149,7 +149,7 @@ const OrderCard=({orders, handleStatusProp})=>{
                    </div>
                    }
                </div>
-               <div>
+               <div className=''>
                 
                    <button name="drop" onClick={handleToggle} className='rounded-md bg-black text-white text-center p-1'>Drop Details</button>
                    {
@@ -194,16 +194,154 @@ function Riderscreen() {
   const RiderContact = JSON.parse(localStorage.getItem("user")).phone;
   const [Myorder, setMyorder] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [pickupLocation ,setPickupLocation] = useState(null);
+  // const [pickupLocation ,setPickupLocation] = useState(null);
   const [Activeorders,setActiveOrder] = useState([]);
   const [status,setStatus] = useState("");
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [paymentStatus,setPaymentStatus] = useState("due");
+  const [settledArray,setSettledArray] = useState([""]);
+  
+  const handlePaymentStatus=(value)=>{
+     setPaymentStatus(value);
+  }
+  const user= localStorage.getItem("user");
+  function loadScript(src) {
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
+}
+
+async function displayRazorpay() {
+  const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+  );
+
+  if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+  }
+
+  // creating a new order
+  const result = await axios.post("/api/payments/orders",{price: totalAmount});
+  if(result)
+    {
+      handlePaymentStatus("paid")
+    }
+  if (!result) {
+      alert("Server error. Are you online?");
+      return;
+  }
+
+  // Getting the order details back
+  const { amount, id: order_id, currency } = result.data;
+
+  const options = {
+      key: import.meta.env.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+      amount: amount.toString(),
+      currency: currency,
+      name: "Pikkro.com",
+      description: `Your pending payment for delivered orders` ,
+      image: "../../images/PikkroLogo.jpeg",
+      order_id: order_id,
+      handler: async function (response) {
+          const data = {
+              orderCreationId: order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+          };
+
+          const result = await axios.post("/api/payments/success", data);
+
+          alert(result.data.msg);
+      },
+      prefill: {
+          name: user.name,
+          email: user.email,
+          contact: user.phone,
+      },
+      notes: {
+          address: "114, Street no 16, Wazirabad Village, New delhi, 110084",
+      },
+      theme: {
+          color: "#61dafb",
+      },
+  };
+
+  const paymentObject = new window.Razorpay(options);
+  paymentObject.open();
+}
+
 
   const handleStatus=(value)=>{
     setStatus(value);
   }
+
+  const handlePayment = async (orderId) => {
+    console.log("OrderId:", orderId);
+    try {
+      const response = await axios.patch('/api/orders/updatepaymentfield', {
+        orderId:orderId
+      }).data;
+      // setPaymentStatus("paid");
+      console.log(response);
+      // Update the local state or refetch orders to reflect the changes
+    } catch (error) {
+      console.log(error.message)
+      console.error("Error updating payment status", error);
+    }
+  };
+
+  const settlePayment = () => {
+    displayRazorpay();
+    if(paymentStatus==="paid"){
+      for (const orderId of settledArray) {
+        if (orderId) {
+           handlePayment(orderId);
+        }
+      }
+   }
+  };
+  
+ 
+useEffect(() => {
+  const handlePayments = () => {
+    let amount = 0;
+    const newSettledSet = new Set(settledArray); // Initialize with current settledArray
+
+    Myorder.forEach((order) => {
+      if (order.paymentSettled === false && order.canceled === false) {
+        let amountToPay = 0,
+          amountToGet = 0;
+
+        if (order.paymentType === 'online') {
+          amountToGet = parseFloat((order.price * 0.8).toFixed(2));
+        } else {
+          amountToPay = parseFloat((order.price * 0.2).toFixed(2));
+        }
+
+        newSettledSet.add(order._id);
+        amount = amount + amountToPay - amountToGet;
+      }
+    });
+
+    setSettledArray(Array.from(newSettledSet)); // Convert set back to array
+    setTotalAmount(amount);
+    console.log(amount);
+  };
+
+  handlePayments();
+}, [Myorder]);
   
   useEffect(()=>{
-    console.log(status," in rider screen");
     const ordersInrange= neworders.filter((order)=>(order.RiderPhone===RiderContact &&  order.accepted===false))
     const MyPickedOrders = neworders.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true))
     const ActiveOrders =   neworders.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true && order.completed===false))
@@ -214,6 +352,12 @@ function Riderscreen() {
   },[status,RiderContact,option])
 
   useEffect(()=>{
+    const options = {
+      enableHighAccuracy: true,
+      maximumAge: 10000, // Maximum age of cached position in milliseconds
+      timeout: 10000 // Timeout in milliseconds
+    };
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -222,14 +366,17 @@ function Riderscreen() {
             lng: position.coords.longitude,
           });
         },
-        () => {
-          console.log('Error: The Geolocation service failed.');
-        }
+        (error) => {
+          console.error('Error: The Geolocation service failed.', error);
+        },
+        options
       );
     } else {
-      console.log("Error: Your browser doesn't support Geolocation.");
+      console.error("Error: Your browser doesn't support Geolocation.");
     }
   },[])
+
+
 
   const calculateDistance = (location1, location2) => {
     if (!location1 || !location2) return null;
@@ -312,6 +459,7 @@ function Riderscreen() {
   return (
     <div>
         {loading && <Loading/>}
+         {option === "" && <div className=' text-center text-xl text-blue-500'>Select options to continue</div>} 
         <div className='flex'>
          <div className="w-1/6 p-2 bg-gray-100">
           {isAdmin && <button
@@ -361,14 +509,24 @@ function Riderscreen() {
                      <div className='flex items-center my-1'>
                         <span className='text-Gray-600 font-semibold mx-2'>{Myorder.Item}:</span>
                         Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}
-                        {Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-auto text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
+                        {Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-auto text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
                         {Myorder.paymentType==="online" && <span className="mx-auto text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
+                        {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10"/>}
+                        {Myorder.Settled===false && <span className='ml-4 text-red-500'>payment due</span>}
                      </div>
                      <br/>
-                     <div className='absolute right-0 bottom-0'>{Myorder.completed ? <span className='text-red-500 '>delivered</span> : Myorder.picked ? <span className='text-blue-500'> picked</span>: Myorder.canceled ? <span className='text-gray-700'>cancelled</span> :<span className='text-green-500'>accepted</span>}</div>
+                     <div className='absolute right-0 bottom-0 '>{Myorder.completed ? <span className='text-red-500 '>delivered</span> : Myorder.picked ? <span className='text-blue-500'> picked</span>: Myorder.canceled ? <span className='text-gray-700'>cancelled</span> :<span className='text-green-500'>accepted</span>}</div>
                   </div>
                 ))
+
                }
+               <br/>
+               <br/>
+               <hr/>
+              <div className='relative'>
+               {totalAmount<0 && <button onClick={handlePaymentRequest} className='absolute right-0 bg-green-500 text-white m-2 rounded-sm px-1 bottom-2'>Request ₹{-1 * totalAmount}</button>}
+               {totalAmount>0 && <button onClick={settlePayment} className='absolute right-0 bottom-2 bg-blue-700 text-white m-2 rounded-sm px-1'>Pay ₹{totalAmount}</button>}
+              </div>
           </div>
          }
          {

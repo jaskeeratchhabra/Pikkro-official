@@ -3,13 +3,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import SuccessComponent from '../components/SuccessComponent';
 import Loading from "../components/Loading";
-// import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
+import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {login} from "../store/authSlice"
 
 const LoginForm = () => {
   const [loading,setLoading]=useState(false);
+  const [showPassword,setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const dispatch = useDispatch()
@@ -19,15 +20,12 @@ const LoginForm = () => {
     password: ''
   });
  
-  // const [showPassword, setShowPassword] = useState(false);
-
-  // const togglePasswordVisibility = () => {
-  //   setShowPassword((prevState) => !prevState);
-  // }; 
-    
-  // useEffect(()=>{
   
-  // },[])
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  }; 
+    
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -48,6 +46,7 @@ const LoginForm = () => {
         dispatch(login({username}));
         const Admin=(JSON.parse(localStorage.getItem("user"))).isAdmin;
         const Rider =(JSON.parse(localStorage.getItem("user"))).isRider;
+        console.log(Rider);
         if(Admin){
          navigate("/Admin");
         }
@@ -86,9 +85,9 @@ const LoginForm = () => {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-6 flex">
             <input
-              type="password"
+              type= {showPassword ?"text" : "password"}
               name="password"
               id="password"
               value={formData.password}
@@ -96,7 +95,7 @@ const LoginForm = () => {
               placeholder="Enter your password"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             />
-              {/* {showPassword ? (
+              {!showPassword ? (
                 <EyeOffIcon
                   className="h-6 w-6 ml-2 text-gray-500 cursor-pointer"
                   onClick={togglePasswordVisibility}
@@ -106,7 +105,7 @@ const LoginForm = () => {
                   className="h-6 w-6 ml-2 text-gray-500 cursor-pointer"
                   onClick={togglePasswordVisibility}
                 />
-              )} */}
+              )}
           </div>
           <button
             type="submit"
@@ -116,7 +115,7 @@ const LoginForm = () => {
           </button>
              <span>Don't have an account 
              <Link to="/register" className="mx-2 text-blue-500 font-semibold">Sign Up</Link></span>
-             <Link to="/register" className="absolute mt-5  text-blue-800">Forgot password?</Link>
+             <Link to="/forgotPassword" className="absolute mt-5  text-blue-800">Forgot password?</Link>
         </form>
       </div>
     </div>

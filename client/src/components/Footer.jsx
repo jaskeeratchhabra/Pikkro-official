@@ -6,8 +6,8 @@ const Footer = () => {
       <div className="flex md:justify-between mx-auto">
         <div className="w-full md:w-1/3 mb-4 md:mb-0 ml-2">
           <h2 className="text-green-500 text-2xl font-extrabold mb-2">Pikkro.com</h2>
-          <p className="text-sm">123 Street, City, Country</p>
-          <p className="text-sm font-bold mt-4">Courier Service in Delhi NCR</p>
+          <p className="text-sm">114, Street no 16, Wazirabad Village, New delhi, 110084</p>
+          <p className="text-sm font-bold mt-4">Delivery Service in Delhi NCR</p>
         </div>
         <div className="w-full md:w-2/3 flex justify-end mr-4">
           <ul className="text-sm mr-8">
