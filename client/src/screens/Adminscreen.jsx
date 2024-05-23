@@ -72,24 +72,24 @@ useEffect(()=>{
         </button>
       </div>
       <div className="gap-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 ">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           {/* <h2 className="text-xl font-semibold mb-4">{requestsType === 'new' ? 'New Requests' : requestsType === 'approved' ? 'Approved Requests' : 'Disapproved Requests'}</h2> */}
           {loading ? (
             <Loading />
           ) : (
             requestsType==="new" ?
             newRequest.map((deliveryPartner, index) => (
-              <DeliveryPartnerCard className="grid sm:grid-cols-2" key={index} deliveryPartner={deliveryPartner} />
+              <DeliveryPartnerCard className="grid md:grid-cols-2" key={index} deliveryPartner={deliveryPartner} />
             ))
             :
              requestsType==="approved"?
             approvedRequest.map((deliveryPartner, index) => (
-              <DeliveryPartnerCard className="grid sm:grid-cols-2" key={index} deliveryPartner={deliveryPartner} />
+              <DeliveryPartnerCard className="grid md:grid-cols-2" key={index} deliveryPartner={deliveryPartner} />
             ))
             :
             (
               disapprovedRequest.map((deliveryPartner, index) => (
-              <DeliveryPartnerCard className="grid sm:grid-cols-2" key={index} deliveryPartner={deliveryPartner} />
+              <DeliveryPartnerCard className="grid md:grid-cols-2" key={index} deliveryPartner={deliveryPartner} />
             ))
             )
           )}

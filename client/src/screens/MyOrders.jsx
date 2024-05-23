@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Loading from '../components/Loading';
-import OrderCard from '../components/OrderCard';
+import OrderCard from '../components/MyOrderCard';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 function MyOrders() {
@@ -12,10 +12,11 @@ function MyOrders() {
   const loggedIn = useSelector(state=>state.authReducer.status)
   const [message,setMessage] = useState(false);
   let username=useSelector(state=>state.authReducer.username);
+  const user = localStorage.getItem("user");
   // const [status, handleStatus] = useState("");
-   useEffect(()=>{
-      console.log(loggedIn)
-   },[loggedIn])
+  //  useEffect(()=>{
+  //     console.log(loggedIn)
+  //  },[loggedIn])
     useEffect(()=>{
    
     async function getOrders(){
@@ -52,7 +53,7 @@ function MyOrders() {
       
       {loading && <Loading/>}
       { message  && <h1 className='text-center text-xl p-2'>{message}</h1>}
-      {!username && Swal.fire("login to view your orders")};
+      {!user && Swal.fire("login to view your orders")}
       <div>
         {
             orders && orders.map((order)=>(

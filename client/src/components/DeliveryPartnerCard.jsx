@@ -125,7 +125,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
   };
 
   return (
-    <div className="bg-white border border-gray-300 shadow-md rounded-md p-2 mb-2 w-7/12 relative">
+    <div className="bg-white border border-gray-300 shadow-md rounded-md p-4 mb-2 w-7/12 relative">
     { loading && <Loading/>}
     {success && <SuccessComponent message="Status updated refresh the page"/>}
      <div className='flex flex-col'>
@@ -147,12 +147,12 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
       <p className="text-sm text-gray-600 mb-2">Vehicle Number: {deliveryPartner.vehicleNumber}</p>
       <div className="flex flex-wrap -mx-1 mb-2">
         {Object.entries(deliveryPartner).slice(8,14).map(([fieldName, image], index) => (
-          <div key={index} className="w-1/2 p-1">
+          <div key={index} className="w-1/2 p-3 ">
             <img
               src={image}
               alt={fieldName}
                    
-              className="w-full h-auto cursor-pointer shadow-md"
+              className="w-30 h-20 cursor-pointer shadow-md"
               onClick={() => openImageModal(image)}
             />
             {fieldName === "bikePhoto" ? "vehiclePhoto" : fieldName}

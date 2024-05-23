@@ -200,7 +200,10 @@ function Riderscreen() {
   const [totalAmount, setTotalAmount] = useState(0);
   const [paymentStatus,setPaymentStatus] = useState("due");
   const [settledArray,setSettledArray] = useState([""]);
-  
+ 
+  const handlePaymentRequest=()=>{
+
+  }
   const handlePaymentStatus=(value)=>{
      setPaymentStatus(value);
   }
@@ -334,7 +337,7 @@ useEffect(() => {
     });
 
     setSettledArray(Array.from(newSettledSet)); // Convert set back to array
-    setTotalAmount(amount);
+    setTotalAmount(amount.toFixed(2));
     console.log(amount);
   };
 
@@ -439,9 +442,9 @@ useEffect(() => {
       try{
         setLoading(true)
         const result =  (await axios.get("/api/orders/getorder")).data;
-        const newOrders= result.filter((order)=>(order.accepted===false ));
+        const newOrders= result.filter((order)=>(order.accepted===false && order.canceled===false ));
         const MyPickedOrders = result.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true))
-        const ActiveOrders =   result.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true && order.completed===false))
+        const ActiveOrders =   result.filter((order)=>(order.canceled===false && order.RiderPhone === RiderContact && order.accepted===true && order.completed===false))
         
         setMyorder(MyPickedOrders)
         setNeworders(newOrders);

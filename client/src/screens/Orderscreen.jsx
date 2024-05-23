@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 
 import { useState ,useRef, useEffect} from 'react';
 import Loading from '../components/Loading';
@@ -66,6 +67,10 @@ function Orderscreen() {
   };
 
   //to load payment link in scripts
+  useEffect(()=>{
+     setPrice("");
+  },[price, distance,originRef,destinationRef,parcelValue,weight])
+
   function loadScript(src) {
     return new Promise((resolve) => {
         const script = document.createElement("script");

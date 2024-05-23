@@ -64,7 +64,7 @@ useEffect(() => {
               // Request high accuracy location
               const options = {
                   enableHighAccuracy: true,
-                  maximumAge: 0, // Maximum age of cached position
+                  maximumAge: 10000, // Maximum age of cached position
                   timeout: 10000 // Timeout in milliseconds
               };
 
@@ -96,9 +96,9 @@ useEffect(() => {
     <div className="grid md:grid-cols-2 md:px-4 md:ml-12 grid-cols-3">
 
         <div className="flex items-center h-16">
-          <div className="text-4xl mx-4 md:block hidden ">
+          <div className="mx-4 md:block hidden ">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
-            <a href="/" className="text-green-500 text-2xl font-extrabold my-auto">Pikkro.com</a>
+            <a href="/" className="text-green-500 text-2xl mb-3 font-extrabold my-auto">Pikkro.com</a>
           </div>
           <div className="text-4xl mx-2 flex md:hidden">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}

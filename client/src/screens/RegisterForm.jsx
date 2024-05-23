@@ -147,7 +147,7 @@ const RegisterForm = () => {
           />
         </div>
         <div className='flex items-center'>
-           <span className='text-gray-700'>+91</span>
+          <span className='text-gray-700'>+91</span>
            <div className="">
              <input
               type="tel"
@@ -163,14 +163,14 @@ const RegisterForm = () => {
         </div>
         {
         <div>
-            <h2>Enter OTP</h2>
+            <h2 className='mt-3 ml-1'>Enter OTP</h2>
             <div className='flex'>
                 <div className="w-fit ">
                     {otp.map((digit, index) => (
                         <input
                             key={index}
                             type="text"
-                            className="h-5 w-5 border border-black mx-1"
+                            className="h-5 w-5 border rounded-md border-black mx-1"
                             maxLength={1}
                             value={digit}
                             onChange={(e) => handleOTPChange(index, e.target.value)}
@@ -181,7 +181,7 @@ const RegisterForm = () => {
                         />
                     ))}
                 </div>
-                <button className='px-1 bg-blue-700 text-white ml-2 rounded-sm' onClick={handleVerification}>Verify</button>
+                <button className='px-1 bg-blue-700 text-white ml-2 rounded-md' onClick={handleVerification}>Verify</button>
             </div>
         </div>
         }
