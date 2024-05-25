@@ -7,6 +7,7 @@ import SuccessComponent from './SuccessComponent';
 import PopupComponent from './PopupComponent';
 import Swal from 'sweetalert2';
 import OrderTracking from './OrderTracking';
+import EditOrderScreen from '../screens/EditOrderScreen';
 function OrderCard({ order}) {
 
     const navigate  = useNavigate();
@@ -14,6 +15,7 @@ function OrderCard({ order}) {
     const [loading,setLoading] = useState(false);
     const [orderStatus,setStatus]  = useState("");
     const [showOrderTracking, setShowOrderTracking] = useState(false);
+    const [editStatus,setEditStatus] = useState(false)
     const toggleDetails = () => {
         setShowDetails(!showDetails);
     };
@@ -21,7 +23,7 @@ function OrderCard({ order}) {
         // console.log(typeof order.Date)
         const date = new Date(order.Date)
         console.log(date)
-        navigate("/create-order")
+        setEditStatus((prev)=>(!prev));
     }
 
 
@@ -60,9 +62,10 @@ function OrderCard({ order}) {
              {loading && <Loading/>}
              {orderStatus==="picked"  &&  Swal.fire("order can't be cancelled as it is processed by rider")}
              {orderStatus==="canceled" && <PopupComponent message="Order has been canceled"/> }
+             {editStatus && <EditOrderScreen order={order}/>}
              <div className="absolute top-1 right-1 text-gray-700" >
              {
-                order.completed===false &&
+                order.completed===false && order.canceled===false && 
                 <button onClick={handleEdit}>Edit</button>}
                 { order.completed===false && (
                  (orderStatus==="canceled" || order.canceled===true) ? <button className="text-red-700 py-2 px-4  ml-4 rounded focus:outline-none focus:shadow-outline">
@@ -73,15 +76,16 @@ function OrderCard({ order}) {
                   )
                 }
              </div>
-             <div className='flex'>
+             <div className='flex absolute top-0 '>
                <div className="mx-2 py-4 text-lg text-blue-900">
                    {order.Item} 
                </div>
                <div className="py-4 text-lg text-blue-900">
                    : {order.Date} 
                </div>
+               
              </div>
-            <div className="px-6 py-4 flex">
+            <div className="px-6 py-4 flex mt-10">
                 <button
                     className="  text-gray-700 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-4 "
                     onClick={toggleDetails}

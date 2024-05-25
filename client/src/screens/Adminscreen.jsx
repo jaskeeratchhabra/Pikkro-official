@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Loading from "../components/Loading";
 import DeliveryPartnerCard from '../components/DeliveryPartnerCard';
-
+import {useNavigate} from "react-router-dom"
 
 const AdminScreen = () => {
   const [requestsType, setRequestsType] = useState('new');
@@ -12,6 +12,12 @@ const AdminScreen = () => {
   const [disapprovedRequest, setDisapproved] = useState([]);
   const [loading, setLoading] = useState(true);
  
+  const navigate= useNavigate();
+
+  const handleNavigate = ()=>{
+    navigate("/rider");
+  }
+
   useEffect(() => {
     // Clear the state arrays before updating them
     setNew([]);
@@ -48,8 +54,11 @@ useEffect(()=>{
   },[])
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 relative">
      {loading && <Loading/>}
+      <div className='absolute top-1 left-1'>
+        <button className='bg-white text-black p-1 rounded-md' onClick={handleNavigate}>Switch to Rider Screen</button>
+      </div>
       <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
       <div className="mb-4">
         <button

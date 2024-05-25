@@ -16,7 +16,7 @@ function Orderscreen() {
   
   const navigate= useNavigate();
   const map_key= import.meta.env.VITE_MAP_API_KEY;
-  const [price,setPrice] = useState("");
+  const [price,setPrice] = useState(null);
   const [distance,setDistance]=useState("")
   
   const [weight, setWeight] = useState('');
@@ -29,6 +29,7 @@ function Orderscreen() {
   const user = JSON.parse(localStorage.getItem("user"));
   const timestamp = Date.now(); // Get the current timestamp
   const date = new Date(timestamp); // Create a Date object from the timestamp
+  const [libraries,setLibraries] = useState(['places']);
   
   const formattedDate = date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -67,9 +68,15 @@ function Orderscreen() {
   };
 
   //to load payment link in scripts
-  useEffect(()=>{
-     setPrice("");
-  },[price, distance,originRef,destinationRef,parcelValue,weight])
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (hasMounted.current) {
+      setPrice("");
+    } else {
+      hasMounted.current = true;
+    }
+  }, [distance, originRef.current ,destinationRef.current, parcelValue, weight]);
 
   function loadScript(src) {
     return new Promise((resolve) => {
@@ -165,14 +172,15 @@ async function displayRazorpay() {
   };
   
   
-  useEffect(()=>{
-     console.log(hour, minute , ampm)
-  },[hour,minute,ampm])
+  // useEffect(()=>{
+  //    console.log(hour, minute , ampm)
+  // },[hour,minute,ampm])
+
   useEffect(()=>{
     if(weight  && distance ){
       calculatePrice()
     }
-  },[weight ,parcelValue, distance, calculatePrice])
+  },[weight ,parcelValue, distance])
   
   // useEffect(()=>{
     //   if(originRef.current && destinationRef.current){
@@ -256,7 +264,7 @@ async function displayRazorpay() {
   
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: map_key,
-    libraries: ['places'],
+    libraries,
   })
   
   if (!isLoaded) {

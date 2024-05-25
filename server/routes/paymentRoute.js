@@ -2,8 +2,40 @@
 require("dotenv").config();
 const express = require("express");
 const Razorpay = require("razorpay");
-
+const paymentRequest = require("../models/payment")
 const router = express.Router();
+
+
+router.get("/getrequest", async (req,res)=>{
+    try {
+        const incompleteRequests = await paymentRequest.find({ paymentCompleted: false });
+        res.status(200).json(incompleteRequests);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+})
+router.post("/settlement", async (req,res)=>{
+     const {riderName, riderPhone, amount} = req.body;
+     console.log(req.body);
+     try
+     {
+       const newRequest = new paymentRequest({
+          riderName, riderPhone, amount
+       })
+       const request= await newRequest.save();
+       console.log(request)
+       if(request){
+        res.status(200).send("request sent succesfully");
+       }
+    }
+    catch(error)
+    {
+        console.log(error.message);
+        res.status(404).send("bad request");
+    }
+})
+
 
 router.post("/orders", async (req, res) => {
     function generateReceipt() {

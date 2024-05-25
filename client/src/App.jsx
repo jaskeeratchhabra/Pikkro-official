@@ -16,6 +16,7 @@ import Footer from "./components/Footer.jsx"
 import { LoadScript } from "@react-google-maps/api"
 import Terms from "./pages/Terms"
 import ForgotPassword from "./screens/ForgotPassword.jsx"
+import EditOrderScreen from "./screens/EditOrderScreen.jsx"
 
 export default function App() {
   
@@ -65,6 +66,7 @@ export default function App() {
          <Route path="/login" exact element={<LoginForm/>}/>
          <Route path="/create-order" exact element={<Orderscreen/>}/>
          <Route path="/register" exact element ={<RegisterForm/>}/>
+         {/* <Route path ="/edit-order" exact element ={<EditOrderScreen/>}/> */}
       </Routes>
       <Footer/>
     </BrowserRouter>

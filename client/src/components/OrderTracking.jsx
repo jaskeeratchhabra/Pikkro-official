@@ -18,9 +18,9 @@ const OrderTracking = ({ order }) => {
   const steps = getStatusSteps();
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md">
        {
-         steps.length===0 && <h1>Your order will be accepted soon</h1>
+         steps.length===0 && <h1 className='text-blue-900'>Your order will be accepted soon</h1>
        }
       <div className="flex justify-between items-center">
         {steps.map((step, index) => (

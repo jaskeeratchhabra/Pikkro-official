@@ -3,7 +3,56 @@ const router=express.Router();
 const fast2sms = require("fast-two-sms");
 const User = require("../models/users");
 const otpGenerator = require('otp-generator');
+const nodemailer = require('nodemailer');
+// const path = require('path');
+// const buildPath = path.join(__dirname, '..', 'build');
+// app.use(express.static(buildPath)); 
+
+
 require('dotenv').config();
+
+router.post('/email',(req,res)=>{
+    // const { to, subject, description,from } = req.body;
+    console.log(req.body);
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'jkchhabra4@gmail.com',
+          pass: 'kckx zbcz xryz zjer'
+        }
+    });
+
+    var mailOptions = {
+        from: "jkchhabra4@gmail.com",
+        to: req.body.to, 
+        subject: req.body.subject, 
+        text:req.body.description,
+        html: `
+        <div style="padding:10px;border-style: ridge">
+        <p>You have a new contact request.</p>
+        <h3>Contact Details</h3>
+        <ul>
+            <li>Email: ${req.body.to}</li>
+            <li>Subject: ${req.body.subject}</li>
+            <li>Message: ${req.body.description}</li>
+        </ul>
+        `
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error)
+        {
+          console.log(error.message ,"email has not been sent");
+          res.json({status: false, respMesg: 'Email has not been sent'})
+        } 
+        else 
+        {
+          console.log("email sent successfully")
+          res.json({status: true, respMesg: 'Email Sent Successfully'})
+        }
+    
+      });
+});
 
 router.patch("/:phone",async(req,res)=>{
     const {password,phone} = req.body;

@@ -199,15 +199,13 @@ function Riderscreen() {
   const [status,setStatus] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [paymentStatus,setPaymentStatus] = useState("due");
-  const [settledArray,setSettledArray] = useState([""]);
- 
-  const handlePaymentRequest=()=>{
-
-  }
+  const [settledArray,setSettledArray] = useState([]);
+  const [paymentRequest, setPaymentRequest] = useState(false)
+  const [incompleteRequests, setIncompleteRequests] = useState([]);
+  const user= JSON.parse(localStorage.getItem("user"));
   const handlePaymentStatus=(value)=>{
      setPaymentStatus(value);
   }
-  const user= localStorage.getItem("user");
   function loadScript(src) {
     return new Promise((resolve) => {
         const script = document.createElement("script");
@@ -234,10 +232,10 @@ async function displayRazorpay() {
 
   // creating a new order
   const result = await axios.post("/api/payments/orders",{price: totalAmount});
-  if(result)
-    {
-      handlePaymentStatus("paid")
-    }
+  // if(result.status===200)
+    // {
+    //   handlePaymentStatus("paid")
+    // }
   if (!result) {
       alert("Server error. Are you online?");
       return;
@@ -263,6 +261,10 @@ async function displayRazorpay() {
           };
 
           const result = await axios.post("/api/payments/success", data);
+          if(result.status===200)
+          {
+            handlePaymentStatus("paid")
+          }
 
           alert(result.data.msg);
       },
@@ -288,7 +290,7 @@ async function displayRazorpay() {
     setStatus(value);
   }
 
-  const handlePayment = async (orderId) => {
+  const handlePaymentField = async (orderId) => {
     console.log("OrderId:", orderId);
     try {
       const response = await axios.patch('/api/orders/updatepaymentfield', {
@@ -308,7 +310,7 @@ async function displayRazorpay() {
     if(paymentStatus==="paid"){
       for (const orderId of settledArray) {
         if (orderId) {
-           handlePayment(orderId);
+           handlePaymentField(orderId);
         }
       }
    }
@@ -319,9 +321,9 @@ useEffect(() => {
   const handlePayments = () => {
     let amount = 0;
     const newSettledSet = new Set(settledArray); // Initialize with current settledArray
-
+    
     Myorder.forEach((order) => {
-      if (order.paymentSettled === false && order.canceled === false) {
+      if (order.completed===true && order.paymentSettled === false && order.canceled === false) {
         let amountToPay = 0,
           amountToGet = 0;
 
@@ -397,6 +399,7 @@ useEffect(() => {
     
 };
 
+
   useEffect(()=>{
     neworders.map((order)=>{
       handleOrderInRange(order.PickupDetails.address,order);
@@ -429,12 +432,67 @@ useEffect(() => {
       }
     });
   };
+
+
+  const getPendingPayments = async ()=>{
+    try{
+       const result = (await axios.get("/api/payments/getrequest")).data;
+       setIncompleteRequests(result);
+       console.log(result)
+    }
+    catch(error)
+    {
+       console.log(error.message);
+    }
+  }
   
- 
+  const handlePaymentRequest = async () => {
+  //   const user = {
+  //     to: "jkchhabra99@gmail.com",
+  //     subject : "Online payment settlement",
+  //     description : "The online payment made by user need to be settle urgently",
+  //   }
+  //   await axios.post("/api/users/email",user)
+  //  .then(response => {console.log(response.data.respMesg)
+  //   console.log(response.status)
+  // }
+  //  );
+      const total = -1 * totalAmount
+      const paymentData = {
+                   riderName :user.name,
+                   riderPhone :user.phone,
+                   amount : total
+                  }
+      try{
+         const data = (await axios.post("/api/payments/settlement", paymentData));
+         console.log(data);
+         if(data.status===200)
+         { 
+            setPaymentRequest(true);
+            for (const orderId of settledArray) {
+              if (orderId) {
+                 handlePaymentField(orderId);
+              }
+            }
+         }
+      }
+      catch(error)
+      {
+         console.log(error.message);
+      }
+  };
+
   const handleClick=(value)=>{
      selectOption(value)
+     if(value==="payment requests")
+      {
+        getPendingPayments();
+      }
   }
+ 
+  const PaymentDone=()=>{
 
+  }
 
   useEffect(()=>{
     
@@ -477,11 +535,15 @@ useEffect(() => {
           <button
             onClick={()=>handleClick("active orders")}
             className={`${option==="active orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-          >Active Orders</button>
+          >Active orders</button>
           <button
             onClick ={()=>handleClick("earning per order")}
             className={`${option==="earning per order" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >Earning per order</button>
+          <button
+            onClick ={()=>handleClick("payment requests")}
+            className={`${option==="payment requests" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+          >Payment requests</button>
         </div>
         { 
           option==="filtered orders" && <div className='grid grid-cols-1 lg:grid-cols-2'>
@@ -503,21 +565,24 @@ useEffect(() => {
 
          }
          {
-          option==="earning per order" && <div>
+          option==="earning per order" && <div className='grid md:grid-cols-2 grid-cols-1'>
                {
                 Myorder.map((Myorder)=>(
-                  <div key={Myorder._id} className='w-full h-auto m-2 p-2 shadow-lg relative'>
+                  <div key={Myorder._id} className='w-full h-auto m-6 p-5 shadow-lg relative'>
                      <h1 className='mx-2 text-blue-500'>{Myorder.Date}</h1>
+                     <h1 className='mx-2 text-blue-500'>orderID : {Myorder._id}</h1>
                      <hr/>
-                     <div className='flex items-center my-1'>
+                     <div className='grid items-center my-1 relative'>
                         <span className='text-Gray-600 font-semibold mx-2'>{Myorder.Item}:</span>
-                        Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}
-                        {Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-auto text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
-                        {Myorder.paymentType==="online" && <span className="mx-auto text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
-                        {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10"/>}
-                        {Myorder.Settled===false && <span className='ml-4 text-red-500'>payment due</span>}
+                        <span className='mx-2'>Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}</span>
+                        {Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-2 text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
+                        {Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
+                        {/* {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10"/>}
+                        {Myorder.paymentSettled===false && <span className='ml-4 text-red-500'>payment due</span>} */}
                      </div>
                      <br/>
+                     {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10 absolute bottom-0 left-0"/>}
+                      {Myorder.paymentSettled===false && <span className='ml-4 text-red-500 absolute bottom-0 left-0'>payment due</span>}
                      <div className='absolute right-0 bottom-0 '>{Myorder.completed ? <span className='text-red-500 '>delivered</span> : Myorder.picked ? <span className='text-blue-500'> picked</span>: Myorder.canceled ? <span className='text-gray-700'>cancelled</span> :<span className='text-green-500'>accepted</span>}</div>
                   </div>
                 ))
@@ -527,7 +592,10 @@ useEffect(() => {
                <br/>
                <hr/>
               <div className='relative'>
-               {totalAmount<0 && <button onClick={handlePaymentRequest} className='absolute right-0 bg-green-500 text-white m-2 rounded-sm px-1 bottom-2'>Request ₹{-1 * totalAmount}</button>}
+               {!paymentRequest && totalAmount<0 && <button onClick={handlePaymentRequest} className='absolute right-0 bg-green-500 text-white m-2 rounded-sm px-1 bottom-2'>Request ₹{-1 * totalAmount}</button>}
+               {
+                paymentRequest && <button className='absolute right-0 text-green-700 m-2 bottom-2'> payment request sent</button>
+               }
                {totalAmount>0 && <button onClick={settlePayment} className='absolute right-0 bottom-2 bg-blue-700 text-white m-2 rounded-sm px-1'>Pay ₹{totalAmount}</button>}
               </div>
           </div>
@@ -541,6 +609,23 @@ useEffect(() => {
              ))
             }
          </div>
+         }
+         {
+            option === "payment requests" && (
+               <div className='m-5'>
+                 {incompleteRequests.map((req) => (
+                   <div key={req._id} className='p-4 border rounded shadow h-fit relative m-2'>
+                   <div className='shadow-sm mb-10'>
+                     <div className='font-bold'>Name: {req.riderName}</div>
+                     <div>Phone: {req.riderPhone}</div>
+                     <div>Amount: ₹{req.amount}</div>
+                     <div>Created At: {new Date(req.createdAt).toLocaleString()}</div>
+                    </div>
+                      <button className='absolute bottom-1 right-1 p-1 rounded-lg bg-green-500 text-white' onClick ={PaymentDone}> Payment Done</button>
+                   </div>
+                 ))}
+               </div>
+            )
          }
         </div>
     </div>
