@@ -17,9 +17,16 @@ router.patch('/:_id', async (req, res) => {
     // Check the value of updatedField and construct the update query accordingly
     if (updatedField === 'approved') {
       updateQuery.approved = true;
+      updateQuery.disapproved=false;
     } else if (updatedField === 'disapproved') {
       updateQuery.disapproved = true;
-    } else {
+      updateQuery.approved=false
+    } 
+    else if(updatedField==="registered")
+    {
+        updateQuery.registered=true;
+    }
+    else {
       return res.status(400).json({ message: 'Invalid updatedField value' });
     }
 

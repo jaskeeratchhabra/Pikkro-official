@@ -36,7 +36,7 @@ const AdminScreen = () => {
     });
   }, [requests ,requests.approved, requests.disapproved]);
     
-      
+
 useEffect(()=>{
   const fetchRequests = async () => {
     try {
@@ -57,9 +57,9 @@ useEffect(()=>{
     <div className="container mx-auto p-4 relative">
      {loading && <Loading/>}
       <div className='absolute top-1 left-1'>
-        <button className='bg-white text-black p-1 rounded-md' onClick={handleNavigate}>Switch to Rider Screen</button>
+        <button className='bg-white text-black p-1 rounded-md shadow-lg'  onClick={handleNavigate}>Switch to Rider Screen</button>
       </div>
-      <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
+      <h1 className="text-2xl font-semibold mb-4 mt-10">Admin Dashboard</h1>
       <div className="mb-4">
         <button
           onClick={() => setRequestsType('new')}

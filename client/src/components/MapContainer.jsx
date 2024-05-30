@@ -120,11 +120,15 @@ return (
       {/* <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}> */}
         <div className='my-5 flex justify-between'>
           {currentLocation && pickupLocation && (
-            <p className='font-semibold '>Current to Pickup: <span className='text-blue-500'>{calculateDistance(currentLocation, pickupLocation)} km</span></p>
+            <div className='mr-2'>
+             <p className='font-semibold'>Current to Pickup: <span className='text-blue-500'>{calculateDistance(currentLocation, pickupLocation)} km</span></p>
+            </div>
           )}
           
           {pickupLocation && deliveryLocation && (
-            <p className=' font-semibold'>Pickup to Delivery: <span className='text-blue-500'>{calculateDistance(pickupLocation, deliveryLocation)} km</span></p>
+            <div className='ml-2'>
+              <p className=' font-semibold'>Pickup to Delivery: <span className='text-blue-500'>{calculateDistance(pickupLocation, deliveryLocation)} km</span></p>
+            </div>
           )}
         </div>
         {    status !=="new" &&

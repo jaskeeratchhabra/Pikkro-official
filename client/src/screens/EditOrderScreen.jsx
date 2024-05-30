@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React, { useState, useRef, useEffect } from 'react';
@@ -9,9 +10,10 @@ import Loading from '../components/Loading';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const EditOrderScreen = ({ order }) => {
-  const navigate = useNavigate();
   const map_key = import.meta.env.VITE_MAP_API_KEY;
-
+  
+  const [pickupName,setPickupName] = useState(order.PickupDetails.name);
+  const [deliveryName,setDeliveryName] = useState(order.DeliveryDetails.name);
   const [price, setPrice] = useState(order.price);
   const [newPrice,setNewPrice] = useState('');
   const [distance, setDistance] = useState(order.distance || '');
@@ -46,14 +48,15 @@ const EditOrderScreen = ({ order }) => {
   const handleDeliveryInstructionsChange = (event) => setDeliveryInstructions(event.target.value);
   const handleItemChange = (value) => setItem(value);
   const handleWeightChange = (value) => setWeight(value);
-  
+  const handlePikcupNameChange = (value) => setDeliveryName(value);
+  const handleDeliveryNameChange = (value) => setPickupName(value);
 
   useEffect(()=>{
     // console.log(price, order.price);
     if(weight  && distance ){
       calculatePrice()
     }
-  },[weight ,parcelValue, distance])
+  },[weight ,parcelValue, distance,calculatePrice])
 
   const hasMounted = useRef(false);
 
@@ -154,24 +157,31 @@ function calculatePrice(){
   const itemweight=parseInt(weight);
   const itemvalue= parseInt(parcelValue);
   // console.log(typeof distanceInKm)
-  let price=0;
+  let newprice=0;
   if(distanceInKm<=3){
-    price = 30;
+    newprice = 30;
   }
   else
   if(distanceInKm>3){
-    price = Math.round((30) + (distanceInKm-3)* (7));
+    newprice = Math.round((30) + (distanceInKm-3)* (7));
   }
   if(itemweight === 10){
-    price = (price + 50)
+    newprice = (price + 50)
   }
   if(itemweight === 15){
-    price = (price + 100)
+    newprice = (price + 100)
   }
   if(itemvalue>1000){
-    price = (price + itemvalue*(0.01))
+    newprice = (price + itemvalue*(0.01))
   }
-  setNewPrice(price);
+  if(order.paymentType==="online")
+  {
+    if(order.price < newprice)
+    {
+      setNewPrice(newprice-order.price);
+    }
+  }
+  setNewPrice(newprice);
 }
 
 async function calculateRoute() {
@@ -215,11 +225,13 @@ if(value==="online")
       price:newPrice,
       paymentType,
       PickupDetails: {
+        name:pickupName,
         address: originRef.current.value,
         Phone: pickupPhoneNumber,
         Locality: pickupFlatDetails,
       },
       DeliveryDetails: {
+        name:deliveryName,
         address: destinationRef.current.value,
         Phone: deliveryPhoneNumber,
         Locality: deliveryFlatDetails,
@@ -304,7 +316,7 @@ if(value==="online")
         </div>
         <div className="my-8 shadow-md">
           <div className="flex text-gray-700">
-            <p className="font-semibold mb-2 mr-4 text-black">Parcel Value:</p>
+            <p className="font-semibold mb-2 mr-4 text-black">Parcel Value: ₹</p>
             <input className="border border-gray-500" value={parcelValue} placeholder=" optional" onChange={handleParcelValueChange} />
           </div>
           <div className="text-gray-700 my-28 mt-5">
@@ -319,6 +331,13 @@ if(value==="online")
           <Autocomplete>
             <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Pickup address" ref={originRef} defaultValue={order.PickupDetails.address} required />
           </Autocomplete>
+          <input
+            type="text"
+            className="border border-gray-400 rounded p-2 mr-2 w-full my-2"
+            placeholder="Flat/House No./Locality"
+            value={pickupName}
+            onChange={handlePikcupNameChange}
+          />
           <input
             type="text"
             className="border border-gray-400 rounded p-2 mr-2 w-full my-2"
@@ -346,6 +365,13 @@ if(value==="online")
               required
             />
           </Autocomplete>
+          <input
+            type="text"
+            className="border border-gray-400 rounded p-2 mr-2 w-full my-2"
+            placeholder="Flat/House No./Locality"
+            value={deliveryName}
+            onChange={handleDeliveryNameChange}
+          />
           <input
             type="text"
             className="border border-gray-400 rounded p-2 mr-2 w-full my-2"

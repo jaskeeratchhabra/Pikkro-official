@@ -3,6 +3,9 @@ import React from 'react';
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-6">
+      <div className='flex justify-center text-xl mb-10'>
+        <h1 >Reach out to us at <span className='font-semibold'>support@pikkro.in</span></h1>
+      </div>
       <div className="flex md:justify-between mx-auto">
         <div className="w-full md:w-1/3 mb-4 md:mb-0 ml-2">
           <h2 className="text-green-500 text-2xl font-extrabold mb-2">Pikkro.com</h2>

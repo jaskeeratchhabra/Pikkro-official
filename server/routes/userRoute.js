@@ -14,23 +14,24 @@ require('dotenv').config();
 router.post('/email',(req,res)=>{
     // const { to, subject, description,from } = req.body;
     console.log(req.body);
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        secure: true, // true for 465, false for other ports
         auth: {
-          user: 'jkchhabra4@gmail.com',
-          pass: 'kckx zbcz xryz zjer'
-        }
-    });
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });;
 
     var mailOptions = {
-        from: "jkchhabra4@gmail.com",
+        from: process.env.EMAIL_USER,
         to: req.body.to, 
         subject: req.body.subject, 
         text:req.body.description,
         html: `
         <div style="padding:10px;border-style: ridge">
-        <p>You have a new contact request.</p>
-        <h3>Contact Details</h3>
+        <p> You have update from Pikkro.com </p>
         <ul>
             <li>Email: ${req.body.to}</li>
             <li>Subject: ${req.body.subject}</li>
@@ -133,7 +134,7 @@ router.post("/register",async(req,res)=>{
         }
      }
      catch(error){
-          console.log(error.message);
+          console.log(error.message, "hello");
          return res.status(400).json([error]);
      }
  })

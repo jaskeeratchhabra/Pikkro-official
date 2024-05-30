@@ -29,6 +29,7 @@ function Orderscreen() {
   const user = JSON.parse(localStorage.getItem("user"));
   const timestamp = Date.now(); // Get the current timestamp
   const date = new Date(timestamp); // Create a Date object from the timestamp
+
   const [libraries,setLibraries] = useState(['places']);
   
   const formattedDate = date.toLocaleDateString('en-US', {
@@ -43,6 +44,8 @@ function Orderscreen() {
    // State variables for pickup details
    const [pickupPhoneNumber, setPickupPhoneNumber] = useState('');
    const [pickupFlatDetails, setPickupFlatDetails] = useState('');
+   const [DeliveryName, setDeliveryName] = useState('');
+   const [PickupName, setPickupName] = useState('');
 
    // State variables for delivery details
    const [deliveryPhoneNumber, setDeliveryPhoneNumber] = useState('');
@@ -62,13 +65,20 @@ function Orderscreen() {
   const handleMinuteChange = (event) => {
     setMinute(event.target.value);
   };
-
+ 
+  const handleDeliveryNameChange =(event)=>{
+    setDeliveryName(event.target.value);
+  }
+  const handlePickupNameChange = (event)=>{
+    setPickupName(event.target.value);
+  }
   const handleAMPMChange = (event) => {
     setAMPM(event.target.value);
   };
 
   //to load payment link in scripts
   const hasMounted = useRef(false);
+
 
   useEffect(() => {
     if (hasMounted.current) {
@@ -287,11 +297,13 @@ async function displayRazorpay() {
       price,
       paymentType,
       PickupDetails: {
+        name:PickupName,
         address: originRef.current.value,
         Phone: pickupPhoneNumber,
         Locality: pickupFlatDetails
       },
       DeliveryDetails: {
+        name:DeliveryName,
         address: destinationRef.current.value,
         Phone: deliveryPhoneNumber,
         Locality: deliveryFlatDetails
@@ -381,7 +393,7 @@ async function displayRazorpay() {
 
         <div className="my-8 shadow-md">
           <div className="flex text-gray-700">
-          <p className="font-semibold mb-2 mr-4 text-black">Parcel Value:</p>
+          <p className="font-semibold mb-2 mr-4 text-black">Parcel Value: ₹</p>
            <input className='border border-gray-500' value={parcelValue} placeholder=' optional'  onChange={handleParcelValueChange}/>
           </div>
           <div className='text-gray-700 my-28 mt-5 '>
@@ -394,6 +406,10 @@ async function displayRazorpay() {
           <Autocomplete>
             <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Pickup address" ref={originRef} required />
           </Autocomplete>
+          <input type="text" className="border border-gray-400 file:rounded p-2 mr-2 w-full my-2" placeholder="Name" 
+            value={PickupName}
+            onChange={handlePickupNameChange}
+          />
           <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Phone Number" value={pickupPhoneNumber}
           onChange={handlePickupPhoneNumberChange} />
 
@@ -410,10 +426,15 @@ async function displayRazorpay() {
           <Autocomplete>
             <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Delivery address" ref={destinationRef} required/>
           </Autocomplete>
+          <input type="text" className="border border-gray-400 file:rounded p-2 mr-2 w-full my-2" placeholder="Name" 
+            value={DeliveryName}
+            onChange={handleDeliveryNameChange}
+          />
           <input type="text" className="border border-gray-400 file:rounded p-2 mr-2 w-full my-2" placeholder="Phone Number" 
             value={deliveryPhoneNumber}
             onChange={handleDeliveryPhoneNumberChange}
           />
+          
           {/* <Autocomplete> */}
            <input type="text" className="border border-gray-400 rounded p-2 mr-2 w-full my-2" placeholder="Flat No/Locality/Street/area" 
              value={deliveryFlatDetails}
@@ -468,6 +489,7 @@ async function displayRazorpay() {
            </div>
               {!success && <button className='bg-blue-500 text-white p-3 my-5 w-3/12 rounded-lg' onClick={handleSubmit}>Submit Order</button>}
               {success && <button className='bg-green-500 text-white p-3 my-5 w-3/12 rounded-lg'>Order Placed SuccessFully</button>}
+              {success && <span className='text-green-700 font-semibold'>You can check more details in <b>My orders</b></span>}
 
            </div>
        </div>

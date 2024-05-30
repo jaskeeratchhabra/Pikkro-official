@@ -50,7 +50,12 @@ router.patch('/updatepaymentfield', async (req, res) => {
 router.patch('/:_id', async (req, res) => {
   const { _id } = req.params;
   console.log(req.body);
+  let canceledBy;
   const { value, RiderPhone, RiderName } = req.body;
+  if(value==="canceled")
+  {
+    canceledBy= req.body.canceledBy;
+  }
   try {
     const updateQuery = {};
 
@@ -67,6 +72,7 @@ router.patch('/:_id', async (req, res) => {
     else if(value === "canceled")
     {
       updateQuery.canceled = true
+      updateQuery.canceledBy = canceledBy
     }
     else {
       return res.status(400).json({ message: 'Invalid updatedField value' });

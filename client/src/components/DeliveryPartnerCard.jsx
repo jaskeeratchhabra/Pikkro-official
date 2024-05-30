@@ -11,7 +11,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
   const [success,setSuccess] = useState(false);
   const [register,setRegister] =useState(false);
   
-    const [status,setStatus] = useState(false);
+    const [status,setStatus] = useState("");
     const [userData,setData] =useState({})
 
   const openImageModal = (image) => {
@@ -34,78 +34,101 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
     return password;
   }
  
+
   useEffect(()=>{
-    // console.log(deliveryPartner.firstname);
-    if(deliveryPartner.approved || deliveryPartner.disapproved){
-      setStatus(true);
-      // console.log(status)
-    }
-    else{
-      setStatus(false)
-    }
-  },[deliveryPartner.approved, deliveryPartner.disapproved])
-  useEffect(()=>{
-    if(status===true && deliveryPartner.approved){
+    // if(status==="approved" || deliveryPartner.approved){
         const partnerInfo= {
              name: deliveryPartner.firstname,
              phone :deliveryPartner.phone,
              email :deliveryPartner.email,
              password : generateRandomPassword(12),
              isAdmin : false,
-             isRider : deliveryPartner.approved
+             isRider : true
         }
 
         setData(partnerInfo)
-       }
+      //  }
       }
       
-  ,[status])
-
-  useEffect(()=>{
-    if(userData.isRider === true){
-      RegisterRider();
-    } 
-  },[userData.isRider])
+  ,[])
 
   useEffect(() => {
     setRegister(false);
-    setSuccess(false); // Reset the register state when deliveryPartner changes
+    setSuccess(false);
   }, [deliveryPartner])
 
-  async function RegisterRider(){
+  async function RegisterRider(_id){
     if(deliveryPartner.registered === true){
-      return ;
+      return;
     }
-    if(userData.isRider===true ){
-       try{
-           const result = (await axios.post("/api/users/register",userData)).data;
-           console.log(result);
-           if(result.isRider ===  true){
-             setRegister(true);
-             updateApprovalStatus("registered",deliveryPartner._id)
-             console.log("rider registered successfully")
+    try{
+     if(userData.isRider===true){
+         setLoading(true);
+         const result = (await axios.post("/api/users/register",userData)).data;
+         // console.log(result);
+         if(result.isRider ===  true){
+           const response = await axios.patch(`/api/partners/${_id}`, { updatedField:"registered" } );
+           console.log(response);
+           if(response.status===200){
+              setRegister(true);
+              console.log("hello")
+              sendMail("approved");
            }
-       }
+         }
+         setLoading(false);
+     }
+    }
        catch(error){
          console.log(error.message);
+         setLoading(false);
        }
      
     }
-   }
+   
+  const sendMail= async (reqStatus)=>{
+    let user;
+    if(reqStatus==="approved"){
+      user = {
+      to: deliveryPartner.email,
+      subject : "Your request for delivery partner is approved",
+      description : `Congratulations ${userData.name}, you have been selected as delivery partner let's begin the new journey and earn together, you can login to your account by using Phone :${userData.phone} and Password: ${userData.password}, you can change your password by clicking forgot password on a login page or you can use this password as well `,
+     }
+    }
+    else
+    {
+      user={
+         to: deliveryPartner.email,
+         subject : "your request for delivery partner is disapproved",
+         description : "you can further contact to our team at support@pikkro.in or can fill another form with correct details, we will reach you soon",
+      }
+    }
+    await axios.post("/api/users/email",user)
+   .then(response => {console.log(response.data.respMesg)
+    console.log(response.status)
+  }
+   );
+  }
 
   const  updateApprovalStatus= async (updatedField , _id)=>{
     try {
       setLoading(true);
-      const response = await axios.patch(`/api/partners/${_id}`, { updatedField: updatedField } );
-      if(response){
+      await axios.patch(`/api/partners/${_id}`, { updatedField: updatedField } );
+      if(updatedField ==="approved"){
         setSuccess(true);
+        setStatus(updatedField)
+        RegisterRider(deliveryPartner._id);
+      }
+      else
+      if(updatedField ==="disapproved"){
+        setSuccess(true);
+        setStatus(updatedField)
+        sendMail("disapproved")
       }
       setLoading(false);
-      return response.data; 
     } catch (error) {
-      setLoading(false);
-      console.error('Error updating approval status:', error.message);
-      throw error; 
+       setLoading(false);
+       console.error('Error updating approval status:', error.message);
+       throw error; 
     }
   }
 
@@ -116,11 +139,10 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
         setLoading(true)
         const updatedDocument = await updateApprovalStatus(updatedField , _id);
         setLoading(false);
-        // console.log(userData)
-      console.log('Field updated successfully:', updatedDocument);
+        console.log('Field updated successfully:', updatedDocument);
     } catch (error) {
-      setLoading(false);
-      console.error('Error updating approval status:', error.message);
+        setLoading(false);
+        console.error('Error updating approval status:', error.message);
     }
   };
 
@@ -132,10 +154,10 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
       <p className={`font-semibold mb-4 absolute top-0 right-0 ${
         deliveryPartner.approved === true ? 'text-green-500' : deliveryPartner.disapproved === true ? 'text-red-500' : 'text-blue-500'
       }`}>
-        {deliveryPartner.approved === true ? 'approved' : deliveryPartner.disapproved === true ? 'disapproved' : ''}
+        {deliveryPartner.approved === true ? 'Approved' : deliveryPartner.disapproved === true ? 'Disapproved' : ''}
       </p>
-      {register && <p className='font-semibold mt-4 text-blue-500 absolute right-0 '>
-         registered
+      {(deliveryPartner.registered || register) && <p className='font-semibold mt-4 text-blue-500 absolute right-0 '>
+         Registered
        </p>
       }
      </div>
@@ -156,11 +178,9 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
               onClick={() => openImageModal(image)}
             />
             {fieldName === "bikePhoto" ? "vehiclePhoto" : fieldName}
-            {/* <p className="text-sm text-gray-600 mt-1">{fieldName}</p> */}
           </div>
         ))}
       </div>
-      {/* Image Modal */}
       {isImageModalOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-75 z-50">
           <div className="max-w-md max-h-md overflow-y-auto">
@@ -180,23 +200,26 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
       )}
       
     {
-      (!status) && (
       <div className="flex mt-">
-        <button 
+       {  (deliveryPartner.disapproved || !deliveryPartner.registered) && <button 
           onClick={() => handleApproval("approved", deliveryPartner._id)}
           className="bg-green-500 text-white px-4 py-2 rounded-md shadow-md mr-2 mx-auto"
 
         >
           Approve
         </button>
+       }
+       { (deliveryPartner.approved || !deliveryPartner.registered) && 
         <button 
           onClick={() => handleApproval("disapproved", deliveryPartner._id)}
           className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md mx-auto"
         >
           Disapprove
         </button>
+
+
+       }
       </div>
-    )
     }
 
     </div>

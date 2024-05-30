@@ -37,6 +37,11 @@ const orderSchema=mongoose.Schema({
         required:true
       },
       PickupDetails:{
+        name:{
+          type:String,
+          required:true,
+          trim:true
+        },
         address:
         {
             type:String,
@@ -53,6 +58,11 @@ const orderSchema=mongoose.Schema({
       }
       ,
       DeliveryDetails:{
+        name:{
+          type:String,
+          required:true,
+          trim:true
+        },
         address:
         {
             type:String,
@@ -103,6 +113,10 @@ const orderSchema=mongoose.Schema({
      canceled:{
         type:Boolean,
         default:false
+     },
+     canceledBy:{
+       type:String,
+       trim:true
      },
      paymentSettled:{
       type:Boolean,

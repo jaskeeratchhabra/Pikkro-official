@@ -22,6 +22,10 @@ const userSchema=mongoose.Schema({
         trim:true,
         required:true
     },
+    pendingPayment:{
+      type :Number,
+      default:0
+    },
     isAdmin:{
         type:Boolean,
         default:false

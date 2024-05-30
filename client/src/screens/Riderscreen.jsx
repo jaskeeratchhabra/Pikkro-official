@@ -5,6 +5,7 @@ import axios from 'axios';
 import Loading from "../components/Loading"
 import MapContainer from '../components/MapContainer';
 import PopupComponent from '../components/PopupComponent';
+import Swal from 'sweetalert2';
 const OrderCard=({orders, handleStatusProp})=>{
   
   const [toggleP,settoggleP] = useState(false);
@@ -15,6 +16,7 @@ const OrderCard=({orders, handleStatusProp})=>{
   const [popup,setPopup] = useState(false);
   const riderName = (JSON.parse(localStorage.getItem("user"))).name
   const RiderPhone = (JSON.parse(localStorage.getItem("user"))).phone
+  const [cancel,setCancel] = useState(false);
   const paymentType = orders.paymentType;
   
 
@@ -40,39 +42,65 @@ const OrderCard=({orders, handleStatusProp})=>{
   
 
   // function to handle status and to add rider details on state update
-  const handleStatus = async (value)=>{
-
-    const userInfo = (JSON.parse(localStorage.getItem("user")));
-    // console.log(userInfo)
+  const handleStatus = async (value) => {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
     const _id = orders._id;
-    const statusValue = { 
-                          value: value,
-                          RiderPhone: userInfo.phone,
-                          RiderName: userInfo.name
-                        }
-    try{
-    setLoading(true);
-    const result = (await axios.patch(`/api/orders/${_id}`,statusValue)).data;
-    // console.log(result)
-    if(result.updatedDocument["accepted"]===true){
-      setRider(result.updatedDocument.RiderPhone)
-    }
-    // console.log(result.updatedDocument)
-    setStatus(prevStatus => {
-      if (result.updatedDocument[value] === true) {
-        return value;
-      } else {
-        return prevStatus; // Return the previous state if the update was not successful
+    let statusValue;
+  
+    if (value === "canceled") {
+      // Show the SweetAlert2 modal for cancellation confirmation
+      const result = await Swal.fire({
+        title: "Cancellation",
+        text: "Cancellation charge of Rs 40 will be applied",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel"
+      });
+  
+      // If the user confirms the cancellation
+      if (!result.isConfirmed) {
+        return; // Exit the function if the user cancels the confirmation dialog
       }
-    });
-     setLoading(false);
+  
+      statusValue = {
+        value: value,
+        canceledBy: "rider",
+        RiderPhone: userInfo.phone,
+        RiderName: userInfo.name
+      };
+    } else {
+      statusValue = {
+        value: value,
+        RiderPhone: userInfo.phone,
+        RiderName: userInfo.name
+      };
     }
-    catch(error){
+  
+    try {
+      setLoading(true);
+      const response = await axios.patch(`/api/orders/${_id}`, statusValue);
+      const result = response.data;
+  
+      if (result.updatedDocument["accepted"] === true) {
+        setRider(result.updatedDocument.RiderPhone);
+      }
+  
+      setStatus((prevStatus) => {
+        if (result.updatedDocument[value] === true) {
+          return value;
+        } else {
+          return prevStatus; // Return the previous state if the update was not successful
+        }
+      });
+  
+      setLoading(false);
+    } catch (error) {
       console.log(error.message);
+      setLoading(false);
     }
-    setLoading(false);
-  }
-
+  };
+  
   // function to hnadle pickup and delivery toggle button
   const handleToggle = (e) =>{
      if(e.target.name==="pickup"){
@@ -83,7 +111,10 @@ const OrderCard=({orders, handleStatusProp})=>{
      }
   }
   
-
+  const handleCancel= ()=>{
+      setCancel(true);
+      handleStatus("canceled");
+  }
 
   return (
     <>
@@ -109,20 +140,33 @@ const OrderCard=({orders, handleStatusProp})=>{
               <MapContainer pickupAddress={orders.PickupDetails.address} deliveryAddress={orders.DeliveryDetails.address} status ={status} setDistanceToPickupProp={(distance)=>{handlePickupDistance(distance)}}/>
                <div className='mb-5 mt-5'>
                 <ol className=''>
-                  <b>Pickup: </b>
+                  <b className='underline'>Pickup: </b>
                   <li>
                       <ul>
-                        <li>Address: {orders.PickupDetails.address}</li>
-                        <li>Phone: {orders.PickupDetails.Phone.replace(/(\d{4})$/, 'XXXX')}</li>
+                      { 
+                        orders.PickupDetails && 
+                        Object.keys(orders.PickupDetails).length === 4 && 
+                        orders.PickupDetails.name && (
+                          <li><span className='font-semibold   mr-2 '>Name : </span> {orders.PickupDetails.name}</li>
+                      )}
+
+                        <li><span className='font-semibold mr-2 '>Address : </span>{orders.PickupDetails.address}</li>
+                        <li><span className='font-semibold   mr-2 '>Phone : </span>{orders.PickupDetails.Phone.replace(/(\d{4})$/, 'XXXX')}</li>
                       </ul>
                       
                   </li>
                   <hr/>
-                  <b>Delivery: </b>
+                  <b className='underline'>Delivery: </b>
                   <li>
                     <ul type="">
-                      <li>Address: {orders.DeliveryDetails.address}</li>
-                      <li>Phone: {orders.DeliveryDetails.Phone.replace(/(\d{4})$/, 'XXXX')}</li>
+                    { 
+                        orders.DeliveryDetails && 
+                        Object.keys(orders.DeliveryDetails).length === 4 && 
+                        orders.DeliveryDetails.name && (
+                          <li><span className='font-semibold   mr-2 '>Name : </span>{orders.DeliveryDetails.name}</li>
+                      )}
+                      <li><span className='font-semibold   mr-2 '>Address : </span>{orders.DeliveryDetails.address}</li>
+                      <li><span className='font-semibold   mr-2 '>Phone : </span>{orders.DeliveryDetails.Phone.replace(/(\d{4})$/, 'XXXX')}</li>
                     </ul>
                   </li>
                   <b className=''>Instructions:</b>
@@ -137,12 +181,18 @@ const OrderCard=({orders, handleStatusProp})=>{
           {status!=="new" && <div className=''>
              <div className='absolute top-10 right-4 font-semibold '>order value:  ₹{orders.price}</div>
              <div className='pt-3'>
-              <MapContainer pickupAddress={orders.PickupDetails.address} deliveryAddress={orders.DeliveryDetails.address} status ={status} setDistanceToPickupProp={(distance)=>{handlePickupDistance(distance)}}/>
+              <MapContainer pickupAddress={orders.PickupDetails.address} deliveryAddress={orders.DeliveryDetails.address} status ={status}/>
              </div>
              <div className=" flex justify-between m-10 ">
                <div>
                    <button onClick={handleToggle} name = "pickup" className='rounded-md bg-black text-white p-1'>pickup Details</button>
                    {toggleP && <div className='flex flex-col border border-gray-200 mx-auto'>
+                    { 
+                        orders.PickupDetails && 
+                        Object.keys(orders.PickupDetails).length === 4 && 
+                        orders.PickupDetails.name && (
+                          <li>Name: {orders.PickupDetails.name}</li>
+                      )}
                      <span><b>Address: </b> {orders.PickupDetails.address}</span>
                      <span><b>Phone:</b> {orders.PickupDetails.Phone}</span>
                      <span><b>Locality:</b> {orders.PickupDetails.Locality}</span>
@@ -154,6 +204,12 @@ const OrderCard=({orders, handleStatusProp})=>{
                    <button name="drop" onClick={handleToggle} className='rounded-md bg-black text-white text-center p-1'>Drop Details</button>
                    {
                      toggleD && <div className='flex flex-col border border-gray-200 mx-auto'>
+                     { 
+                        orders.DeliveryDetails && 
+                        Object.keys(orders.DeliveryDetails).length === 4 && 
+                        orders.DeliveryDetails.name && (
+                          <li><span className='underline'>Name: </span>{orders.DeliveryDetails.name}</li>
+                      )}
                      <span><b>Address: </b>{orders.DeliveryDetails.address}</span>
                      <span><b>Phone:</b> {orders.DeliveryDetails.Phone}</span>
                      <span><b>Locality:</b> {orders.DeliveryDetails.Locality}</span>
@@ -162,7 +218,7 @@ const OrderCard=({orders, handleStatusProp})=>{
                </div>
              </div>
                <div className='w-auto flex justify-center mb-10'> 
-                   {paymentType==="cash" ? 
+                   {paymentType.split(' ')[0]==="cash" ? 
                    (<div className='p-1  border border-b-4 border-gray-500 w-fit rounded-md'>Collect cash:  ₹{orders.price}</div>)
                    :
                    (<div className='p-1 border border-b-4 border-gray-500 w-fit rounded-md'> Prepaid </div>)
@@ -172,6 +228,7 @@ const OrderCard=({orders, handleStatusProp})=>{
            }
           <div className='flex'>
           
+           {orders.picked===false && orders.accepted===true && <button className='absolute left-5 bottom-5 p-1 rounded-md  bg-purple-700 text-white' onClick={handleCancel}>Cancel</button>}
            {status === "new" ? <button onClick={()=>{handleStatus("accepted")}} className='rounded-md bg-green-500 text-white p-1 absolute right-5 bottom-5 '>Accept</button> :
            status === "accepted" ? <button onClick={()=>{handleStatus("picked")}} className='rounded-md bg-blue-500 text-white p-1 absolute right-5 bottom-5 '>Picked</button>:
             status==="picked" ? <button onClick={()=>{handleStatus("completed")}}className='rounded-md bg-red-500 text-white p-1 absolute right-5 bottom-5 '>Delivered</button> :
@@ -183,6 +240,7 @@ const OrderCard=({orders, handleStatusProp})=>{
     </>
   )
 }
+
 
 
 function Riderscreen() {
@@ -203,6 +261,8 @@ function Riderscreen() {
   const [paymentRequest, setPaymentRequest] = useState(false)
   const [incompleteRequests, setIncompleteRequests] = useState([]);
   const user= JSON.parse(localStorage.getItem("user"));
+
+  const [paymentDone,setPaymentDone] = useState(false)
   const handlePaymentStatus=(value)=>{
      setPaymentStatus(value);
   }
@@ -261,9 +321,14 @@ async function displayRazorpay() {
           };
 
           const result = await axios.post("/api/payments/success", data);
-          if(result.status===200)
+          if(result.message==="success")
           {
-            handlePaymentStatus("paid")
+            handlePaymentStatus("paid");
+            for (const orderId of settledArray) {
+              if (orderId) {
+                 handlePaymentField(orderId);
+              }
+            }
           }
 
           alert(result.data.msg);
@@ -307,13 +372,6 @@ async function displayRazorpay() {
 
   const settlePayment = () => {
     displayRazorpay();
-    if(paymentStatus==="paid"){
-      for (const orderId of settledArray) {
-        if (orderId) {
-           handlePaymentField(orderId);
-        }
-      }
-   }
   };
   
  
@@ -336,7 +394,13 @@ useEffect(() => {
         newSettledSet.add(order._id);
         amount = amount + amountToPay - amountToGet;
       }
-    });
+      if(order.canceled && order.canceledBy==="rider" && order.RiderPhone===user.phone)
+        {
+          amount = amount + 40
+        }
+    }
+  );
+
 
     setSettledArray(Array.from(newSettledSet)); // Convert set back to array
     setTotalAmount(amount.toFixed(2));
@@ -447,16 +511,6 @@ useEffect(() => {
   }
   
   const handlePaymentRequest = async () => {
-  //   const user = {
-  //     to: "jkchhabra99@gmail.com",
-  //     subject : "Online payment settlement",
-  //     description : "The online payment made by user need to be settle urgently",
-  //   }
-  //   await axios.post("/api/users/email",user)
-  //  .then(response => {console.log(response.data.respMesg)
-  //   console.log(response.status)
-  // }
-  //  );
       const total = -1 * totalAmount
       const paymentData = {
                    riderName :user.name,
@@ -490,9 +544,19 @@ useEffect(() => {
       }
   }
  
-  const PaymentDone=()=>{
+  const PaymentDone=async(reqId)=>{
+    try{
+      const data= (await axios.patch(`/api/payments/${reqId}`)).data;
+      setPaymentDone(true);
+      console.log(data);
+    }
+    catch(error)
+    {
+      console.log(error.message);
+    }
 
   }
+  
 
   useEffect(()=>{
     
@@ -504,6 +568,26 @@ useEffect(() => {
         const MyPickedOrders = result.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true))
         const ActiveOrders =   result.filter((order)=>(order.canceled===false && order.RiderPhone === RiderContact && order.accepted===true && order.completed===false))
         
+        const parseDateTime = (dateString, time) => {
+          const [month, day, year] = dateString.split(' ');
+          let { hours, minutes, meridian } = time;
+  
+          // Convert month abbreviation to month index
+          const monthIndex = new Date(`${month} 1`).getMonth();
+  
+          // Convert 12-hour time to 24-hour time
+          if (meridian.toLowerCase() === 'pm' && hours !== 12) {
+            hours += 12;
+          } else if (meridian.toLowerCase() === 'am' && hours === 12) {
+            hours = 0;
+          }
+  
+          return new Date(year, monthIndex, day, hours, minutes);
+        };
+  
+        // Sort newOrders by most recent combined datetime
+        newOrders.sort((a, b) => parseDateTime(b.Date, b.Time) - parseDateTime(a.Date, a.Time));
+
         setMyorder(MyPickedOrders)
         setNeworders(newOrders);
         setActiveOrder(ActiveOrders);
@@ -540,10 +624,15 @@ useEffect(() => {
             onClick ={()=>handleClick("earning per order")}
             className={`${option==="earning per order" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >Earning per order</button>
-          <button
+          {isAdmin && <button
             onClick ={()=>handleClick("payment requests")}
             className={`${option==="payment requests" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >Payment requests</button>
+          }
+          {/* <button
+            onClick ={()=>handleClick("pending payments")}
+            className={`${option==="pending payments" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+          >Pending payments</button> */}
         </div>
         { 
           option==="filtered orders" && <div className='grid grid-cols-1 lg:grid-cols-2'>
@@ -565,24 +654,25 @@ useEffect(() => {
 
          }
          {
-          option==="earning per order" && <div className='grid md:grid-cols-2 grid-cols-1'>
+          option==="earning per order" && <div className=' my-2 mx-20 grid md:grid-cols-2 grid-cols-1 gap-x-20 gap-y-20 '>
                {
                 Myorder.map((Myorder)=>(
-                  <div key={Myorder._id} className='w-full h-auto m-6 p-5 shadow-lg relative'>
+                  <div key={Myorder._id} className='w-auto  h-auto p-5 shadow-lg border border-blue-100 relative'>
                      <h1 className='mx-2 text-blue-500'>{Myorder.Date}</h1>
                      <h1 className='mx-2 text-blue-500'>orderID : {Myorder._id}</h1>
                      <hr/>
                      <div className='grid items-center my-1 relative'>
                         <span className='text-Gray-600 font-semibold mx-2'>{Myorder.Item}:</span>
                         <span className='mx-2'>Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}</span>
-                        {Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-2 text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
-                        {Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
+                        {!Myorder.canceled && Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-2 text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
+                        {!Myorder.canceled && Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
+                        {Myorder.canceled && Myorder.canceledBy==="rider" && Myorder.RiderPhone===user.phone && Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-red-500 border-b-2 border-red-500">You owe : ₹40</span>}
                         {/* {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10"/>}
                         {Myorder.paymentSettled===false && <span className='ml-4 text-red-500'>payment due</span>} */}
                      </div>
                      <br/>
-                     {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10 absolute bottom-0 left-0"/>}
-                      {Myorder.paymentSettled===false && <span className='ml-4 text-red-500 absolute bottom-0 left-0'>payment due</span>}
+                     {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-8 w-8 absolute top-2 right-2"/>}
+                      {!Myorder.canceled && Myorder.paymentSettled===false && <span className='ml-4 text-red-500 absolute bottom-0 left-0'>payment due</span>}
                      <div className='absolute right-0 bottom-0 '>{Myorder.completed ? <span className='text-red-500 '>delivered</span> : Myorder.picked ? <span className='text-blue-500'> picked</span>: Myorder.canceled ? <span className='text-gray-700'>cancelled</span> :<span className='text-green-500'>accepted</span>}</div>
                   </div>
                 ))
@@ -611,7 +701,7 @@ useEffect(() => {
          </div>
          }
          {
-            option === "payment requests" && (
+               option === "payment requests" && (
                <div className='m-5'>
                  {incompleteRequests.map((req) => (
                    <div key={req._id} className='p-4 border rounded shadow h-fit relative m-2'>
@@ -621,7 +711,8 @@ useEffect(() => {
                      <div>Amount: ₹{req.amount}</div>
                      <div>Created At: {new Date(req.createdAt).toLocaleString()}</div>
                     </div>
-                      <button className='absolute bottom-1 right-1 p-1 rounded-lg bg-green-500 text-white' onClick ={PaymentDone}> Payment Done</button>
+                      {!paymentDone && <button className='absolute bottom-1 right-1 p-1 rounded-lg bg-green-500 text-white ' onClick ={()=>PaymentDone(req._id)}> Payment Done</button>}
+                      {paymentDone && <button className='absolute bottom-1 right-1 p-1 text-green-500 font-semibold '>Successful</button>}
                    </div>
                  ))}
                </div>

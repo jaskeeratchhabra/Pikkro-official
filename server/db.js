@@ -1,10 +1,5 @@
 const mongoose= require("mongoose");
 
-// const username = encodeURIComponent("jkchhabra99");
-// const password = encodeURIComponent("Mummypapa10@");
-
-// const mongoURL=`mongodb+srv://${username}:${password}@cluster0.jlulvss.mongodb.net/Pikkro-official`;
-
 const mongoURL = process.env.MONGO_URI
 mongoose.connect(mongoURL);
 

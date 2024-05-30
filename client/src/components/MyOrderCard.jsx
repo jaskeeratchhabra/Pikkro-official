@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router"
@@ -27,36 +28,50 @@ function OrderCard({ order}) {
     }
 
 
-    const handleCancel = async (value)=>{
-
-        if(order.picked === true){
-            console.log("order  can't be canceled")
-            setStatus("picked");
-            return ;
+    const handleCancel = async (value) => {
+        if (order.picked === true) {
+          console.log("Order can't be canceled");
+          setStatus("picked");
+          return;
         }
-        
-        Swal.fire("Cancellation charge of Rs 40 will be applied")
-        const userInfo = (JSON.parse(localStorage.getItem("user")));
-        const _id = order._id;
-        const statusValue = { 
-                              value: value,
-                              RiderPhone: userInfo.phone,
-                              RiderName: userInfo.name
-                            }
-        try{
-        setLoading(true);
-        const result = (await axios.patch(`/api/orders/${_id}`,statusValue)).data;
-        if(result.updatedDocument["canceled"]===true){
-          console.log(result.message , "order has been canceled")
-          setStatus("canceled");
+      
+        // Show the SweetAlert2 modal
+        const result = await Swal.fire({
+          title: "Cancellation",
+          text: "Cancellation charge of Rs 30 will be applied",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel"
+        });
+      
+        // If the user confirmed the cancellation
+        if (result.isConfirmed) {
+          const userInfo = JSON.parse(localStorage.getItem("user"));
+          const _id = order._id;
+          const statusValue = {
+            value: value,
+            RiderPhone: userInfo.phone,
+            RiderName: userInfo.name,
+            canceledBy: "user"
+          };
+      
+          try {
+            setLoading(true);
+            const response = await axios.patch(`/api/orders/${_id}`, statusValue);
+            const result = response.data;
+      
+            if (result.updatedDocument["canceled"] === true) {
+              console.log(result.message, "Order has been canceled");
+              setStatus("canceled");
+            }
+            setLoading(false);
+          } catch (error) {
+            console.log(error.message);
+            setLoading(false); // Ensure loading is set to false even if there's an error
+          }
         }
-         setLoading(false);
-        }
-        catch(error){
-          console.log(error.message);
-        }
-        setLoading(false);
-    }
+      };
     return (
         <div className="bg-gray-100 shadow-lg rounded-lg overflow-hidden mb-4  mt-4 relative">
              {loading && <Loading/>}
@@ -85,6 +100,16 @@ function OrderCard({ order}) {
                </div>
                
              </div>
+             {order.completed === false && order.accepted === true && order.canceled === false && 
+                <div className='m-4 relative top-8'> {/* Use mt-4 to add some margin-top */}
+                  <div className='text-gray-700 '>
+                    Your order will be completed by: {order.RiderName}
+                  </div>
+                  <div className='text-gray-700 '>
+                    Rider's Contact: +91{order.RiderPhone}
+                  </div>
+                </div>
+              }
             <div className="px-6 py-4 flex mt-10">
                 <button
                     className="  text-gray-700 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-4 "

@@ -6,6 +6,26 @@ const paymentRequest = require("../models/payment")
 const router = express.Router();
 
 
+router.patch("/:reqId", async(req,res)=>{
+    const {reqId} = req.params;
+    try{
+       const  request =  await paymentRequest.findById(reqId);
+       if(request){
+           request.paymentCompleted=true;
+           await request.save();
+           res.status(200).json("request fullfilled, field updated");
+       }
+       else{
+        res.status(404).json("req not fullfilled, something went wrong");
+       }
+    }
+    catch(error)
+    {
+        console.log(error.message);
+        res.send(error.message);
+    }
+})
+
 router.get("/getrequest", async (req,res)=>{
     try {
         const incompleteRequests = await paymentRequest.find({ paymentCompleted: false });
