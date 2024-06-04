@@ -21,7 +21,7 @@ const Footer = () => {
             <li className="mb-2"><a href="/T&C" className="hover:text-gray-500">T&C</a></li>
           </ul>
           <ul className="text-sm">
-            <li className="mb-2"><a href="/DisputeResolution" className="hover:text-gray-500">Dispute Resolution</a></li>
+            <li className="mb-2"><a href="/RiderT&C" className="hover:text-gray-500">Rider's T&C</a></li>
             <li className="mb-2"><a href="/cancellation" className="hover:text-gray-500">Cancellation policy and Charges</a></li>
             <li className="mb-2"><a href="/CommunityGuidlines" className="hover:text-gray-500">Community Guidelines</a></li>
             <li className="mb-2"><a href="/Pricing" className="hover:text-gray-500">Pricing</a></li>

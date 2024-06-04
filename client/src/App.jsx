@@ -17,6 +17,8 @@ import { LoadScript } from "@react-google-maps/api"
 import Terms from "./pages/Terms"
 import ForgotPassword from "./screens/ForgotPassword.jsx"
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx"
+import CancellationPolicy from "./pages/CancellationPolicy.jsx"
+import RiderTermsAndConditions from "./pages/RiderTermsAndConditions.jsx"
 
 
 export default function App() {
@@ -68,6 +70,9 @@ export default function App() {
          <Route path="/create-order" exact element={<Orderscreen/>}/>
          <Route path="/register" exact element ={<RegisterForm/>}/>
          <Route path ="/PrivacyPolicy" exact element={<PrivacyPolicy/>}/>
+         <Route path ="/cancellation" exact element={<CancellationPolicy/>}/>
+         <Route path ="/RiderT&C" exact element={<RiderTermsAndConditions/>}/>
+         
          {/* <Route path ="/edit-order" exact element ={<EditOrderScreen/>}/> */}
       </Routes>
       <Footer/>

@@ -741,7 +741,7 @@ useEffect(() => {
 
   }
   
-
+  
   useEffect(()=>{
     
     async function getOrders(){
@@ -755,20 +755,20 @@ useEffect(() => {
         const parseDateTime = (dateString, time) => {
           const [month, day, year] = dateString.split(' ');
           let { hours, minutes, meridian } = time;
-  
+          
           // Convert month abbreviation to month index
           const monthIndex = new Date(`${month} 1`).getMonth();
-  
+          
           // Convert 12-hour time to 24-hour time
           if (meridian.toLowerCase() === 'pm' && hours !== 12) {
             hours += 12;
           } else if (meridian.toLowerCase() === 'am' && hours === 12) {
             hours = 0;
           }
-  
+          
           return new Date(year, monthIndex, day, hours, minutes);
         };
-  
+        
         // Sort newOrders by most recent combined datetime
         newOrders.sort((a, b) => parseDateTime(b.Date, b.Time) - parseDateTime(a.Date, a.Time));
 
@@ -778,7 +778,7 @@ useEffect(() => {
         setLoading(false);
       }
       catch(error){
-       setLoading(false)
+        setLoading(false)
        console.log(error.message);
       }
     }
@@ -791,14 +791,12 @@ useEffect(() => {
 
   const handleEditBankDetails=()=>{
   setEditbankform((prev)=>(!prev));
-  }
+}
   return (
     <div className='relative'>
         {loading && <Loading/>}
-         {option === "" && <div className=' text-center text-xl text-blue-500'>Select options to continue</div>} 
+         {option === "" && <div className=' text-center text-xl text-gray-700 font-semibold animate-pulse'>Select options to continue</div>} 
          {isAdmin && <button className='border shadow-md p-1' onClick={()=>(navigate("/admin"))}>Switch to admin screen</button>}
-         {editbankform && <BankDetailsForm role="edit"/>}
-         {bankformstatus && <BankDetailsForm role="add"/>}
          <div className='absolute right-4 top-1 flex items-center'>
              <div
               className={`w-14 h-8 flex items-center bg-gray-300 rounded-full p-1 cursor-pointer transition-colors duration-300 ${isOn ? 'bg-green-500' : 'bg-gray-300'}`}
@@ -880,10 +878,10 @@ useEffect(() => {
           }
 
          {
-          option==="earning per order" && <div className=' my-2 mx-auto  grid md:grid-cols-2 grid-cols-1 gap-x-20 gap-y-5 mt-10 relative '>
+          option==="earning per order" && <div className=' my-auto ml-20  grid md:grid-cols-2 grid-cols-1 gap-x-32 gap-y-12 mt-10 relative '>
                {
                 Myorder.map((Myorder)=>(
-                  <div key={Myorder._id} className='w-auto  h-auto p-5 shadow-lg border border-blue-100 relative'>
+                  <div key={Myorder._id} className='min-w-1/2 h-auto p-5 shadow-lg border border-blue-100 relative'>
                      <h1 className='mx-2 text-blue-500'>{Myorder.Date}</h1>
                      <h1 className='mx-2 text-blue-500'>orderID : {Myorder._id}</h1>
                      <hr/>
@@ -955,6 +953,8 @@ useEffect(() => {
             )
          }
         </div>
+        {editbankform && <BankDetailsForm role="edit"/>}
+         {bankformstatus && <BankDetailsForm role="add"/>}
     </div>
   )
 }

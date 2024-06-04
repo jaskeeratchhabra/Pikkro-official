@@ -3,7 +3,7 @@ import {useState} from 'react';
 import { useRef ,useEffect} from 'react';
 // import { LocationMarkerIcon } from "@heroicons/react/solid";'
 import Loading from '../components/Loading';
-
+import { useNavigate } from 'react-router-dom';
 
 import {
   // useJsApiLoader,
@@ -17,7 +17,9 @@ const Homescreen = () => {
    const [price, setPrice] = useState(null);
    const [distance,setDistance]=useState("");
    const [duration,setDuration]=useState("");
-
+   const navigate= useNavigate();
+   
+   const user=JSON.parse(localStorage.getItem("user"))
    useEffect(()=>{
       
      if(distance){
@@ -56,6 +58,8 @@ const Homescreen = () => {
 
   return (
     <>
+    {user && user.isRider && <button className='shadow-lg m-1 p-1' onClick={()=>(navigate("/rider"))}> Switch to rider mode</button>}
+    {user && ~user.isAdmin && <button className='shadow-lg m-1 p-1' onClick={()=>(navigate("/admin"))}> Switch to admin screen</button>}
     <div className='grid md:grid-cols-2 grid-cols-1 mt-4'>
 
       <div className=" lg:mt-5 my-auto h-2/3 mx-auto md:order-2">
