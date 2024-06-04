@@ -11,6 +11,20 @@ const nodemailer = require('nodemailer');
 
 require('dotenv').config();
 
+
+router.get("/getonlinepartners", async(req,res)=>{
+    try{
+        const riders = await User.find({onDuty:true});
+        console.log(riders,"hello");
+        res.send(riders);
+    }
+    catch(error)
+    {
+      console.log(error.message);
+      res.status(404).json({error:error.message});
+    }
+})
+
 router.post('/email',(req,res)=>{
     // const { to, subject, description,from } = req.body;
     console.log(req.body);
@@ -56,19 +70,42 @@ router.post('/email',(req,res)=>{
 });
 
 router.patch("/:phone",async(req,res)=>{
-    const {password,phone} = req.body;
+
+    const {phone} = req.params;
+    if(req.body.password){
+        var password = req.body.password;
+    }
     // console.log(req.body, phone); 
+    if(req.body.onDuty)
+    {
+         var onDuty= req.body.onDuty;
+    }
     try {
         const user=await User.findOne({phone});
-        if(user){
+        if(onDuty===true)
+        {
+            user.onDuty=true;
+            await user.save();
+            console.log("state updated")
+            return res.status(200).json({ message: "state updated successfully" })
+        }
+        else{
+            user.onDuty=false;
+            await user.save();
+            console.log("state set to false")
+            return res.status(200).json({ message: "state updated successfully" })
+        }
+        if(user && password){
             user.password = password;
             await user.save();
             console.log(user)
             return res.status(200).json({ message: "Password updated successfully" })
         }
         else{
-        console.log("user not found")
-        return res.status(400).json({message:"User Not Found"});4
+        if(password){
+           console.log("user not found")
+           return res.status(400).json({message:"User Not Found"});
+        }
        }     
       } catch (error) {
         console.error('Error updating field:', error);
@@ -83,12 +120,12 @@ router.post("/generateOTP", async(req,res)=>{
 
     var {number} = req.body;
     // console.log(req.body);
-    const options  ={
-        authorization : process.env.OTP_Authorization,
-        message: `Hi user, this otp is sent by pikkro.com for your phone number verification your otp is ${otp} valid for 10 mins.`,
-        numbers: [`${number}`]
-    
-    }
+    const messageContent = `Hi user, this otp is sent by pikkro.com for your phone number verification. Your otp is ${otp} valid for 10 mins.`;
+        const options = {
+            authorization: process.env.OTP_Authorization,
+            message: messageContent,
+            numbers: [number]
+        };
     // console.log(options)
     fast2sms.sendMessage(options)
     .then((response)=>{
@@ -106,6 +143,7 @@ router.post("/generateOTP", async(req,res)=>{
     })
     .catch((error)=>
         {
+            console.log(error);
             console.log(error.message);
         }
     )

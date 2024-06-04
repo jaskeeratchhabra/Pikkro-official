@@ -8,6 +8,7 @@ import { logout } from '../store/authSlice';
 import { login } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import SideScreen from './SideScreen';
+import axios from 'axios';
 const NavigationBar = () => {
   
   const navigate=useNavigate();
@@ -17,6 +18,7 @@ const NavigationBar = () => {
   const dispatch =useDispatch();
   const loggedIn = useSelector(state=>state.authReducer.status)
   const [isSideScreenOpen, setIsSideScreenOpen] = useState(false);
+  const user= JSON.parse(localStorage.getItem("user"))
 
   const handleDropdown=(e)=>{
     e.preventDefault();
@@ -33,9 +35,17 @@ const NavigationBar = () => {
   
 
 let username=useSelector(state=>state.authReducer.username);
-const handleLogout=()=>{
-   localStorage.removeItem("user");
-   dispatch(logout())
+const handleLogout=async()=>{
+  const phone = user.phone
+  try{
+    await axios.patch(`/api/users/${phone}`,{onDuty:false})
+  }
+  catch(error)
+  {
+    console.log(error.message);
+  }
+  dispatch(logout())
+  localStorage.removeItem("user");
    navigate("/")
 
 }
@@ -144,7 +154,7 @@ useEffect(() => {
                 onClick={handleDropdown}>Hi, {username} ▼</button>
              </div>
              
-             {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+             {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                <div className="py-1 flex flex-col items-center" role="none">
                  <a href="/MyOrders" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
                  <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>

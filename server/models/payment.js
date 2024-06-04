@@ -27,7 +27,7 @@ const paymentSchema = mongoose.Schema(
        paymentCompleted:{
         type:Boolean,
         default:false
-       }
+       },
     },
     {
        timestamps:true

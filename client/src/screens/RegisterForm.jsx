@@ -24,9 +24,6 @@ const RegisterForm = () => {
   const [otp, setOTP] = useState(['', '', '', '', '', '']);
   const [code,setCode] = useState("");
   const refs = useRef([]);
-  useEffect(()=>{
-     
-  },[OtpStatus])
 
     const handleOTPChange = (index, value) => {
         const newOTP = [...otp];
@@ -64,7 +61,7 @@ const RegisterForm = () => {
       const data = (await axios.post("/api/users/generateOTP",{number:phone})).data;
       console.log(data)
       setCode(data); 
-      setStatus(true);
+      // setStatus(true);
     }
    const handleVerification=(e)=>{
          e.preventDefault();
@@ -131,7 +128,7 @@ const RegisterForm = () => {
   return (
     <>
      {success && <SuccessComponent message="User Registered SuccessFully"/>}
-      <div className='text-center mt-10 text-xl font-semibold text-red-500 '>{error&&<h1>{error}</h1>}</div>
+      <div className='text-center mt-10 text-xl font-semibold text-red-500 '>{error&& <SuccessComponent message="Registration failed try again"/>}</div>
       <div className="flex justify-center items-center h-screen">
       {loading && <Loading />}
       <form className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">

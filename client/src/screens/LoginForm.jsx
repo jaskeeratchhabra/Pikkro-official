@@ -68,7 +68,8 @@ const LoginForm = () => {
 
   return (
        <>
-      {success ? <SuccessComponent className="top" message="Logged In SuccessFully"/> : <h1>{error}</h1>}
+      {success && <SuccessComponent className="top" message="Logged In SuccessFully"/>}
+      {error &&  <SuccessComponent className="top" message="User not found!"/>}
       <div className="relative flex justify-center items-center h-screen bg-gray-100">
       {loading && <Loading/>}
       <div className="bg-white shadow-md rounded-md p-8 mb-3 w-full max-w-sm">

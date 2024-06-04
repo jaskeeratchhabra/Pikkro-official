@@ -6,6 +6,10 @@ import Loading from "../components/Loading"
 import MapContainer from '../components/MapContainer';
 import PopupComponent from '../components/PopupComponent';
 import Swal from 'sweetalert2';
+import {useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
+import BankDetailsForm from '../components/BankDetailsForm';
+
 const OrderCard=({orders, handleStatusProp})=>{
   
   const [toggleP,settoggleP] = useState(false);
@@ -18,6 +22,36 @@ const OrderCard=({orders, handleStatusProp})=>{
   const RiderPhone = (JSON.parse(localStorage.getItem("user"))).phone
   const [cancel,setCancel] = useState(false);
   const paymentType = orders.paymentType;
+  const user=JSON.parse(localStorage.getItem("user"));
+  const [OtpPickupStatus,setOtpPickupStatus] = useState("");
+  const [OtpDeliveryStatus,setOtpDeliveryStatus] = useState("");
+  const [Pickupotp, setPickupOTP] = useState(['', '', '', '', '', '']);
+  const [Deliveryotp, setDeliveryOTP] = useState(['', '', '', '', '', '']);
+  const [Pickupcode,setPickupCode] = useState("");
+  const [Deliverycode,setDeliveryCode] = useState("");
+  const refs = useRef([]);
+
+  const handleOTPChange = (index, value, otpType) => {
+    const newOTP = otpType === "pickup" ? [...Pickupotp] : [...Deliveryotp];
+    newOTP[index] = value;
+
+    console.log(otpType)
+    if (otpType === "pickup") {
+      setPickupOTP(newOTP);
+    } else {
+      setDeliveryOTP(newOTP);
+    }
+
+    if (value && index < newOTP.length - 1) {
+      refs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (index, e, otpType) => {
+    if (e.key === 'Backspace' && index > 0) {
+      refs.current[index - 1].focus();
+    }
+  };
   
 
   // to update state of the order
@@ -111,6 +145,46 @@ const OrderCard=({orders, handleStatusProp})=>{
      }
   }
   
+  const handleGeneration = async (value) => {
+    let phone;
+    if (value === "pickup") {
+      phone = orders.PickupDetails.Phone;
+    } else {
+      phone = orders.DeliveryDetails.Phone;
+    }
+    try {
+      const data = (await axios.post("/api/users/generateOTP", { number: phone })).data;
+      console.log(data);
+      if (value === "pickup") {
+        setOtpPickupStatus("sent");
+        setPickupCode(data);
+      } else {
+        setOtpDeliveryStatus("sent");
+        // console.log(data);
+        setDeliveryCode(data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleVerification = (value) => {
+    const otp = value === "pickup" ? Pickupotp.join('') : Deliveryotp.join('');
+    const code = value === "pickup" ? Pickupcode : Deliverycode;
+   
+    console.log(code,otp)
+    if (otp === String(code)) {
+      if (value === "pickup") {
+        setOtpPickupStatus("verified");
+      } else {
+        setOtpDeliveryStatus("verified");
+      }
+    } else {
+      console.log("OTP verification failed");
+    }
+  };
+
+
   const handleCancel= ()=>{
       setCancel(true);
       handleStatus("canceled");
@@ -196,6 +270,33 @@ const OrderCard=({orders, handleStatusProp})=>{
                      <span><b>Address: </b> {orders.PickupDetails.address}</span>
                      <span><b>Phone:</b> {orders.PickupDetails.Phone}</span>
                      <span><b>Locality:</b> {orders.PickupDetails.Locality}</span>
+                     {!OtpPickupStatus && <button className='bg-blue-500 text-white w-fit p-1 rounded-md' onClick={()=>handleGeneration("pickup")}>Send OTP</button>}
+                     {OtpPickupStatus==="sent" && <div>
+                        <h2 className='mt-3 ml-1'>Enter OTP</h2>
+                        <div className='flex'>
+                            <div className="w-fit ">
+                                {Pickupotp.map((digit, index) => (
+                                    <input
+                                        key={index}
+                                        type="text"
+                                        className="h-5 w-5 border rounded-md border-black mx-1"
+                                        maxLength={1}
+                                        value={digit}
+                                        onChange={(e) => handleOTPChange(index, e.target.value,"pickup")}
+                                        onKeyDown={(e) => handleKeyDown(index, e,"pickup")}
+                    
+                                        ref={(el) => (refs.current[index] = el)}
+                    
+                                    />
+                                ))}
+                            </div>
+                            <button className='px-1 bg-blue-700 text-white ml-2 rounded-md' onClick={()=>handleVerification("pickup")}>Verify</button>
+                        </div>
+                    </div>
+                   }
+                   {
+                    OtpPickupStatus==="verified" && <h1 className='text-green-700'>User verified</h1>
+                   }
                    </div>
                    }
                </div>
@@ -208,21 +309,60 @@ const OrderCard=({orders, handleStatusProp})=>{
                         orders.DeliveryDetails && 
                         Object.keys(orders.DeliveryDetails).length === 4 && 
                         orders.DeliveryDetails.name && (
-                          <li><span className='underline'>Name: </span>{orders.DeliveryDetails.name}</li>
+                          <li><span className=''>Name: </span>{orders.DeliveryDetails.name}</li>
                       )}
                      <span><b>Address: </b>{orders.DeliveryDetails.address}</span>
                      <span><b>Phone:</b> {orders.DeliveryDetails.Phone}</span>
                      <span><b>Locality:</b> {orders.DeliveryDetails.Locality}</span>
+                     {!OtpDeliveryStatus && <button className='bg-blue-500 text-white w-fit p-1 rounded-md' onClick={()=>{handleGeneration("delivery")}}>Send OTP</button>}
+                     {
+                      OtpDeliveryStatus==="sent" && <div>
+                        <h2 className='mt-3 ml-1'>Enter OTP</h2>
+                        <div className='flex'>
+                            <div className="w-fit ">
+                                {Deliveryotp.map((digit, index) => (
+                                    <input
+                                        key={index}
+                                        type="text"
+                                        className="h-5 w-5 border rounded-md border-black mx-1"
+                                        maxLength={1}
+                                        value={digit}
+                                        onChange={(e) => handleOTPChange(index, e.target.value,"delivery")}
+                                        onKeyDown={(e) => handleKeyDown(index, e,"delivery")}
+                    
+                                        ref={(el) => (refs.current[index] = el)}
+                    
+                                    />
+                                ))}
+                            </div>
+                            <button className='px-1 bg-blue-700 text-white ml-2 rounded-md' onClick={()=>handleVerification("delivery")}>Verify</button>
+                        </div>
+                    </div>
+                     }
+                     {
+                      OtpDeliveryStatus==="verified" && <h1 className='text-green-500'>User verified</h1>
+                     }
                    </div>
                    }
                </div>
+
              </div>
+             <div className='text-center m-3 border-b-2 border-blue-200'>User's Phone : +91{user.phone}</div>
                <div className='w-auto flex justify-center mb-10'> 
-                   {paymentType.split(' ')[0]==="cash" ? 
-                   (<div className='p-1  border border-b-4 border-gray-500 w-fit rounded-md'>Collect cash:  ₹{orders.price}</div>)
-                   :
-                   (<div className='p-1 border border-b-4 border-gray-500 w-fit rounded-md'> Prepaid </div>)
-                   }
+               {paymentType === "cash on delivery" ? (
+                  <div className='p-1 border border-b-4 border-gray-500 w-fit rounded-md mb-4'>
+                    Collect cash on delivery: ₹{orders.price}
+                  </div>
+                ) : paymentType === "cash on pickup" ? (
+                  <div className='p-1 border border-b-4 border-gray-500 w-fit rounded-md mb-4'>
+                    Collect cash on pickup: ₹{orders.price}
+                  </div>
+                ) : (
+                  <div className='p-1 border border-b-4 border-gray-500 w-fit rounded-md mb-4'>
+                    Prepaid
+                  </div>
+                )}
+
                </div>
             </div>
            }
@@ -261,6 +401,50 @@ function Riderscreen() {
   const [paymentRequest, setPaymentRequest] = useState(false)
   const [incompleteRequests, setIncompleteRequests] = useState([]);
   const user= JSON.parse(localStorage.getItem("user"));
+  const [alltimeearning, setAlltimeearnings] = useState(0);
+
+
+  function calculateEarning() {
+    let totalEarning = 0;
+    Myorder.forEach((order) => {
+      if (order.canceled === false && order.completed === true) {
+        totalEarning += parseFloat((order.price * 0.8).toFixed(2));
+      }
+    });
+    setAlltimeearnings(totalEarning)
+  }
+  
+   useEffect(()=>{
+     calculateEarning();
+   }, [Myorder])
+  const [isOn, setIsOn] = useState(()=>{
+    const saved = localStorage.getItem('isOn');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+
+  const [bankformstatus,setBankformstatus] = useState(false);
+  const [editbankform,setEditbankform] = useState(false);
+
+  const navigate = useNavigate()
+  const toggleSwitch = () => {
+    setIsOn(!isOn);
+  };
+  
+  useEffect(()=>{
+    localStorage.setItem('isOn', JSON.stringify(isOn));
+    changeDuty();
+  },[isOn])
+  const changeDuty= async()=>{
+    const onDuty = isOn;
+    const phone = user.phone
+     try{
+       await axios.patch(`/api/users/${phone}`,{onDuty:onDuty})
+     }
+     catch(error)
+     {
+        console.log(error.message);
+     }
+  }
 
   const [paymentDone,setPaymentDone] = useState(false)
   const handlePaymentStatus=(value)=>{
@@ -601,11 +785,32 @@ useEffect(() => {
     getOrders();
   },[option])
 
+  const handleBankDetails=()=>{
+    setBankformstatus((prev)=>(!prev));
+  }
+
+  const handleEditBankDetails=()=>{
+  setEditbankform((prev)=>(!prev));
+  }
   return (
-    <div>
+    <div className='relative'>
         {loading && <Loading/>}
          {option === "" && <div className=' text-center text-xl text-blue-500'>Select options to continue</div>} 
-        <div className='flex'>
+         {isAdmin && <button className='border shadow-md p-1' onClick={()=>(navigate("/admin"))}>Switch to admin screen</button>}
+         {editbankform && <BankDetailsForm role="edit"/>}
+         {bankformstatus && <BankDetailsForm role="add"/>}
+         <div className='absolute right-4 top-1 flex items-center'>
+             <div
+              className={`w-14 h-8 flex items-center bg-gray-300 rounded-full p-1 cursor-pointer transition-colors duration-300 ${isOn ? 'bg-green-500' : 'bg-gray-300'}`}
+              onClick={toggleSwitch}
+              >
+              <div
+                className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${isOn ? 'translate-x-6' : 'translate-x-0'}`}
+              />
+            </div>
+              <span className='ml-2'>On Duty</span>
+         </div>
+        <div className='flex mt-10'>
          <div className="w-1/6 p-2 bg-gray-100">
           {isAdmin && <button
             onClick={()=>handleClick("new orders")}
@@ -629,32 +834,53 @@ useEffect(() => {
             className={`${option==="payment requests" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >Payment requests</button>
           }
+          <div className='flex flex-col w-fit mt-10'>
+           <button className='shadow-lg p-1 rounded-lg ml-2' onClick={handleBankDetails}>Submit Bank Details</button>
+           <button className='shadow-lg p-1 rounded-lg ml-2 mt-5' onClick={handleEditBankDetails}>Update Bank Details</button>
+          </div>
           {/* <button
             onClick ={()=>handleClick("pending payments")}
             className={`${option==="pending payments" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
           >Pending payments</button> */}
         </div>
-        { 
-          option==="filtered orders" && <div className='grid grid-cols-1 lg:grid-cols-2'>
-            {
-              orderInRange.map((order)=>(
-                <OrderCard key={order._id} orders={order} handleStatusProp={(value)=>handleStatus(value)}/>
-             ))
-            }
-         </div>
-         }
          { 
-           option==="new orders" && <div className='grid grid-cols-1 lg:grid-cols-2'>
-             {
-              neworders.map((order)=>(
-                <OrderCard key={order._id} orders={order} handleStatusProp={(value)=>handleStatus(value)}/>
-             ))
-            }
-         </div>
-
+          option === "filtered orders" && (
+             <div className='grid grid-cols-1 lg:grid-cols-2 mt-10'>
+               {orderInRange.length === 0 ? (
+                 <h1>No orders found</h1>
+               ) : (
+                 orderInRange.map((order) => (
+                   <OrderCard 
+                     key={order._id} 
+                     orders={order} 
+                     handleStatusProp={(value) => handleStatus(value)} 
+                   />
+                 ))
+               )}
+             </div>
+           )
          }
+
          {
-          option==="earning per order" && <div className=' my-2 mx-20 grid md:grid-cols-2 grid-cols-1 gap-x-20 gap-y-20 '>
+            option === "new orders" && (
+              <div className='grid grid-cols-1 lg:grid-cols-2 mt-5'>
+                {neworders.length === 0 ? (
+                  <h1>No orders found</h1>
+                ) : (
+                  neworders.map((order) => (
+                    <OrderCard
+                      key={order._id}
+                      orders={order}
+                      handleStatusProp={(value) => handleStatus(value)}
+                    />
+                  ))
+                )}
+              </div>
+            )
+          }
+
+         {
+          option==="earning per order" && <div className=' my-2 mx-auto  grid md:grid-cols-2 grid-cols-1 gap-x-20 gap-y-5 mt-10 relative '>
                {
                 Myorder.map((Myorder)=>(
                   <div key={Myorder._id} className='w-auto  h-auto p-5 shadow-lg border border-blue-100 relative'>
@@ -666,7 +892,7 @@ useEffect(() => {
                         <span className='mx-2'>Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}</span>
                         {!Myorder.canceled && Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-2 text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
                         {!Myorder.canceled && Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
-                        {Myorder.canceled && Myorder.canceledBy==="rider" && Myorder.RiderPhone===user.phone && Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-red-500 border-b-2 border-red-500">You owe : ₹40</span>}
+                        {Myorder.canceled && Myorder.canceledBy==="rider" && Myorder.RiderPhone===user.phone && Myorder.paymentSettled===false && <span className="mx-2 text-red-500 border-b-2 border-red-500">You owe : ₹40</span>}
                         {/* {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10"/>}
                         {Myorder.paymentSettled===false && <span className='ml-4 text-red-500'>payment due</span>} */}
                      </div>
@@ -681,28 +907,38 @@ useEffect(() => {
                <br/>
                <br/>
                <hr/>
-              <div className='relative'>
+              {/* <div className='relative'> */}
                {!paymentRequest && totalAmount<0 && <button onClick={handlePaymentRequest} className='absolute right-0 bg-green-500 text-white m-2 rounded-sm px-1 bottom-2'>Request ₹{-1 * totalAmount}</button>}
                {
                 paymentRequest && <button className='absolute right-0 text-green-700 m-2 bottom-2'> payment request sent</button>
                }
                {totalAmount>0 && <button onClick={settlePayment} className='absolute right-0 bottom-2 bg-blue-700 text-white m-2 rounded-sm px-1'>Pay ₹{totalAmount}</button>}
-              </div>
+              
+               {alltimeearning && <h1 className=' text-black font-semibold underline absolute left-0 bottom-2'>All time earnings : ₹{alltimeearning}</h1>}
+              {/* </div> */}
           </div>
          }
-         {
-          option==="active orders" && 
-          <div className='grid grid-cols-1 lg:grid-cols-2'>
-             {
-              Activeorders.map((order)=>(
-                <OrderCard key={order._id} orders={order} handleStatusProp={(value)=>handleStatus(value)}/>
-             ))
-            }
-         </div>
+         { 
+           option === "active orders" && (
+             <div className='grid grid-cols-1 lg:grid-cols-2 mt-10'>
+               {Activeorders.length === 0 ? (
+                 <h1 className=''>No active orders found</h1>
+               ) : (
+                 Activeorders.map((order) => (
+                   <OrderCard 
+                     key={order._id} 
+                     orders={order} 
+                     handleStatusProp={(value) => handleStatus(value)} 
+                   />
+                 ))
+               )}
+             </div>
+           )
          }
+
          {
                option === "payment requests" && (
-               <div className='m-5'>
+               <div className=''>
                  {incompleteRequests.map((req) => (
                    <div key={req._id} className='p-4 border rounded shadow h-fit relative m-2'>
                    <div className='shadow-sm mb-10'>

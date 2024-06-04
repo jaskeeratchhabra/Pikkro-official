@@ -133,7 +133,7 @@ return (
         </div>
         {    status !=="new" &&
              <GoogleMap
-               mapContainerStyle={{ width: '100%', height: '250px' }}
+               mapContainerStyle={{ width: '100%', height: '200px' }}
                center={currentLocation}
                zoom={12}
              >

@@ -33,6 +33,10 @@ const userSchema=mongoose.Schema({
     isRider:{
         type:Boolean,
         default:false
+    },
+    onDuty:{
+        type:Boolean,
+        default:false
     }
 },
     {
