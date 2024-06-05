@@ -6,8 +6,18 @@ const ordersRoute = require("./routes/orderRoute")
 const partnersRoute= require("./routes/partnerRoute")
 const paymentRoute = require("./routes/paymentRoute")
 const BankRoute= require("./routes/BankdetailsRoute")
+const path = require('path');
 require('dotenv').config();
+
 const app=express();
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+
 
 app.use(express.json());
 app.use(cors());
