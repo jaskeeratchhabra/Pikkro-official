@@ -96,6 +96,7 @@ router.patch('/:_id', async (req, res) => {
 });
 
 router.get("/getorder", async(req,res)=>{
+  console.log("hello")
   try{
       const orders = await Order.find({});
       res.send(orders);

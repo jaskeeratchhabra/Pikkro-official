@@ -7,28 +7,33 @@ const partnersRoute= require("./routes/partnerRoute")
 const paymentRoute = require("./routes/paymentRoute")
 const BankRoute= require("./routes/BankdetailsRoute")
 const path = require('path');
+const db=require("./db")
 require('dotenv').config();
 
 const app=express();
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(cors({
+    origin: 'http://localhost:3000', // frontend URL
+    optionsSuccessStatus: 200
+  }));
+  
+  
+  
+  app.use(express.json());
+  app.use(bodyParser.urlencoded({extended:false})); 
+  
+  app.use("/api/users",usersRoute);
+  app.use("/api/orders",ordersRoute)
+  app.use("/api/partners",partnersRoute);
+  app.use("/api/payments/",paymentRoute)
+  app.use("/api/bank",BankRoute)
+  
+  app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client','dist', 'index.html'));
+  });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
-
-
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.urlencoded({extended:false})); 
-
-app.use("/api/users",usersRoute);
-app.use("/api/orders",ordersRoute)
-app.use("/api/partners",partnersRoute);
-app.use("/api/payments/",paymentRoute)
-app.use("/api/bank",BankRoute)
-const db=require("./db")
 const port = parseInt(process.env.PORT, 10) || 8080;
 
 

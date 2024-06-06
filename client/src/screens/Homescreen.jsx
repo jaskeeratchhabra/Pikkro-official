@@ -59,7 +59,7 @@ const Homescreen = () => {
   return (
     <>
     {user && user.isRider && <button className='shadow-lg m-1 p-1' onClick={()=>(navigate("/rider"))}> Switch to rider mode</button>}
-    {user && ~user.isAdmin && <button className='shadow-lg m-1 p-1' onClick={()=>(navigate("/admin"))}> Switch to admin screen</button>}
+    {user && user.isAdmin && <button className='shadow-lg m-1 p-1' onClick={()=>(navigate("/admin"))}> Switch to admin screen</button>}
     <div className='grid md:grid-cols-2 grid-cols-1 mt-4'>
 
       <div className=" lg:mt-5 my-auto h-2/3 mx-auto md:order-2">
