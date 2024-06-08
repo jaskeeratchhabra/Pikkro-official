@@ -114,7 +114,7 @@ useEffect(() => {
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
             <a href="/" className="text-green-500 text-2xl font-extrabold">Pikkro</a>
           </div>
-          <div className=" flex rounded-sm p-1 left">
+          <div className=" md:flex hidden rounded-sm p-1 left">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
@@ -122,7 +122,7 @@ useEffect(() => {
             <a href="/" className="text-lg text-gray-200 font-semibold">{city}</a>
           </div>
           {location.pathname === "/" && (
-             <div className=" lg:ml-auto ml-6">
+             <div className=" lg:ml-auto ">
                <Link to="/create-order">
                  <button className="mt-4 w-28  lg:w-48 mb-2 py-2 bg-green-600 text-white rounded-md animate-pulse ">
                    Book Delivery

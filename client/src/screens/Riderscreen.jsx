@@ -192,11 +192,11 @@ const OrderCard=({orders, handleStatusProp})=>{
 
   return (
     <>
-    <div className='w-3/4 mx-auto rounded-lg'>
+    <div className='md:w-3/4 w-fit m-2 mx-auto rounded-lg'>
     {loading  &&  <Loading/>}
       {popup && <PopupComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
        <div className= "w-full shadow-xl p-2 m-2 border border-gray-300 relative"> 
-          <div className='font-semibold text-xl text-gray-700 m-1'>
+          <div className='font-semibold md:text-xl text-gray-700 m-1'>
           {orders.Time && (
               <span>
                 Pickup Time: {orders.Time.hours}:{orders.Time.minutes}{" "}
@@ -206,11 +206,11 @@ const OrderCard=({orders, handleStatusProp})=>{
           </div>
           {
             status === "new" && <div>
-
-             <div className='absolute right-2 mb-3 font-semibold'>Your earning: ₹{((0.8)* orders.price).toFixed(2)}</div>
-             <div className='w-fit'>
+             <div className='w-fit '>
               <div className='bg-black text-white rounded-md p-1 mb-3 animate-pulse'>New order</div> 
              </div>
+
+             <div className='md:right-2 md:mb-3 font-semibold'>Your earning: ₹{((0.8)* orders.price).toFixed(2)}</div>
               <MapContainer pickupAddress={orders.PickupDetails.address} deliveryAddress={orders.DeliveryDetails.address} status ={status} setDistanceToPickupProp={(distance)=>{handlePickupDistance(distance)}}/>
                <div className='mb-5 mt-5'>
                 <ol className=''>
@@ -259,7 +259,7 @@ const OrderCard=({orders, handleStatusProp})=>{
              </div>
              <div className=" flex justify-between m-10 ">
                <div>
-                   <button onClick={handleToggle} name = "pickup" className='rounded-md bg-black text-white p-1'>pickup Details</button>
+                   <button onClick={handleToggle} name = "pickup" className='rounded-md bg-black text-white p-1 mr-2'>pickup</button>
                    {toggleP && <div className='flex flex-col border border-gray-200 mx-auto'>
                     { 
                         orders.PickupDetails && 
@@ -302,7 +302,7 @@ const OrderCard=({orders, handleStatusProp})=>{
                </div>
                <div className=''>
                 
-                   <button name="drop" onClick={handleToggle} className='rounded-md bg-black text-white text-center p-1'>Drop Details</button>
+                   <button name="drop" onClick={handleToggle} className='rounded-md bg-black text-white text-center p-1 ml-2'>Drop</button>
                    {
                      toggleD && <div className='flex flex-col border border-gray-200 mx-auto'>
                      { 
@@ -402,6 +402,12 @@ function Riderscreen() {
   const [incompleteRequests, setIncompleteRequests] = useState([]);
   const user= JSON.parse(localStorage.getItem("user"));
   const [alltimeearning, setAlltimeearnings] = useState(0);
+
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
 
 
   function calculateEarning() {
@@ -792,171 +798,186 @@ useEffect(() => {
   const handleEditBankDetails=()=>{
   setEditbankform((prev)=>(!prev));
 }
-  return (
-    <div className='relative'>
-        {loading && <Loading/>}
-         {option === "" && <div className=' text-center text-xl text-gray-700 font-semibold animate-pulse'>Select options to continue</div>} 
-         {isAdmin && <button className='border shadow-md p-1' onClick={()=>(navigate("/admin"))}>Switch to admin screen</button>}
-         <div className='absolute right-4 top-1 flex items-center'>
-             <div
-              className={`w-14 h-8 flex items-center bg-gray-300 rounded-full p-1 cursor-pointer transition-colors duration-300 ${isOn ? 'bg-green-500' : 'bg-gray-300'}`}
-              onClick={toggleSwitch}
-              >
-              <div
-                className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${isOn ? 'translate-x-6' : 'translate-x-0'}`}
-              />
-            </div>
-              <span className='ml-2'>On Duty</span>
-         </div>
-        <div className='flex mt-10'>
-         <div className="w-1/6 p-2 bg-gray-100">
-          {isAdmin && <button
-            onClick={()=>handleClick("new orders")}
-            className={`${option==="new orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-           >All Orders</button>
-           }
-            <button
-            onClick={()=>handleClick("filtered orders")}
-            className={`${option==="filtered orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-           >Orders near you</button>
-          <button
-            onClick={()=>handleClick("active orders")}
-            className={`${option==="active orders" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-          >Active orders</button>
-          <button
-            onClick ={()=>handleClick("earning per order")}
-            className={`${option==="earning per order" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-          >Earning per order</button>
-          {isAdmin && <button
-            onClick ={()=>handleClick("payment requests")}
-            className={`${option==="payment requests" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-          >Payment requests</button>
-          }
-          <div className='flex flex-col w-fit mt-10'>
-           <button className='shadow-lg p-1 rounded-lg ml-2' onClick={handleBankDetails}>Submit Bank Details</button>
-           <button className='shadow-lg p-1 rounded-lg ml-2 mt-5' onClick={handleEditBankDetails}>Update Bank Details</button>
-          </div>
-          {/* <button
-            onClick ={()=>handleClick("pending payments")}
-            className={`${option==="pending payments" ? "border-b-4 border-blue-700" : " text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
-          >Pending payments</button> */}
-        </div>
-         { 
-          option === "filtered orders" && (
-             <div className='grid grid-cols-1 lg:grid-cols-2 mt-10'>
-               {orderInRange.length === 0 ? (
-                 <h1>No orders found</h1>
-               ) : (
-                 orderInRange.map((order) => (
-                   <OrderCard 
-                     key={order._id} 
-                     orders={order} 
-                     handleStatusProp={(value) => handleStatus(value)} 
-                   />
-                 ))
-               )}
-             </div>
-           )
-         }
-
-         {
-            option === "new orders" && (
-              <div className='grid grid-cols-1 lg:grid-cols-2 mt-5'>
-                {neworders.length === 0 ? (
-                  <h1>No orders found</h1>
-                ) : (
-                  neworders.map((order) => (
-                    <OrderCard
-                      key={order._id}
-                      orders={order}
-                      handleStatusProp={(value) => handleStatus(value)}
-                    />
-                  ))
-                )}
-              </div>
-            )
-          }
-
-         {
-          option==="earning per order" && <div className=' my-auto ml-20  grid md:grid-cols-2 grid-cols-1 gap-x-32 gap-y-12 mt-10 relative '>
-               {
-                Myorder.map((Myorder)=>(
-                  <div key={Myorder._id} className='min-w-1/2 h-auto p-5 shadow-lg border border-blue-100 relative'>
-                     <h1 className='mx-2 text-blue-500'>{Myorder.Date}</h1>
-                     <h1 className='mx-2 text-blue-500'>orderID : {Myorder._id}</h1>
-                     <hr/>
-                     <div className='grid items-center my-1 relative'>
-                        <span className='text-Gray-600 font-semibold mx-2'>{Myorder.Item}:</span>
-                        <span className='mx-2'>Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}</span>
-                        {!Myorder.canceled && Myorder.paymentSettled=== false && Myorder.paymentType.split(' ')[0]==="cash" && <span className="mx-2 text-red-500 border-b-2 border-red-500 ">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
-                        {!Myorder.canceled && Myorder.paymentSettled===false && Myorder.paymentType==="online" && <span className="mx-2 text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
-                        {Myorder.canceled && Myorder.canceledBy==="rider" && Myorder.RiderPhone===user.phone && Myorder.paymentSettled===false && <span className="mx-2 text-red-500 border-b-2 border-red-500">You owe : ₹40</span>}
-                        {/* {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-10 w-10"/>}
-                        {Myorder.paymentSettled===false && <span className='ml-4 text-red-500'>payment due</span>} */}
-                     </div>
-                     <br/>
-                     {Myorder.paymentSettled===true && <img src="../../images/GreenTick.png" alt="green tick" className="h-8 w-8 absolute top-2 right-2"/>}
-                      {!Myorder.canceled && Myorder.paymentSettled===false && <span className='ml-4 text-red-500 absolute bottom-0 left-0'>payment due</span>}
-                     <div className='absolute right-0 bottom-0 '>{Myorder.completed ? <span className='text-red-500 '>delivered</span> : Myorder.picked ? <span className='text-blue-500'> picked</span>: Myorder.canceled ? <span className='text-gray-700'>cancelled</span> :<span className='text-green-500'>accepted</span>}</div>
-                  </div>
-                ))
-
-               }
-               <br/>
-               <br/>
-               <hr/>
-              {/* <div className='relative'> */}
-               {!paymentRequest && totalAmount<0 && <button onClick={handlePaymentRequest} className='absolute right-0 bg-green-500 text-white m-2 rounded-sm px-1 bottom-2'>Request ₹{-1 * totalAmount}</button>}
-               {
-                paymentRequest && <button className='absolute right-0 text-green-700 m-2 bottom-2'> payment request sent</button>
-               }
-               {totalAmount>0 && <button onClick={settlePayment} className='absolute right-0 bottom-2 bg-blue-700 text-white m-2 rounded-sm px-1'>Pay ₹{totalAmount}</button>}
-              
-               {alltimeearning && <h1 className=' text-black font-semibold underline absolute left-0 bottom-2'>All time earnings : ₹{alltimeearning}</h1>}
-              {/* </div> */}
-          </div>
-         }
-         { 
-           option === "active orders" && (
-             <div className='grid grid-cols-1 lg:grid-cols-2 mt-10'>
-               {Activeorders.length === 0 ? (
-                 <h1 className=''>No active orders found</h1>
-               ) : (
-                 Activeorders.map((order) => (
-                   <OrderCard 
-                     key={order._id} 
-                     orders={order} 
-                     handleStatusProp={(value) => handleStatus(value)} 
-                   />
-                 ))
-               )}
-             </div>
-           )
-         }
-
-         {
-               option === "payment requests" && (
-               <div className=''>
-                 {incompleteRequests.map((req) => (
-                   <div key={req._id} className='p-4 border rounded shadow h-fit relative m-2'>
-                   <div className='shadow-sm mb-10'>
-                     <div className='font-bold'>Name: {req.riderName}</div>
-                     <div>Phone: {req.riderPhone}</div>
-                     <div>Amount: ₹{req.amount}</div>
-                     <div>Created At: {new Date(req.createdAt).toLocaleString()}</div>
-                    </div>
-                      {!paymentDone && <button className='absolute bottom-1 right-1 p-1 rounded-lg bg-green-500 text-white ' onClick ={()=>PaymentDone(req._id)}> Payment Done</button>}
-                      {paymentDone && <button className='absolute bottom-1 right-1 p-1 text-green-500 font-semibold '>Successful</button>}
-                   </div>
-                 ))}
-               </div>
-            )
-         }
-        </div>
-        {editbankform && <BankDetailsForm role="edit"/>}
-         {bankformstatus && <BankDetailsForm role="add"/>}
+return (
+  <div className='relative'>
+    {loading && <Loading />}
+    {option === "" && <div className='text-center text-xl text-gray-700 font-semibold animate-pulse'>Select options to continue</div>}
+    {isAdmin && <button className='border shadow-md p-1' onClick={() => navigate("/admin")}>Switch to admin screen</button>}
+    <div className='absolute md:right-4 right-10 md:m-4 mt-2 flex items-center'>
+      <div
+        className={`w-14 h-8 flex items-center bg-gray-300 rounded-full p-1 cursor-pointer transition-colors duration-300 ${isOn ? 'bg-green-500' : 'bg-gray-300'}`}
+        onClick={toggleSwitch}
+      >
+        <div
+          className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${isOn ? 'translate-x-6' : 'translate-x-0'}`}
+        />
+      </div>
+      <span className='ml-2'>On Duty</span>
     </div>
-  )
+
+    <button onClick={toggleSidebar} className="p-2 rounded-lg bg-gray-100 shadow-lg ml-2 font-semibold">
+      {option==="filtered orders" ? "Orders Near You" : option=== "new orders"? "All Orders" :
+      option==="earning per order" ? "Earning Per Order" : option==="payment requests"? "Payment Requests" :
+      option ==="active orders"?" Active Orders" : "Select Option"}
+    </button>
+    <div className='flex'>
+      <div>
+      {isSidebarOpen && (
+
+        <div className='mt-10 relative'>
+          <div className="p-2 bg-gray-100 flex flex-col ">
+            {isAdmin && (
+              <button
+                onClick={() => handleClick("new orders")}
+                className={`${option === "new orders" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+              >
+                All Orders
+              </button>
+            )}
+            <button
+              onClick={() => handleClick("filtered orders")}
+              className={`${option === "filtered orders" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+            >
+              Orders Near You
+            </button>
+            <button
+              onClick={() => handleClick("active orders")}
+              className={`${option === "active orders" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+            >
+              Active Orders
+            </button>
+            <button
+              onClick={() => handleClick("earning per order")}
+              className={`${option === "earning per order" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+            >
+              Earning Per Order
+            </button>
+            {isAdmin && (
+              <button
+                onClick={() => handleClick("payment requests")}
+                className={`${option === "payment requests" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
+              >
+                Payment Requests
+              </button>
+            )}
+            <div className='flex flex-col w-fit mt-10'>
+              <button className='shadow-lg p-1 rounded-lg ml-2' onClick={handleBankDetails}>Submit Bank Details</button>
+              <button className='shadow-lg p-1 rounded-lg ml-2 mt-5' onClick={handleEditBankDetails}>Update Bank Details</button>
+            </div>
+          </div>
+          <button className='absolute top-1 right-0 font-semibold text-red-500 mx-1'onClick={toggleSidebar}>☓</button>
+        </div>
+      )}
+      </div>
+  
+    <div>
+     {option === "filtered orders" && (
+       <div className='grid grid-cols-1 lg:grid-cols-2 mt-10'>
+         {orderInRange.length === 0 ? (
+           <h1>No orders found</h1>
+         ) : (
+           orderInRange.map((order) => (
+             <OrderCard
+               key={order._id}
+               orders={order}
+               handleStatusProp={(value) => handleStatus(value)}
+             />
+           ))
+         )}
+       </div>
+     )}
+ 
+     {option === "new orders" && (
+       <div className='grid grid-cols-1 lg:grid-cols-2 mt-5'>
+         {neworders.length === 0 ? (
+           <h1>No orders found</h1>
+         ) : (
+           neworders.map((order) => (
+             <OrderCard
+               key={order._id}
+               orders={order}
+               handleStatusProp={(value) => handleStatus(value)}
+             />
+           ))
+         )}
+       </div>
+     )}
+ 
+     {option === "earning per order" && (
+       <div className='my-auto grid md:grid-cols-2 grid-cols-1 gap-x-32 gap-y-12 mt-10 relative'>
+         {Myorder.map((Myorder) => (
+           <div key={Myorder._id} className='min-w-1/2 h-auto p-5 shadow-lg border border-blue-100 relative'>
+             <h1 className='mx-2 text-blue-500'>{Myorder.Date}</h1>
+             <h1 className='mx-2 text-blue-500'>orderID : {Myorder._id}</h1>
+             <hr />
+             <div className='grid items-center my-1 relative'>
+               <span className='text-Gray-600 font-semibold mx-2'>{Myorder.Item}:</span>
+               <span className='mx-2'>Earning on this order: ₹{(0.8 * Myorder.price).toFixed(2)}</span>
+               {!Myorder.canceled && Myorder.paymentSettled === false && Myorder.paymentType.split(' ')[0] === "cash" && <span className="mx-2 text-red-500 border-b-2 border-red-500">You owe : ₹{(Myorder.price * 0.2).toFixed(2)}</span>}
+               {!Myorder.canceled && Myorder.paymentSettled === false && Myorder.paymentType === "online" && <span className="mx-2 text-green-500 border-b-2 border-green-500">You get : ₹{(Myorder.price * 0.8).toFixed(2)}</span>}
+               {Myorder.canceled && Myorder.canceledBy === "rider" && Myorder.RiderPhone === user.phone && Myorder.paymentSettled === false && <span className="mx-2 text-red-500 border-b-2 border-red-500">You owe : ₹40</span>}
+             </div>
+             <br />
+             {Myorder.paymentSettled === true && <img src="../../images/GreenTick.png" alt="green tick" className="h-8 w-8 absolute top-2 right-2" />}
+             {!Myorder.canceled && Myorder.paymentSettled === false && <span className='ml-4 text-red-500 absolute bottom-0 left-0'>payment due</span>}
+             <div className='absolute right-0 bottom-0 '>{Myorder.completed ? <span className='text-red-500 '>delivered</span> : Myorder.picked ? <span className='text-blue-500'> picked</span> : Myorder.canceled ? <span className='text-gray-700'>cancelled</span> : <span className='text-green-500'>accepted</span>}</div>
+           </div>
+         ))}
+         <br />
+         <br />
+         <hr />
+         {!paymentRequest && totalAmount < 0 && <button onClick={handlePaymentRequest} className='absolute right-0 bg-green-500 text-white m-2 rounded-sm px-1 bottom-2'>Request ₹{-1 * totalAmount}</button>}
+         {paymentRequest && <button className='absolute right-0 text-green-700 m-2 bottom-2'> payment request sent</button>}
+         {totalAmount > 0 && <button onClick={settlePayment} className='absolute right-0 bottom-2 bg-blue-700 text-white m-2 rounded-sm px-1'>Pay ₹{totalAmount}</button>}
+         {alltimeearning && <h1 className='text-black font-semibold underline absolute left-0 bottom-2'>All time earnings : ₹{alltimeearning}</h1>}
+       </div>
+     )}
+ 
+     {option === "active orders" && (
+       <div className='grid grid-cols-1 lg:grid-cols-2 mt-10'>
+         {Activeorders.length === 0 ? (
+           <h1 className=''>No active orders found</h1>
+         ) : (
+           Activeorders.map((order) => (
+             <OrderCard
+               key={order._id}
+               orders={order}
+               handleStatusProp={(value) => handleStatus(value)}
+             />
+           ))
+         )}
+       </div>
+     )}
+ 
+     {option === "payment requests" && (
+       <div className=''>
+         {incompleteRequests.map((req) => (
+           <div key={req._id} className='p-4 border rounded shadow h-fit relative m-2'>
+             <div className='shadow-sm mb-10'>
+               <div className='font-bold'>Name: {req.riderName}</div>
+               <div>Phone: {req.riderPhone}</div>
+               <div>Amount: ₹{req.amount}</div>
+               <div>Created At: {new Date(req.createdAt).toLocaleString()}</div>
+             </div>
+             {!paymentDone && <button className='absolute bottom-1 right-1 p-1 rounded-lg bg-green-500 text-white'
+ 
+                onClick={() => PaymentDone(req._id)}
+             >
+               Mark as Paid
+             </button>}
+             {paymentDone && <div className='absolute bottom-1 right-1 p-1 rounded-lg bg-gray-500 text-white'>Paid</div>}
+           </div>
+         ))}
+       </div>
+     )}
+     </div>
+     </div>
+ 
+     {editbankform && <BankDetailsForm role="edit" />}
+     {bankformstatus && <BankDetailsForm role="add" />}
+  </div>
+); 
+
 }
 
 export default Riderscreen
