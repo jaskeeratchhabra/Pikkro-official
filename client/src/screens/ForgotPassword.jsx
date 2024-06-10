@@ -47,7 +47,7 @@ const ForgotPassword = () => {
     const handleGeneration = async(e)=>{
       e.preventDefault();
       const phone = formData.phone;
-      const data = (await axios.post("/api/users/generateOTP",{number:phone})).data;
+      const data = (await axios.post("http://localhost:5000/api/users/generateOTP",{number:phone})).data;
       console.log(data)
       setCode(data); 
       setStatus(true);
@@ -89,7 +89,7 @@ const ForgotPassword = () => {
     const user = { phone, password };
     try {
       setLoading(true);
-      const result = (await axios.patch(`/api/users/:${phone}`, user)).data;
+      const result = (await axios.patch(`http://localhost:5000/api/users/:${phone}`, user)).data;
       if (result) {
           setSuccess(true);
       }

@@ -113,7 +113,7 @@ async function displayRazorpay() {
   }
 
   // creating a new order
-  const result = await axios.post("/api/payments/orders",{price});
+  const result = await axios.post("http://localhost:5000/api/payments/orders",{price});
 
   if (!result) {
       alert("Server error. Are you online?");

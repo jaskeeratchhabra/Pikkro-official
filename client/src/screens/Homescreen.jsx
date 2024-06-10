@@ -138,30 +138,30 @@ const Homescreen = () => {
          </div>
       </div>
     </div>
-      <div className='mb-32'>
+      <div className='mb-32 mt-12 p-1'>
         <div className='text-center mx-auto text-2xl font-semibold bg-gray-100 text-green-700'> We are delivering...</div>
-        <div className='md:flex grid grid-cols-2'>
-          <div className='text-center border border-gray-300 ml-1'>
+        <div className='md:flex grid grid-cols-2  p-2'>
+          <div className='text-center border border-gray-300 ml-1 rounded-lg'>
             <img src='../../images/clothings.jpeg' alt='' className='h-50 w-50 '></img>
             <span className='font-semibold' >Clothings</span>
           </div>
-          <div className='text-center border border-gray-300 ml-1'>
+          <div className='text-center border border-gray-300 ml-1 rounded-lg'>
             <img src='../../images/documents.jpeg' alt='' className='h-50 w-50'></img>
             <span className='font-semibold'>Docs</span>
           </div>
-          <div className='text-center border border-gray-300 ml-1'>
+          <div className='text-center border border-gray-300 ml-1 rounded-lg'>
             <img src='../../images/food.jpeg' alt='' className='h-50 w-50'></img>
             <span className='font-semibold'>Food</span>
           </div>
-          <div className='text-center border border-gray-300 ml-1'>
+          <div className='text-center border border-gray-300 ml-1 rounded-lg'>
             <img src='../../images/gifts.jpeg' alt='' className='h-50 w-50'></img>
             <span className='font-semibold'>Gifts</span>
           </div>
-          <div className='text-center border border-gray-300 ml-1'>
+          <div className='text-center border border-gray-300 ml-1 rounded-lg'>
             <img src='../../images/grocery.jpeg' alt='' className='h-50 w-50'></img>
             <span className='font-semibold'>Grocery</span>
           </div>
-          <div className='text-center border border-gray-300 ml-1'>
+          <div className='text-center border border-gray-300 ml-1 rounded-lg'>
             <img src='../../images/medicines.jpeg' alt='' className='h-50 w-50'></img>
             <span className='font-semibold'>Medicine</span>
           </div>

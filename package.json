@@ -1,0 +1,15 @@
+{
+    "name": "pikkro",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "client": "npm --prefix client run dev",
+      "server": "npm --prefix server start",
+      "dev": "concurrently \"npm run server\" \"npm run client\"",
+      "build": "npm --prefix client run build"
+    },
+    "devDependencies": {
+      "concurrently": "^7.0.0"
+    }
+  }
+  

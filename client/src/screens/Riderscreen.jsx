@@ -113,7 +113,7 @@ const OrderCard=({orders, handleStatusProp})=>{
   
     try {
       setLoading(true);
-      const response = await axios.patch(`/api/orders/${_id}`, statusValue);
+      const response = await axios.patch(`http://localhost:5000/api/orders/${_id}`, statusValue);
       const result = response.data;
   
       if (result.updatedDocument["accepted"] === true) {
@@ -153,7 +153,7 @@ const OrderCard=({orders, handleStatusProp})=>{
       phone = orders.DeliveryDetails.Phone;
     }
     try {
-      const data = (await axios.post("/api/users/generateOTP", { number: phone })).data;
+      const data = (await axios.post("http://localhost:5000/api/users/generateOTP", { number: phone })).data;
       console.log(data);
       if (value === "pickup") {
         setOtpPickupStatus("sent");
@@ -444,7 +444,7 @@ function Riderscreen() {
     const onDuty = isOn;
     const phone = user.phone
      try{
-       await axios.patch(`/api/users/${phone}`,{onDuty:onDuty})
+       await axios.patch(`http://localhost:5000/api/users/${phone}`,{onDuty:onDuty})
      }
      catch(error)
      {
@@ -481,7 +481,7 @@ async function displayRazorpay() {
   }
 
   // creating a new order
-  const result = await axios.post("/api/payments/orders",{price: totalAmount});
+  const result = await axios.post("http://localhost:5000/api/payments/orders",{price: totalAmount});
   // if(result.status===200)
     // {
     //   handlePaymentStatus("paid")
@@ -510,7 +510,7 @@ async function displayRazorpay() {
               razorpaySignature: response.razorpay_signature,
           };
 
-          const result = await axios.post("/api/payments/success", data);
+          const result = await axios.post("http://localhost:5000/api/payments/success", data);
           if(result.message==="success")
           {
             handlePaymentStatus("paid");
@@ -548,7 +548,7 @@ async function displayRazorpay() {
   const handlePaymentField = async (orderId) => {
     console.log("OrderId:", orderId);
     try {
-      const response = await axios.patch('/api/orders/updatepaymentfield', {
+      const response = await axios.patch('http://localhost:5000/api/orders/updatepaymentfield', {
         orderId:orderId
       }).data;
       // setPaymentStatus("paid");
@@ -708,7 +708,7 @@ useEffect(() => {
                    amount : total
                   }
       try{
-         const data = (await axios.post("/api/payments/settlement", paymentData));
+         const data = (await axios.post("http://localhost:5000/api/payments/settlement", paymentData));
          console.log(data);
          if(data.status===200)
          { 
@@ -736,7 +736,7 @@ useEffect(() => {
  
   const PaymentDone=async(reqId)=>{
     try{
-      const data= (await axios.patch(`/api/payments/${reqId}`)).data;
+      const data= (await axios.patch(`http://localhost:5000/api/payments/${reqId}`)).data;
       setPaymentDone(true);
       console.log(data);
     }
@@ -753,7 +753,7 @@ useEffect(() => {
     async function getOrders(){
       try{
         setLoading(true)
-        const result =  (await axios.get("/api/orders/getorder")).data;
+        const result =  (await axios.get("http://localhost:5000/api/orders/getorder")).data;
         const newOrders= result.filter((order)=>(order.accepted===false && order.canceled===false ));
         const MyPickedOrders = result.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true))
         const ActiveOrders =   result.filter((order)=>(order.canceled===false && order.RiderPhone === RiderContact && order.accepted===true && order.completed===false))

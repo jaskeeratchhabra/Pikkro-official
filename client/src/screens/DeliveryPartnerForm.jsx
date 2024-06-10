@@ -45,7 +45,7 @@ const DeliveryPartnerForm = () => {
         formDataToSend.append(key, formData[key]);
       }
       
-      const result = await axios.post("/api/partners/newpartner", formDataToSend);
+      const result = await axios.post("http://localhost:5000/api/partners/newpartner", formDataToSend);
       
       setLoading(false);
       

@@ -37,7 +37,7 @@ function MyOrders() {
      const userPhone = (JSON.parse(localStorage.getItem("user"))).phone
      try{
         setLoading(true);
-        const result = (await axios.post("/api/orders/myorder",{userPhone}));
+        const result = (await axios.post("http://localhost:5000/api/orders/myorder",{userPhone}));
         console.log(result.status)
         setLoading(false);
         if(result.data.length===0){

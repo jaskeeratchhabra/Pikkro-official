@@ -38,7 +38,7 @@ let username=useSelector(state=>state.authReducer.username);
 const handleLogout=async()=>{
   const phone = user.phone
   try{
-    await axios.patch(`/api/users/${phone}`,{onDuty:false})
+    await axios.patch(`http://localhost:5000/api/users/${phone}`,{onDuty:false})
   }
   catch(error)
   {
@@ -124,7 +124,7 @@ useEffect(() => {
           {location.pathname === "/" && (
              <div className=" lg:ml-auto ">
                <Link to="/create-order">
-                 <button className="mt-4 w-28  lg:w-48 mb-2 py-2 bg-green-600 text-white rounded-md animate-pulse ">
+                 <button className="mt-4 w-28  lg:w-48 mb-2 py-2 mx-auto  bg-green-600 text-white rounded-md animate-pulse ">
                    Book Delivery
                  </button>
                </Link>

@@ -21,7 +21,7 @@ const AdminScreen = () => {
 
   const getRidersBankDetails = async ()=>{
     try{
-         const data = (await axios.get("/api/bank/getbank")).data;
+         const data = (await axios.get("http://localhost:5000/api/bank/getbank")).data;
          setRidersbank(data);
     }
     catch(error)
@@ -65,7 +65,7 @@ useEffect(()=>{
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/partners/getpartners`);
+      const response = await axios.get(`http://localhost:5000/api/partners/getpartners`);
       setRequests(response.data);
       setLoading(false);
     } catch (error) {
