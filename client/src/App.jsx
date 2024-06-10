@@ -52,7 +52,7 @@ export default function App() {
   return (
     <div>
     {loading && <Loading/>}
-    <BrowserRouter>
+    {/* <BrowserRouter> */}
       <NavigationBar/>
       <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}>
         <Routes>
@@ -72,11 +72,9 @@ export default function App() {
          <Route path ="/PrivacyPolicy" exact element={<PrivacyPolicy/>}/>
          <Route path ="/cancellation" exact element={<CancellationPolicy/>}/>
          <Route path ="/RiderT&C" exact element={<RiderTermsAndConditions/>}/>
-         
-         {/* <Route path ="/edit-order" exact element ={<EditOrderScreen/>}/> */}
       </Routes>
       <Footer/>
-    </BrowserRouter>
+    {/* </BrowserRouter> */}
     </div>
   )
 }

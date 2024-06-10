@@ -37,7 +37,7 @@ const LoginForm = () => {
     const user = { phone, password };
     try {
       setLoading(true);
-      const result = (await axios.post("/api/users/login", user)).data;
+      const result = (await axios.post("http://localhost:5000/api/users/login", user)).data;
       if (result) {
         setSuccess(true);
         localStorage.setItem("user",JSON.stringify(result));
@@ -114,9 +114,11 @@ const LoginForm = () => {
           >
             Sign In
           </button>
+          <div className='flex'>
              <span>Don't have an account 
              <Link to="/register" className="mx-2 text-blue-500 font-semibold">Sign Up</Link></span>
-             <Link to="/forgotPassword" className="absolute mt-5  text-blue-800">Forgot password?</Link>
+          </div>
+             <Link to="/forgotPassword" className="absolute right-2 text-blue-800">Forgot password?</Link>
         </form>
       </div>
     </div>

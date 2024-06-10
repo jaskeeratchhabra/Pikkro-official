@@ -79,7 +79,7 @@ const Homescreen = () => {
                 type="text"
                 ref={originRef}
                 placeholder="Enter pickup location"
-                className="min-w-96 mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                className="md:min-w-96 w-fit mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
               />
            </Autocomplete>
        </div>
@@ -96,7 +96,7 @@ const Homescreen = () => {
                 type="text"
                 ref={destiantionRef}
                 placeholder="Enter delivery location"
-                className=" min-w-96 mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                className=" md:min-w-96 w-fit mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
               />
            </Autocomplete>
        </div>
@@ -104,11 +104,11 @@ const Homescreen = () => {
          <div className='flex flex-col'>
            <button 
              onClick={calculateRoute} 
-             className="ml-6 min-w-96 mb-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+             className="ml-6 w-fit md:min-w-96 mb-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
            >
-              Check Prices for better estimates
+              Check Prices for Estimates
            </button>
-           <span className='text-gray-600 text-center ml-5'>We treat your package as our most precious gift</span>
+           <span className='text-gray-600 text-center '>We treat your package as our most precious gift</span>
          </div>
    
    
@@ -122,15 +122,15 @@ const Homescreen = () => {
               {/* <button className='bg-gray-500' onClick={setPrice(null)}>clear</button> */}
            </div>
          )}
-         <div className='flex h-52 w-auto'>
-           <div className='my-auto mx-auto'>
-              <div className='flex flex-col text-blue-700 justify-center p-2 items-center font-semibold rounded-xl h-20 w-38 bg-white border border-blue-400'>
+         <div className='flex h-52 w-auto justify-between'>
+           <div className='my-auto mx-auto mr-2'>
+              <div className='flex flex-col text-blue-700 justify-center p-2 items-center font-semibold rounded-xl md:h-20 md:w-38 bg-white border border-blue-400'>
                 Fastest Delivery
                 <span className=' text-sm text-blue-300'>Delivery time 60 mins</span>
               </div>
            </div>
            <div className='my-auto mx-auto' >
-              <div className='flex flex-col justify-center p-2 items-center text-blue-700 font-semibold rounded-xl h-20 w-38 bg-white border border-blue-400'>
+              <div className='flex flex-col justify-center p-2 items-center text-blue-700 font-semibold rounded-xl md:h-20 md:w-38 bg-white border border-blue-400'>
                  Security Guarantee
                  <span className=' text-sm text-blue-300'>Most trusted Platform</span>
               </div>
@@ -140,7 +140,7 @@ const Homescreen = () => {
     </div>
       <div className='mb-32'>
         <div className='text-center mx-auto text-2xl font-semibold bg-gray-100 text-green-700'> We are delivering...</div>
-        <div className='flex'>
+        <div className='md:flex grid grid-cols-2'>
           <div className='text-center border border-gray-300 ml-1'>
             <img src='../../images/clothings.jpeg' alt='' className='h-50 w-50 '></img>
             <span className='font-semibold' >Clothings</span>
