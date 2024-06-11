@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // SideScreen.js
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -13,10 +14,10 @@ function SideScreen({isOpen, onClose, loggedIn, username, handleLogout }) {
         </button>
         <div className="py-1 flex flex-col items-center">
           <span>  Hi, {username && username} </span>
-          <a href="/MyOrders" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
-          <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
-          <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
-          <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
+          <Link to="/MyOrders" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</Link>
+          <Link to="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</Link>
+          <Link to="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</Link>
+          <Link to="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</Link>
           {!loggedIn && (
             <Link to="/login">
               <button className='my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Login/Sign up</button>
@@ -25,7 +26,7 @@ function SideScreen({isOpen, onClose, loggedIn, username, handleLogout }) {
           {loggedIn && (
             <button onClick={handleLogout} className='my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100' role="menuitem">Logout</button>
           )}
-          <a href="/DeliveryPartnerForm" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Become a Delivery Partner</a>
+          <Link to="/DeliveryPartnerForm" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Become a Delivery Partner</Link>
         </div>
       </div>
     </div>

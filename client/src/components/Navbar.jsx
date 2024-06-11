@@ -108,18 +108,18 @@ useEffect(() => {
         <div className="flex items-center h-16">
           <div className="mx-4 md:block hidden ">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
-            <a href="/" className="text-green-500 text-2xl mb-3 font-extrabold my-auto">Pikkro.com</a>
+            <Link to="/" className="text-green-500 text-2xl mb-3 font-extrabold my-auto">Pikkro.com</Link>
           </div>
           <div className="text-4xl mx-2 flex md:hidden">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
-            <a href="/" className="text-green-500 text-2xl font-extrabold">Pikkro</a>
+            <Link to="/" className="text-green-500 text-2xl font-extrabold">Pikkro</Link>
           </div>
           <div className=" md:flex hidden rounded-sm p-1 left">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
             </svg>
-            <a href="/" className="text-lg text-gray-200 font-semibold">{city}</a>
+            <Link to="/" className="text-lg text-gray-200 font-semibold">{city}</Link>
           </div>
           {location.pathname === "/" && (
              <div className=" lg:ml-auto ">
@@ -135,7 +135,9 @@ useEffect(() => {
       
       <div className="relative hidden lg:block">
         <div className="flex items-center md:ml-6 my-4 absolute right-10">
-          <a href="/DeliveryPartnerForm" className="text-gray-300 hover:text-white py-2 text-sm font-medium mr-6">Become a Delivery Partner</a>
+          <Link to="/DeliveryPartnerForm">
+            <button className="text-gray-300 hover:text-white py-2 text-sm font-medium mr-6">Become a Delivery Partner</button>
+          </Link> 
          
           <Link to="/login">
             {
@@ -156,10 +158,10 @@ useEffect(() => {
              
              {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                <div className="py-1 flex flex-col items-center" role="none">
-                 <a href="/MyOrders" className=" my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</a>
-                 <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</a>
-                 <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</a>
-                 <a href="#" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</a>
+                 <Link to="/MyOrders" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</Link>
+                 <Link to="/about" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</Link>
+                 <Link to="/contact-us" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Contact Us</Link>
+                 <Link to="/faqs" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">FAQs</Link>
                </div>
               </div>
                }

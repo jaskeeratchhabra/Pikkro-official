@@ -33,6 +33,10 @@ export default function App() {
   const handleLoad = () => {
     setLoading(false);
   };
+  const handleError = () => {
+    console.error("Failed to load Google Maps API");
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -51,7 +55,8 @@ export default function App() {
     <BrowserRouter>
       {loading && <Loading />}
       <NavigationBar />
-      <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}>
+      <LoadScript googleMapsApiKey={map_key} libraries={libraries} onLoad={handleLoad}
+      onError={handleError}>
         <Routes>
           {Rider && <Route path="/Rider" element={<Riderscreen />} />}
           <Route path="/" element={<Homescreen />} />
