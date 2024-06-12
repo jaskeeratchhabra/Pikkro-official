@@ -89,12 +89,14 @@ router.patch("/:phone",async(req,res)=>{
             console.log("state updated")
             return res.status(200).json({ message: "state updated successfully" })
         }
-        else{
+        else
+        if(req.body.onDuty){
             user.onDuty=false;
             await user.save();
             console.log("state set to false")
             return res.status(200).json({ message: "state updated successfully" })
         }
+        else
         if(user && password){
             user.password = password;
             await user.save();
