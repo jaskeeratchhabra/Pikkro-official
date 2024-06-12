@@ -1,13 +1,15 @@
 {
-    "name": "yourname/yourproject",
-    "description": "A brief description of your project",
-    "require": {
+  "name": "yourname/yourproject",
+  "description": "A brief description of your project",
+    
+  "require": {
     "composer/installers": "^1.9"
   },
   "config": {
     "allow-plugins": {
       "composer/installers": true
-    },
+    }
+  },
     "scripts": {
         "post-install-cmd": [
             "php artisan migrate",
