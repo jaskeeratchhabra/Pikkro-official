@@ -11,8 +11,9 @@
             "php artisan config:cache",
             "php artisan route:cache",
             "git pull origin main",
+            "cd client",
             "npm install",
-             "npm run build"
+            "npm run build"
         ],
         "post-update-cmd": [
             "php artisan migrate",

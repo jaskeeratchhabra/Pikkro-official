@@ -17,11 +17,10 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist',
+    outDir: '../dist',
     rollupOptions: {
       output: {
         manualChunks: {
-          // Split vendor code into its own chunk for better caching.
           vendor: ['react', 'react-dom', 'react-router-dom']
         }
       }
