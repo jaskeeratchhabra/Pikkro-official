@@ -52,6 +52,7 @@ export default function App() {
   }, [user]);
 
   return (
+    <div className="">
     <BrowserRouter>
       {loading && <Loading />}
       <NavigationBar />
@@ -73,7 +74,8 @@ export default function App() {
           <Route path="/RiderT&C" element={<RiderTermsAndConditions />} />
         </Routes>
       </LoadScript>
-      <Footer />
+      <Footer/>
     </BrowserRouter>
+    </div>
   );
 }

@@ -104,7 +104,7 @@ async function displayRazorpay() {
   }
 
   // creating a new order
-  const result = await axios.post("/api/payments/orders",{price:newPrice});
+  const result = await axios.post("https://api.pikkro.com/api/payments/orders",{price:newPrice});
 
   if (!result) {
       alert("Server error. Are you online?");
@@ -130,7 +130,7 @@ async function displayRazorpay() {
               razorpaySignature: response.razorpay_signature,
           };
 
-          const result = await axios.post("/api/payments/success", data);
+          const result = await axios.post("https://api.pikkro.com/api/payments/success", data);
 
           alert(result.data.msg);
       },
@@ -245,7 +245,7 @@ if(value==="online")
     };
 
     try {
-      const response = await axios.patch(`/api/orders/update/${order._id}`, orderData);
+      const response = await axios.patch(`https://api.pikkro.com/api/orders/update/${order._id}`, orderData);
       if (response.data.success) {
         setSuccess(true);
         Swal.fire('Order updated successfully');

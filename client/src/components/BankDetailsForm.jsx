@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import axios from 'axios';
 import SuccessComponent from './SuccessComponent';
@@ -27,7 +28,7 @@ const BankDetailsForm = ({role}) => {
     
     const bankdetails = {...formData, RiderPhone, RiderName}
     try{
-       const response = (await axios.post("http://localhost:5000/api/bank/bankdetails",bankdetails)).data;
+       const response = (await axios.post("https://api.pikkro.com/api/bank/bankdetails",bankdetails)).data;
        setSuccess(true);
        console.log(response);
     }
@@ -40,7 +41,7 @@ const BankDetailsForm = ({role}) => {
   
   const handleSubmitEdit = async () => {
     try {
-      const response = await axios.patch("http://localhost:5000/api/bank/edit", { ...formData, RiderPhone });
+      const response = await axios.patch("https://api.pikkro.com/api/bank/edit", { ...formData, RiderPhone });
       setSuccess(true);
       console.log(response);
     } catch (error) {

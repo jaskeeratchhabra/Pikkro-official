@@ -37,16 +37,17 @@ const LoginForm = () => {
     const user = { phone, password };
     try {
       setLoading(true);
-      const result = (await axios.post("http://localhost:5000/api/users/login", user)).data;
+      const result = (await axios.post("https://api.pikkro.com/api/users/login", user)).data;
       if (result) {
         setSuccess(true);
+        console.log(result)
         localStorage.setItem("user",JSON.stringify(result));
         const username=result.name
         // console.log(result);
         dispatch(login({username}));
         const Admin=(JSON.parse(localStorage.getItem("user"))).isAdmin;
         const Rider =(JSON.parse(localStorage.getItem("user"))).isRider;
-        console.log(Rider);
+        // console.log(Rider);
         if(Admin){
          navigate("/Admin");
         }
@@ -74,7 +75,7 @@ const LoginForm = () => {
       {loading && <Loading/>}
       <div className="bg-white shadow-md rounded-md p-8 mb-3 w-full max-w-sm">
         <h2 className="text-3xl font-semibold mb-4 text-center">Login</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='relative'>
           <div className="mb-4">
             <input
               type="text"

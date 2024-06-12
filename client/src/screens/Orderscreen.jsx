@@ -113,7 +113,7 @@ async function displayRazorpay() {
   }
 
   // creating a new order
-  const result = await axios.post("http://localhost:5000/api/payments/orders",{price});
+  const result = await axios.post("https://api.pikkro.com/api/payments/orders",{price});
 
   if (!result) {
       alert("Server error. Are you online?");
@@ -139,7 +139,7 @@ async function displayRazorpay() {
               razorpaySignature: response.razorpay_signature,
           };
 
-          const result = await axios.post("/api/payments/success", data);
+          const result = await axios.post("https://api.pikkro.com/api/payments/success", data);
 
           alert(result.data.msg);
       },
@@ -318,7 +318,7 @@ async function displayRazorpay() {
     };
     console.log(orderData);
     try{
-      const data= (await (axios.post("/api/orders/neworder",orderData))).data;
+      const data= (await (axios.post("https://api.pikkro.com/api/orders/neworder",orderData))).data;
       if(data)
       {
         console.log("order placed successfully");

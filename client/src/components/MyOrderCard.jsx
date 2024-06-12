@@ -58,7 +58,7 @@ function OrderCard({ order}) {
       
           try {
             setLoading(true);
-            const response = await axios.patch(`http://localhost:5000/api/orders/${_id}`, statusValue);
+            const response = await axios.patch(`https://api.pikkro.com/api/orders/${_id}`, statusValue);
             const result = response.data;
       
             if (result.updatedDocument["canceled"] === true) {

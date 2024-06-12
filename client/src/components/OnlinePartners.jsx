@@ -7,7 +7,7 @@ function OnlinePartners() {
  
  const getUsers = async()=>{
     try{
-       const response =  (await axios.get("http://localhost:5000/api/users/getonlinepartners")).data;
+       const response =  (await axios.get("https://api.pikkro.com/api/users/getonlinepartners")).data;
        setUsers(response);
     }
     catch(error)

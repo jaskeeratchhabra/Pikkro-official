@@ -38,7 +38,7 @@ let username=useSelector(state=>state.authReducer.username);
 const handleLogout=async()=>{
   const phone = user.phone
   try{
-    await axios.patch(`http://localhost:5000/api/users/${phone}`,{onDuty:false})
+    await axios.patch(`https://api.pikkro.com/api/users/${phone}`,{onDuty:false})
   }
   catch(error)
   {
@@ -110,7 +110,7 @@ useEffect(() => {
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
             <Link to="/" className="text-green-500 text-2xl mb-3 font-extrabold my-auto">Pikkro.com</Link>
           </div>
-          <div className="text-4xl mx-2 flex md:hidden">
+          <div className="text-4xl mx-2 md:hidden text-center">
             {/* <img className='h-20 w-24 mx-3 my-auto' src="../../images/logo.gif" alt="logo"/> */}
             <Link to="/" className="text-green-500 text-2xl font-extrabold">Pikkro</Link>
           </div>
@@ -124,7 +124,7 @@ useEffect(() => {
           {location.pathname === "/" && (
              <div className=" lg:ml-auto ">
                <Link to="/create-order">
-                 <button className="mt-4 w-28  lg:w-48 mb-2 py-2 mx-auto  bg-green-600 text-white rounded-md animate-pulse ">
+                 <button className="mt-4 w-28 lg:w-48 mb-2 py-2 bg-green-600 text-white rounded-md animate-pulse ">
                    Book Delivery
                  </button>
                </Link>

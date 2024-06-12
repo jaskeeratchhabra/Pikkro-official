@@ -23,7 +23,7 @@ app.use(cors());
   app.use("/api/users",usersRoute);
   app.use("/api/orders",ordersRoute)
   app.use("/api/partners",partnersRoute);
-  app.use("/api/payments/",paymentRoute)
+  app.use("/api/payments",paymentRoute)
   app.use("/api/bank",BankRoute)
 
   app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));

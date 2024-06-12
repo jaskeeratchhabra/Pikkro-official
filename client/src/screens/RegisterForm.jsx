@@ -58,7 +58,7 @@ const RegisterForm = () => {
     const handleGeneration = async(e)=>{
       e.preventDefault();
       const phone = formData.phone;
-      const data = (await axios.post("http://localhost:5000/api/users/generateOTP",{number:phone})).data;
+      const data = (await axios.post("https://api.pikkro.com/api/users/generateOTP",{number:phone})).data;
       console.log(data)
       setCode(data); 
       // setStatus(true);
@@ -106,7 +106,7 @@ const RegisterForm = () => {
     };
     try {
       setLoading(true);
-      const result = (await axios.post("http://localhost:5000/api/users/register", user)).data;
+      const result = (await axios.post("https://api.pikkro.com/api/users/register", user)).data;
       if(result){
         setSuccess(true);
         localStorage.setItem("user",JSON.stringify(result));

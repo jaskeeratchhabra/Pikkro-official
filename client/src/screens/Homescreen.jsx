@@ -67,8 +67,8 @@ const Homescreen = () => {
       </div>
 
       <div className="lg:mt-5 lg:h-2/3 mx-auto bg-gray-100 px-6 rounded-sm shadow-lg md:order-1">
-       <h1 className='mt-4 text-2xl mb-12 text-center font-bold'> Delivery starts from Rs 7/km</h1>
-       <div className='flex'>
+       <h1 className='mt-4 text-2xl mb-6 text-center font-bold'> Delivery starts from Rs 7/km</h1>
+       <div className='flex justify-center'>
          <label>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="w-6 h-6">
                 <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
@@ -85,7 +85,7 @@ const Homescreen = () => {
        </div>
          
        
-       <div className='flex'>
+       <div className='flex justify-center'>
          <label>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="w-6 h-6">
                 <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
@@ -101,7 +101,7 @@ const Homescreen = () => {
            </Autocomplete>
        </div>
          
-         <div className='flex flex-col'>
+         <div className='flex flex-col items-center'>
            <button 
              onClick={calculateRoute} 
              className="ml-6 w-fit md:min-w-96 mb-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
