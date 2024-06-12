@@ -82,7 +82,7 @@ router.patch("/:phone",async(req,res)=>{
     }
     try {
         const user=await User.findOne({phone});
-        if(onDuty===true)
+        if(req.body.onDuty && onDuty===true)
         {
             user.onDuty=true;
             await user.save();
@@ -178,7 +178,7 @@ router.post("/register",async(req,res)=>{
  })
 
  router.post("/login",async(req,res)=>{
-    
+
     const {phone , password}=req.body;
     try{
         // console.log(req.body);
