@@ -60,7 +60,7 @@ const ForgotPassword = () => {
             console.log(otp , code , typeof otp, typeof code)
             console.log("otp verified successfully");
             setStatus("verified");
-            setError("Otp verification done")
+            setSuccess(true)
           }
    }
  
@@ -102,7 +102,7 @@ const ForgotPassword = () => {
 
   return (
        <>
-       <div className='text-center mt-10 text-xl font-semibold text-red-500 '>{error&&<h1>{error}</h1>}</div>
+       <div className='text-center mt-10 text-xl font-semibold text-red-500 '>{error&&<h1>Some error occured! try again later</h1>}</div>
       {success && <SuccessComponent className="top" message="Password updated successfully"/>}
       <div className="relative flex justify-center items-center h-screen bg-gray-100">
       {loading && <Loading/>}

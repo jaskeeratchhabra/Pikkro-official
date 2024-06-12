@@ -1,0 +1,25 @@
+{
+    "name": "yourname/yourproject",
+    "description": "A brief description of your project",
+    "require": {
+        "php": "^7.4|^8.0",
+        "composer/installers": "^1.9"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php artisan migrate",
+            "php artisan config:cache",
+            "php artisan route:cache",
+            "git pull origin main",
+             "npm run build",
+             "npm install"
+        ],
+        "post-update-cmd": [
+            "php artisan migrate",
+            "php artisan config:cache",
+            "php artisan route:cache",
+            "git pull origin main",
+            "npm install"
+        ]
+    }
+}
