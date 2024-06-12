@@ -10,7 +10,7 @@ export default defineConfig({
     proxy: {
       host:'0.0.0.0',
       '/api': {
-        target: 'https://api.pikkro.com',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
       }

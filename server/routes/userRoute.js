@@ -71,7 +71,7 @@ router.post('/email',(req,res)=>{
 
 router.patch("/:phone",async(req,res)=>{
 
-    const {phone} = req.params;
+    const phone = req.params;
     if(req.body.password){
         var password = req.body.password;
     }

@@ -13,7 +13,7 @@ require('dotenv').config();
 const app=express();
 
 
-const allowedOrigins = ['https://pikkro.com'];
+const allowedOrigins = ['https://pikkro.com','http://localhost:5173'];
 
 const corsOptions = {
   origin: (origin, callback) => {
