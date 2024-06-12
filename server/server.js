@@ -12,9 +12,23 @@ require('dotenv').config();
 
 const app=express();
 
+
 const allowedOrigins = ['https://pikkro.com'];
 
-app.use(cors());
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
   
   
   app.use(express.json());
