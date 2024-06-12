@@ -82,7 +82,7 @@ router.patch("/:phone",async(req,res)=>{
     }
     try {
         const user=await User.findOne({phone:phone});
-        console.log(user)
+        console.log(user ,phone)
         if(req.body.onDuty && onDuty===true)
         {
             user.onDuty=true;
