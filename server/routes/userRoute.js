@@ -80,7 +80,7 @@ router.patch("/:phone", async (req, res) => {
             console.log("User not found");
             return res.status(400).json({ message: "User Not Found" });
         }
-
+        console.log(user)
         if (onDuty !== undefined) {
             user.onDuty = onDuty;
             await user.save();
