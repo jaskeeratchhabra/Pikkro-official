@@ -69,53 +69,41 @@ router.post('/email',(req,res)=>{
       });
 });
 
-router.patch("/:phone",async(req,res)=>{
+router.patch("/:phone", async (req, res) => {
+    const { phone } = req.body.phone;
+    const { password, onDuty } = req.body;
 
-    const phone = req.body.phone;
-    if(req.body.password){
-        var password = req.body.password;
-    }
-    // console.log(req.body, phone); 
-    if(req.body.onDuty)
-    {
-         var onDuty= req.body.onDuty;
-    }
     try {
-        const user=await User.findOne({phone:phone});
-        console.log(user ,phone)
-        if(req.body.onDuty && onDuty===true)
-        {
-            user.onDuty=true;
-            await user.save();
-            console.log("state updated")
-            return res.status(200).json({ message: "state updated successfully" })
+        const user = await User.findOne({ phone });
+
+        if (!user) {
+            console.log("User not found");
+            return res.status(400).json({ message: "User Not Found" });
         }
-        else
-        if(req.body.onDuty){
-            user.onDuty=false;
+
+        if (onDuty !== undefined) {
+            user.onDuty = onDuty;
             await user.save();
-            console.log("state set to false")
-            return res.status(200).json({ message: "state updated successfully" })
+            console.log("onDuty updated");
+            return res.status(200).json({ message: "State updated successfully" });
         }
-        else
-        if(user && password){
+
+        if (password) {
             user.password = password;
             await user.save();
-            console.log(user)
-            return res.status(200).json({ message: "Password updated successfully" })
+            console.log("Password updated successfully");
+            return res.status(200).json({ message: "Password updated successfully" });
         }
-        else{
-        if(password){
-           console.log("user not found")
-           return res.status(400).json({message:"User Not Found"});
-        }
-       }     
-      } catch (error) {
+
+        console.log("No valid field to update");
+        return res.status(400).json({ message: "No valid field to update" });
+
+    } catch (error) {
         console.error('Error updating field:', error);
-        res.status(500).json({ message: 'Internal server error' });
-      }
-}
-)
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
 router.post("/generateOTP", async(req,res)=>{

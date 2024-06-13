@@ -9,6 +9,7 @@ import { login } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import SideScreen from './SideScreen';
 import axios from 'axios';
+import Loading from './Loading';
 const NavigationBar = () => {
   
   const navigate=useNavigate();
@@ -19,6 +20,7 @@ const NavigationBar = () => {
   const loggedIn = useSelector(state=>state.authReducer.status)
   const [isSideScreenOpen, setIsSideScreenOpen] = useState(false);
   const user= JSON.parse(localStorage.getItem("user"))
+  const [loading,setLoading]= useState(false);
 
   const handleDropdown=(e)=>{
     e.preventDefault();
@@ -37,16 +39,23 @@ const NavigationBar = () => {
 let username=useSelector(state=>state.authReducer.username);
 const handleLogout=async()=>{
   const phone = user.phone
+  console.log(phone)
+  const obj = {phone:phone, onDuty:false};
   try{
-    await axios.patch(`https://api.pikkro.com/api/users/${phone}`,{onDuty:false})
+    setLoading(true);
+    if(user.isRider){
+     const data =  (await axios.patch(`https://api.pikkro.com/api/users/${phone}`,obj)).data
+     console.log(data);
+    }
   }
   catch(error)
   {
     console.log(error.message);
   }
+  setLoading(false);
   dispatch(logout())
   localStorage.removeItem("user");
-   navigate("/")
+  navigate("/")
 
 }
 
@@ -103,6 +112,7 @@ useEffect(() => {
   return (
     <nav className="bg-gray-800">
       
+      {loading && <Loading/>}
     <div className="grid md:grid-cols-2 md:px-4 md:ml-12 grid-cols-3">
 
         <div className="flex items-center h-16">

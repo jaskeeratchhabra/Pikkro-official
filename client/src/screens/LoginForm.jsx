@@ -58,7 +58,6 @@ const LoginForm = () => {
         else{
            navigate("/");
         }
-        // console.log(result.name);
       }
     } catch (error) {
       setError(error.message);

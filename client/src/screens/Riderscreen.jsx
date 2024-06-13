@@ -444,7 +444,7 @@ function Riderscreen() {
     const onDuty = isOn;
     const phone = user.phone
      try{
-       await axios.patch(`https://api.pikkro.com/api/users/${phone}`,{onDuty:onDuty})
+       await axios.patch(`https://api.pikkro.com/api/users/${phone}`,{phone:phone ,onDuty:onDuty})
      }
      catch(error)
      {
