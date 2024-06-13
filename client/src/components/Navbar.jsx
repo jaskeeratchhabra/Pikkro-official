@@ -40,11 +40,11 @@ let username=useSelector(state=>state.authReducer.username);
 const handleLogout=async()=>{
   const phone = user.phone
   console.log(phone)
-  const obj = {phone:phone, onDuty:false};
+  const obj = {phone, onDuty:false};
   try{
     setLoading(true);
     if(user.isRider){
-     const data =  (await axios.patch(`https://api.pikkro.com/api/users/${phone}`,obj)).data
+     const data =  (await axios.patch(`https://api.pikkro.com/api/users/:${phone}`,obj)).data
      console.log(data);
     }
   }
