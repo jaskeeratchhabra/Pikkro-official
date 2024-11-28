@@ -65,6 +65,7 @@ router.post("/orders", async (req, res) => {
     }
     console.log(req.body);
     var {price}= req.body;
+    price = parseInt(price)
     price = price *100;
     try {
         const instance = new Razorpay({
@@ -84,6 +85,7 @@ router.post("/orders", async (req, res) => {
 
         res.json(order);
     } catch (error) {
+        console.log(error);
         res.status(500).send(error);
         
     }

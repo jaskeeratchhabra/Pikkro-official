@@ -91,7 +91,7 @@ function OrderCard({ order}) {
                   )
                 }
              </div>
-             <div className='flex absolute top-0 '>
+             <div className='flex absolute top-6 '>
                <div className="mx-2 py-4 text-lg text-blue-900">
                    {order.Item} 
                </div>
@@ -101,16 +101,16 @@ function OrderCard({ order}) {
                
              </div>
              {order.completed === false && order.accepted === true && order.canceled === false && 
-                <div className='m-4 relative top-8'> {/* Use mt-4 to add some margin-top */}
-                  <div className='text-gray-700 '>
+                <div className='m-4 relative top-14'> 
+                  <div className='text-gray-400 '>
                     Your order will be completed by: {order.RiderName}
                   </div>
-                  <div className='text-gray-700 '>
+                  <div className='text-gray-400 '>
                     Rider's Contact: +91{order.RiderPhone}
                   </div>
                 </div>
               }
-            <div className="px-6 py-4 flex mt-10">
+            <div className="px-6 py-4 flex mt-16">
                 <button
                     className="  text-gray-700 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-4 "
                     onClick={toggleDetails}

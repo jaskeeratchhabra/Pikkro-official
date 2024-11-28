@@ -187,10 +187,11 @@ async function displayRazorpay() {
   // },[hour,minute,ampm])
 
   useEffect(()=>{
+    console.log(destinationRef, originRef);
     if(weight  && distance ){
       calculatePrice()
     }
-  },[weight ,parcelValue, distance])
+  },[weight ,parcelValue, distance, originRef.current.value, destinationRef.current.value])
   
   // useEffect(()=>{
     //   if(originRef.current && destinationRef.current){
@@ -336,9 +337,10 @@ async function displayRazorpay() {
   }
 
   return (
-    <div className="flex flex-col items-center w-auto relative">
+    <div className="flex flex-col items-center w-auto relative p-4">
      <button className='border border-gray-500 text-black p-1 m-1 absolute left-2' onClick={handleBack}>Back</button>
-      <h1 className="text-3xl font-bold m-12">Create Your Order</h1>
+      {user && <h1 className="text-xl font-bold m-12">Create Your Order</h1>}
+      {!user && <h1 className="text-xl font-bold m-12">Login to Create Order</h1>}
       <div className="w-full md:w-2/3">
        <div className='shadow-md'>
         <div className="flex">
@@ -367,21 +369,21 @@ async function displayRazorpay() {
     
       <div className="my-8 shadow-md">
           <p className="font-semibold mb-2">Select Item:</p>
-          <div className="flex text-blue-500 ">
+          <div className="md:flex text-blue-500 grid grid-cols-3 gap-4 ">
             <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Food" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Food")}>Food</button>
-            <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Clothes" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Clothes")}>Clothes</button>
+            <button className={`border border-gray-400 rounded p-2 mx-4 w-fit ${Item === "Clothes" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Clothes")}>Clothes</button>
             <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Gifts" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Gifts")}>Gifts</button>
-            <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Documents" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Documents")}> Documents</button>
-            <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Grocery" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Grocery")}> Grocery</button>
-            <button className={`border  border-gray-400 rounded p-2 mx-4 ${Item === "Medicine" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Medicine")}> Medicine</button>
-            <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Others" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Others")}> Others</button>
+            <button className={`border border-gray-400 rounded p-2 mx-4 ${Item === "Documents" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Documents")}> Docs</button>
+            <button className={`border border-gray-400 rounded p-2 mx-4 w-fit ${Item === "Grocery" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Grocery")}> Grocery</button>
+            <button className={`border  border-gray-400 rounded p-2 mx-4 w-fit ${Item === "Medicine" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Medicine")}> Medicine</button>
+            <button className={`border border-gray-400 rounded p-2 mx-4 w-fit ${Item === "Others" && 'bg-blue-500 text-white'}`} onClick={() => handleItemChange("Others")}> Others</button>
           </div>
         </div>
 
 
         <div className="shadow-md">
           <p className="font-semibold mb-2">Weight:</p>
-          <div className="flex text-blue-500">
+          <div className="md:flex text-blue-500 grid grid-cols-2 gap-4">
             <button className={`border border-gray-400 rounded p-2 mx-4 ${weight === '0kg' && 'bg-blue-500 text-white'}`} onClick={() => handleWeightChange('0kg')}>Up to 10 kg</button>
             <button className={`border border-gray-400 rounded p-2 mx-4 ${weight === '10kg' && 'bg-blue-500 text-white'}`} onClick={() => handleWeightChange('10kg')}>10-15 kg</button>
             <button className={`border border-gray-400 rounded p-2 mx-4 ${weight === '15kg' && 'bg-blue-500 text-white'}`} onClick={() => handleWeightChange('15kg')}>15-20 kg</button>
@@ -397,7 +399,7 @@ async function displayRazorpay() {
            <input className='border border-gray-500' value={parcelValue} placeholder=' optional'  onChange={handleParcelValueChange}/>
           </div>
           <div className='text-gray-700 my-28 mt-5 '>
-             <p> We ask for parcel value to provide most secure delivery fascilities to you , we charge only 1% extra according to parcel value for secure delivery <b>Max Parcel Value: ₹50,000</b></p>
+             <p> We ask for parcel value to provide most secure delivery facilities to you , we charge only 1% extra according to parcel value for secure delivery <b>Max Parcel Value: ₹50,000</b></p>
           </div>
         </div>
 
@@ -454,7 +456,7 @@ async function displayRazorpay() {
           {!added && <button className='bg-blue-500 w-12 text-white rounded-sm ' onClick={saveInstruction}>Add</button>}
           {added && <button className='bg-green-500 w-12 text-white rounded-sm '>Added</button>}
             
-          <div className='flex justify-center'>
+          <div className='flex justify-center mt-12'>
              {price && <span className='bg-red-500 text-white p-3 my-5 w-3/12 rounded-lg '>Payable amount : ₹ {price} </span>}
              {!price &&  
               <div className=''>
@@ -466,8 +468,8 @@ async function displayRazorpay() {
 
           <div className='flex flex-col mt-12 font-semibold'>
             <p>Select payment method:</p>
-            <div className='flex my-4'>
-              <button className={` flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="cash on delivery" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('cash on delivery')}>
+            <div className='md:flex grid grid-cols-2 gap-4 my-4'>
+              <button className={`flex border border-blue-400 rounded p-5 mx-4 text-gray-700 ${ paymentType==="cash on delivery" && 'bg-blue-500 text-white'}`} onClick={() => handlePayment('cash on delivery')}>
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                </svg>
@@ -487,8 +489,8 @@ async function displayRazorpay() {
               </button>
             </div>
            </div>
-              {!success && <button className='bg-blue-500 text-white p-3 my-5 w-3/12 rounded-lg' onClick={handleSubmit}>Submit Order</button>}
-              {success && <button className='bg-green-500 text-white p-3 my-5 w-3/12 rounded-lg'>Order Placed SuccessFully</button>}
+              {!success && <button className='bg-blue-500 text-white p-3 my-5 md:w-3/12 w-fit rounded-lg' onClick={handleSubmit}>Submit Order</button>}
+              {success && <button className='bg-green-500 text-white p-3 my-5 md:w-3/12 w-fit rounded-lg'>Order Placed SuccessFully</button>}
               {success && <span className='text-green-700 font-semibold'>You can check more details in <b>My orders</b></span>}
 
            </div>

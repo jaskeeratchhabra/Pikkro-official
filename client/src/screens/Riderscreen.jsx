@@ -192,8 +192,8 @@ const OrderCard=({orders, handleStatusProp})=>{
 
   return (
     <>
-    <div className='md:w-3/4 w-fit m-2 mx-auto rounded-lg'>
     {loading  &&  <Loading/>}
+    <div className='md:w-3/4 w-fit m-2 md:mx-auto rounded-lg p-2 '>
       {popup && <PopupComponent className="absolute top-0" message={`Order ${status} by ${riderName}`}/>}
        <div className= "w-full shadow-xl p-2 m-2 border border-gray-300 relative"> 
           <div className='font-semibold md:text-xl text-gray-700 m-1'>
@@ -482,6 +482,7 @@ async function displayRazorpay() {
   }
 
   // creating a new order
+  console.log(typeof totalAmount)
   const result = await axios.post("https://api.pikkro.com/api/payments/orders",{price: totalAmount});
   // if(result.status===200)
     // {
@@ -803,7 +804,7 @@ return (
   <div className='relative'>
     {loading && <Loading />}
     {option === "" && <div className='text-center text-xl text-gray-700 font-semibold animate-pulse'>Select options to continue</div>}
-    {isAdmin && <button className='border shadow-md p-1' onClick={() => navigate("/admin")}>Switch to admin screen</button>}
+    { user && isAdmin && <button className='border shadow-md p-1' onClick={() => navigate("/admin")}>Switch to admin screen</button>}
     <div className='absolute md:right-4 right-10 md:m-4 mt-2 flex items-center'>
       <div
         className={`w-14 h-8 flex items-center bg-gray-300 rounded-full p-1 cursor-pointer transition-colors duration-300 ${isOn ? 'bg-green-500' : 'bg-gray-300'}`}
@@ -827,7 +828,7 @@ return (
 
         <div className='mt-10 relative  shadow-lg '>
           <div className="p-2 bg-gray-200 flex flex-col ">
-            {isAdmin && (
+            {user && isAdmin && (
               <button
                 onClick={() => handleClick("new orders")}
                 className={`${option === "new orders" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}
@@ -853,7 +854,7 @@ return (
             >
               Earning Per Order
             </button>
-            {isAdmin && (
+            {user && isAdmin && (
               <button
                 onClick={() => handleClick("payment requests")}
                 className={`${option === "payment requests" ? "border-b-4 border-blue-700" : "text-blue-700 shadow-lg"} rounded-md m-4 py-2`}

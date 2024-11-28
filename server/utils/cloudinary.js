@@ -2,9 +2,6 @@ const cloudinary = require('cloudinary');
 const dotenv =require("dotenv") 
 require('dotenv').config();
 
-// const a = process.env.CLOUDINARY_API_KEY
-// console.log(a==="854971252852455")
-
 const fs = require("fs");      
 cloudinary.config({
   cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
@@ -21,15 +18,13 @@ const uploadOnCloudinary=async(localFilePath)=>{
        })
       if(response)
       {
-        // fs.unlinkSync(localFilePath)
          console.log("upload successfully");
       }
        return response;
     }
     catch(error){
-      // console.log("hello")
       console.log(error.message)
-       fs.unlinkSync(localFilePath)//remove the local saved temp file on the server
+       fs.unlink(localFilePath)
     }
 }
 

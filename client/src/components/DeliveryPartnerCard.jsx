@@ -147,7 +147,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
   };
 
   return (
-    <div className="bg-white border border-gray-300 shadow-md rounded-md p-4 mb-2 w-7/12 relative">
+    <div className="bg-white border border-gray-300 shadow-md rounded-md p-4 mb-2 md:w-7/12 w-fit  relative">
     { loading && <Loading/>}
     {success && <SuccessComponent message="Status updated refresh the page"/>}
      <div className='flex flex-col'>

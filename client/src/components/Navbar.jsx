@@ -1,6 +1,6 @@
 // NavigationBar.js
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useSelector,useDispatch}  from "react-redux"
@@ -21,10 +21,34 @@ const NavigationBar = () => {
   const [isSideScreenOpen, setIsSideScreenOpen] = useState(false);
   const user= JSON.parse(localStorage.getItem("user"))
   const [loading,setLoading]= useState(false);
+  const dropdownRef = useRef(null);
 
-  const handleDropdown=(e)=>{
-    e.preventDefault();
-    setDropdown(!dropdown);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       setDropdown(false);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   if (dropdown && dropdownRef.current) {
+  //     const rect = dropdownRef.current.getBoundingClientRect();
+  //     if (rect.bottom > window.innerHeight) {
+  //       dropdownRef.current.style.bottom = `${rect.bottom - window.innerHeight}px`;
+  //     } else {
+  //       dropdownRef.current.style.bottom = 'auto';
+  //     }
+  //   }
+  // }, [dropdown]);
+
+  const handleDropdown=()=>{
+        setDropdown(!dropdown);
   }
  
   const handleSideScreen=()=>{
@@ -44,6 +68,7 @@ const handleLogout=async()=>{
   try{
     setLoading(true);
     if(user.isRider){
+      console.log(obj)
      const data =  (await axios.patch(`https://api.pikkro.com/api/users/:${phone}`,obj)).data
      console.log(data);
     }
@@ -166,7 +191,13 @@ useEffect(() => {
                 onClick={handleDropdown}>Hi, {username} ▼</button>
              </div>
              
-             {dropdown && <div className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+             {dropdown && <div
+              // ref={dropdownRef}
+              className="origin-top-right absolute mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" 
+              role="menu" 
+              aria-orientation="vertical" 
+              aria-labelledby="user-menu"
+              >
                <div className="py-1 flex flex-col items-center" role="none">
                  <Link to="/MyOrders" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My orders</Link>
                  <Link to="/about" className="my-2 w-full text-center text-sm text-gray-700 hover:bg-gray-100" role="menuitem">About us</Link>

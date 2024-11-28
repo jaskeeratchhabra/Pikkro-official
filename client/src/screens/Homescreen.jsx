@@ -124,13 +124,13 @@ const Homescreen = () => {
          )}
          <div className='flex h-52 w-auto justify-between'>
            <div className='my-auto mx-auto mr-2'>
-              <div className='flex flex-col text-blue-700 justify-center p-2 items-center font-semibold rounded-xl md:h-20 md:w-38 bg-white border border-blue-400'>
+              <div className='flex flex-col text-blue-700 justify-center p-2  items-center font-semibold rounded-xl md:h-20 md:w-38 bg-white border border-blue-400'>
                 Fastest Delivery
                 <span className=' text-sm text-blue-300'>Delivery time 60 mins</span>
               </div>
            </div>
-           <div className='my-auto mx-auto' >
-              <div className='flex flex-col justify-center p-2 items-center text-blue-700 font-semibold rounded-xl md:h-20 md:w-38 bg-white border border-blue-400'>
+           <div className='my-auto mx-auto ' >
+              <div className='flex flex-col justify-center p-2 items-center text-blue-700 font-semibold rounded-xl  md:h-20 md:w-38 bg-white border border-blue-400'>
                  Security Guarantee
                  <span className=' text-sm text-blue-300'>Most trusted Platform</span>
               </div>

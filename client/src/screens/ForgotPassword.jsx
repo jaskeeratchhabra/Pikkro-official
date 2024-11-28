@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import SuccessComponent from '../components/SuccessComponent';
 import Loading from "../components/Loading";
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const ForgotPassword = () => {
   const [loading,setLoading]=useState(false);
   const [showPassword,setShowPassword] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [Cpassword,setCPassword]= useState(false)
   const [formData, setFormData] = useState({
@@ -44,13 +44,15 @@ const ForgotPassword = () => {
             setOTP(pasteData.split(''));
         }
     };
+
     const handleGeneration = async(e)=>{
       e.preventDefault();
       const phone = formData.phone;
       const data = (await axios.post("https://api.pikkro.com/api/users/generateOTP",{number:phone})).data;
       console.log(data)
       setCode(data); 
-      setStatus(true);
+      setSuccess("sent")
+      setStatus("recieved");
     }
    const handleVerification=(e)=>{
          e.preventDefault();
@@ -60,7 +62,7 @@ const ForgotPassword = () => {
             console.log(otp , code , typeof otp, typeof code)
             console.log("otp verified successfully");
             setStatus("verified");
-            setSuccess(true)
+            setSuccess("verified")
           }
    }
  
@@ -91,7 +93,7 @@ const ForgotPassword = () => {
       setLoading(true);
       const result = (await axios.patch(`https://api.pikkro.com/api/users/:${phone}`, user)).data;
       if (result) {
-          setSuccess(true);
+          setSuccess("password updated");
       }
     } catch (error) {
       setError(error.message);
@@ -102,15 +104,17 @@ const ForgotPassword = () => {
 
   return (
        <>
-       <div className='text-center mt-10 text-xl font-semibold text-red-500 '>{error&&<h1>Some error occured! try again later</h1>}</div>
-      {success && <SuccessComponent className="top" message="Password updated successfully"/>}
+       {loading && <Loading/>}
+      <div className='text-center mt-10 text-xl font-semibold text-red-500 '>{error&&<h1>Some error occured! try again later</h1>}</div>
+      {success && <SuccessComponent className="top" message={success}/>}
+
       <div className="relative flex justify-center items-center h-screen bg-gray-100">
       {loading && <Loading/>}
       <div className="bg-white shadow-md rounded-md p-8 mb-3 w-full max-w-sm">
         <h2 className="text-3xl font-semibold mb-4 text-center">Set new password</h2>
         <form onSubmit={handleSubmit}>
         <div className='flex '>
-          <span className='text-center text-gray-700 font-semibold mt-2'>+91</span>
+          {/* <span className='text-center text-gray-700 font-semibold mt-2'>+91</span> */}
           <div className="mb-4">
           <div className='flex'>
             <input
@@ -119,12 +123,12 @@ const ForgotPassword = () => {
               id="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Enter your phone number"
+              placeholder="+91"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
             />
-           {formData.phone && <button className='bg-blue-700 text-white h-fit mx-2 px-1 rounded-sm ' onClick={handleGeneration}>Ask For OTP</button>}
            </div>
-           {
+           {formData.phone && <button className='bg-blue-700 text-white h-fit mx-2 px-1 mt-1 rounded-md ' onClick={handleGeneration}>Ask For OTP</button>}
+           {OtpStatus === "recieved" &&
              <div>
                  <h2 className='mt-3'>Enter OTP</h2>
                  <div className='flex'>

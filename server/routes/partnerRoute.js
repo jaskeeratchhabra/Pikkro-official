@@ -67,9 +67,7 @@ router.post('/newpartner', upload.fields([
         vehicleType,
         vehicleNumber
       } = req.body;
-      // console.log(req.body);
-      // Upload files to Cloudinary
-      // console.log(req.body);
+
       const uploadPromises = Object.keys(req.files).map(async (fieldName) => {
         const file = req.files[fieldName][0];
         const result = await uploadOnCloudinary(file.path)

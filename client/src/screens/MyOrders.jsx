@@ -61,7 +61,7 @@ function MyOrders() {
 }, []);
 
   return (
-    <div>
+    <div className='p-4'>
       
       {loading && <Loading/>}
       { message  && <h1 className='text-center text-xl p-2'>{message}</h1>}

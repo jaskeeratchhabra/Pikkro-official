@@ -13,21 +13,28 @@ require('dotenv').config();
 const app=express();
 
 
-const allowedOrigins = ['https://pikkro.com','http://localhost:5173'];
+// const allowedOrigins = ['https://pikkro.com','http://localhost:5173'];
+
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     if (allowedOrigins.includes(origin) || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
+//   credentials: true,
+// };
+
+// app.use(cors(corsOptions));
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
-  credentials: true,
+  origin: '*', // Allow all origins
 };
 
 app.use(cors(corsOptions));
+  
 
   
   

@@ -256,7 +256,7 @@ if(value==="online")
   }
 
   return (
-    <div className="flex flex-col items-center w-auto relative">
+    <div className="flex flex-col items-center w-auto relative mt-4 p-4">
       {/* <button className="border border-gray-500 text-black p-1 m-1 absolute left-2" onClick={() => navigate('/')}>
         Back
       </button> */}
@@ -288,11 +288,11 @@ if(value==="online")
         </div>
         <div className="my-8 shadow-md">
           <p className="font-semibold mb-2">Select Item:</p>
-          <div className="flex text-blue-500">
-            {['Food', 'Clothes', 'Gifts', 'Documents', 'Grocery', 'Medicine', 'Others'].map((item) => (
+          <div className="md:flex text-blue-500 grid grid-cols-3 gap-4">
+            {['Food', 'Clothes', 'Gifts', 'Docs', 'Grocery', 'Medicine', 'Others'].map((item) => (
               <button
                 key={item}
-                className={`border border-gray-400 rounded p-2 mx-4 ${Item === item && 'bg-blue-500 text-white'}`}
+                className={`border border-gray-400 rounded p-2 mx-4 w-fit ${Item === item && 'bg-blue-500 text-white'}`}
                 onClick={() => handleItemChange(item)}
               >
                 {item}
@@ -302,11 +302,11 @@ if(value==="online")
         </div>
         <div className="shadow-md">
           <p className="font-semibold mb-2">Weight:</p>
-          <div className="flex text-blue-500">
+          <div className="md:flex text-blue-500 grid grid-cols-2 gap-4">
             {['0kg', '10kg', '15kg', '21kg'].map((w) => (
               <button
                 key={w}
-                className={`border border-gray-400 rounded p-2 mx-4 ${weight === w && 'bg-blue-500 text-white'}`}
+                className={`w-fit border border-gray-400 rounded p-2 mx-4 ${weight === w && 'bg-blue-500 text-white'}`}
                 onClick={() => handleWeightChange(w)}
               >
                 {w === '0kg' ? 'Up to 10 kg' : w === '10kg' ? '10-15 kg' : w === '15kg' ? '15-20 kg' : 'greater than 20 kg'}
@@ -429,9 +429,9 @@ if(value==="online")
           <button className='bg-red-500 rounded-md p-1 text-white'>New Price : ₹{newPrice}</button>
         </div>
         }
-        <div className="flex ">
+        <div className="flex  ">
           <button
-            className="bg-blue-500 text-white p-2 ml-2 rounded"
+            className="bg-blue-500 text-white p-2 ml-2 rounded mt-6"
             onClick={handleSubmit}
           >
             Update Order
