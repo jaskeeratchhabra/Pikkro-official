@@ -7,6 +7,7 @@ import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
 
 const ForgotPassword = () => {
+  const url= import.meta.env.BASE_URL
   const [loading,setLoading]=useState(false);
   const [showPassword,setShowPassword] = useState(false);
   const [success, setSuccess] = useState("");
@@ -48,7 +49,7 @@ const ForgotPassword = () => {
     const handleGeneration = async(e)=>{
       e.preventDefault();
       const phone = formData.phone;
-      const data = (await axios.post("https://api.pikkro.com/api/users/generateOTP",{number:phone})).data;
+      const data = (await axios.post(url+"/api/users/generateOTP",{number:phone})).data;
       console.log(data)
       setCode(data); 
       setSuccess("sent")
@@ -91,7 +92,7 @@ const ForgotPassword = () => {
     const user = { phone, password };
     try {
       setLoading(true);
-      const result = (await axios.patch(`https://api.pikkro.com/api/users/:${phone}`, user)).data;
+      const result = (await axios.patch(url+`/api/users/:${phone}`, user)).data;
       if (result) {
           setSuccess("password updated");
       }

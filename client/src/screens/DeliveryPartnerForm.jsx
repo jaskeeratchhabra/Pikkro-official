@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 const DeliveryPartnerForm = () => {
 
+  const url= import.meta.env.BASE_URL
   const [loading,setLoading]=useState(false);
   const [success,setSuccess] =useState(false)
   const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ const DeliveryPartnerForm = () => {
         formDataToSend.append(key, formData[key]);
       }
       
-      const result = await axios.post("http://localhost:5000/api/partners/newpartner", formDataToSend);
+      const result = await axios.post(url+"/api/partners/newpartner", formDataToSend);
       
       setLoading(false);
       

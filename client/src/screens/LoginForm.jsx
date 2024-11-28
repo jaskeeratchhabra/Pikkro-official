@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import {login} from "../store/authSlice"
 
 const LoginForm = () => {
+  const url= import.meta.env.BASE_URL
   const [loading,setLoading]=useState(false);
   const [showPassword,setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -37,7 +38,7 @@ const LoginForm = () => {
     const user = { phone, password };
     try {
       setLoading(true);
-      const result = (await axios.post("https://api.pikkro.com/api/users/login", user)).data;
+      const result = (await axios.post(url+"/api/users/login", user)).data;
       if (result) {
         setSuccess(true);
         console.log(result)

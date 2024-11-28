@@ -11,7 +11,7 @@ import SideScreen from './SideScreen';
 import axios from 'axios';
 import Loading from './Loading';
 const NavigationBar = () => {
-  
+  const url= import.meta.env.BASE_URL
   const navigate=useNavigate();
   const location=useLocation();
   const [city,setCity]= useState("");
@@ -69,7 +69,7 @@ const handleLogout=async()=>{
     setLoading(true);
     if(user.isRider){
       console.log(obj)
-     const data =  (await axios.patch(`https://api.pikkro.com/api/users/:${phone}`,obj)).data
+     const data =  (await axios.patch(url+`/api/users/:${phone}`,obj)).data
      console.log(data);
     }
   }

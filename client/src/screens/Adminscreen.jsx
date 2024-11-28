@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom"
 import OnlinePartners from '../components/OnlinePartners';
 import RiderBankCard from '../components/RiderBankCard';
 const AdminScreen = () => {
+  const url= import.meta.env.BASE_URL
   const [requestsType, setRequestsType] = useState('new');
   const [requests, setRequests] = useState([]);
   const [newRequest, setNew] =useState([]);
@@ -21,7 +22,7 @@ const AdminScreen = () => {
 
   const getRidersBankDetails = async ()=>{
     try{
-         const data = (await axios.get("https://api.pikkro.com/api/bank/getbank")).data;
+         const data = (await axios.get(url+"/api/bank/getbank")).data;
          setRidersbank(data);
     }
     catch(error)
@@ -65,7 +66,7 @@ useEffect(()=>{
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`https://api.pikkro.com/api/partners/getpartners`);
+      const response = await axios.get(url+`/api/partners/getpartners`);
       setRequests(response.data);
       setLoading(false);
     } catch (error) {

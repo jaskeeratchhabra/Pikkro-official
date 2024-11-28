@@ -4,10 +4,10 @@ import { useState,useEffect } from 'react';
 function OnlinePartners() { 
    
  const [users,setUsers] = useState([]);
- 
+ const url= import.meta.env.BASE_URL
  const getUsers = async()=>{
     try{
-       const response =  (await axios.get("https://api.pikkro.com/api/users/getonlinepartners")).data;
+       const response =  (await axios.get(url+"/api/users/getonlinepartners")).data;
        setUsers(response);
     }
     catch(error)

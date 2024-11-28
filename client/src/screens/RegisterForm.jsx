@@ -10,7 +10,7 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 const RegisterForm = () => {
-    
+  const url= import.meta.env.BASE_URL
   const dispatch = useDispatch();
   const [Cpassword,setCPassword]= useState(false);
   const [emailValid, setEmailValid] = useState(true);
@@ -58,7 +58,7 @@ const RegisterForm = () => {
     const handleGeneration = async(e)=>{
       e.preventDefault();
       const phone = formData.phone;
-      const data = (await axios.post("https://api.pikkro.com/api/users/generateOTP",{number:phone})).data;
+      const data = (await axios.post(url+"/api/users/generateOTP",{number:phone})).data;
       console.log(data)
       setCode(data); 
       // setStatus(true);
@@ -106,7 +106,7 @@ const RegisterForm = () => {
     };
     try {
       setLoading(true);
-      const result = (await axios.post("https://api.pikkro.com/api/users/register", user)).data;
+      const result = (await axios.post(url+"/api/users/register", user)).data;
       if(result){
         setSuccess(true);
         localStorage.setItem("user",JSON.stringify(result));

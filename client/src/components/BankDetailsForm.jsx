@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import axios from 'axios';
 import SuccessComponent from './SuccessComponent';
 const BankDetailsForm = ({role}) => {
 
   const RiderName = JSON.parse(localStorage.getItem("user")).name;
   const RiderPhone = JSON.parse(localStorage.getItem("user")).phone
+  const url= import.meta.env.BASE_URL
 
   const [success,setSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const BankDetailsForm = ({role}) => {
     
     const bankdetails = {...formData, RiderPhone, RiderName}
     try{
-       const response = (await axios.post("https://api.pikkro.com/api/bank/bankdetails",bankdetails)).data;
+       const response = (await axios.post(url+"/api/bank/bankdetails",bankdetails)).data;
        setSuccess(true);
        console.log(response);
     }
@@ -41,7 +42,7 @@ const BankDetailsForm = ({role}) => {
   
   const handleSubmitEdit = async () => {
     try {
-      const response = await axios.patch("https://api.pikkro.com/api/bank/edit", { ...formData, RiderPhone });
+      const response = await axios.patch(url+"/api/bank/edit", { ...formData, RiderPhone });
       setSuccess(true);
       console.log(response);
     } catch (error) {

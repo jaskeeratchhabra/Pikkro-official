@@ -13,6 +13,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
   
     const [status,setStatus] = useState("");
     const [userData,setData] =useState({})
+      const url= import.meta.env.BASE_URL
 
   const openImageModal = (image) => {
     setSelectedImage(image);
@@ -64,10 +65,10 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
     try{
      if(userData.isRider===true){
          setLoading(true);
-         const result = (await axios.post("https://api.pikkro.com/api/users/register",userData)).data;
+         const result = (await axios.post(url+"/api/users/register",userData)).data;
          // console.log(result);
          if(result.isRider ===  true){
-           const response = await axios.patch(`https://api.pikkro.com/api/partners/${_id}`, { updatedField:"registered" } );
+           const response = await axios.patch(url+`/api/partners/${_id}`, { updatedField:"registered" } );
            console.log(response);
            if(response.status===200){
               setRegister(true);
@@ -102,7 +103,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
          description : "you can further contact to our team at support@pikkro.in or can fill another form with correct details, we will reach you soon",
       }
     }
-    await axios.post("https://api.pikkro.com/api/users/email",user)
+    await axios.post(url+"/api/users/email",user)
    .then(response => {console.log(response.data.respMesg)
     console.log(response.status)
   }
@@ -112,7 +113,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
   const  updateApprovalStatus= async (updatedField , _id)=>{
     try {
       setLoading(true);
-      await axios.patch(`https://api.pikkro.com/api/partners/${_id}`, { updatedField: updatedField } );
+      await axios.patch(url+`/api/partners/${_id}`, { updatedField: updatedField } );
       if(updatedField ==="approved"){
         setSuccess(true);
         setStatus(updatedField)

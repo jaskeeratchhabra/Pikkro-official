@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 function MyOrders() {
-   
+  const url= import.meta.env.BASE_URL
   const [orders,setOrders] =useState([]);
   const [loading,setLoading] = useState(false);
   const loggedIn = useSelector(state=>state.authReducer.status)
@@ -37,7 +37,7 @@ function MyOrders() {
      const userPhone = (JSON.parse(localStorage.getItem("user"))).phone
      try{
         setLoading(true);
-        const result = (await axios.post("https://api.pikkro.com/api/orders/myorder",{userPhone}));
+        const result = (await axios.post(url+"/api/orders/myorder",{userPhone}));
         console.log(result.status)
         setLoading(false);
         if(result.data.length===0){

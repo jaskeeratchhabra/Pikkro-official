@@ -11,6 +11,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const EditOrderScreen = ({ order }) => {
   const map_key = import.meta.env.VITE_MAP_API_KEY;
+  const url= import.meta.env.BASE_URL
   
   const [pickupName,setPickupName] = useState(order.PickupDetails.name);
   const [deliveryName,setDeliveryName] = useState(order.DeliveryDetails.name);
@@ -104,7 +105,7 @@ async function displayRazorpay() {
   }
 
   // creating a new order
-  const result = await axios.post("https://api.pikkro.com/api/payments/orders",{price:newPrice});
+  const result = await axios.post(url+"/api/payments/orders",{price:newPrice});
 
   if (!result) {
       alert("Server error. Are you online?");
@@ -130,7 +131,7 @@ async function displayRazorpay() {
               razorpaySignature: response.razorpay_signature,
           };
 
-          const result = await axios.post("https://api.pikkro.com/api/payments/success", data);
+          const result = await axios.post(url+"/api/payments/success", data);
 
           alert(result.data.msg);
       },
@@ -245,7 +246,7 @@ if(value==="online")
     };
 
     try {
-      const response = await axios.patch(`https://api.pikkro.com/api/orders/update/${order._id}`, orderData);
+      const response = await axios.patch(url+`/api/orders/update/${order._id}`, orderData);
       if (response.data.success) {
         setSuccess(true);
         Swal.fire('Order updated successfully');

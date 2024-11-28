@@ -17,6 +17,7 @@ function OrderCard({ order}) {
     const [orderStatus,setStatus]  = useState("");
     const [showOrderTracking, setShowOrderTracking] = useState(false);
     const [editStatus,setEditStatus] = useState(false)
+    const url= import.meta.env.BASE_URL
     const toggleDetails = () => {
         setShowDetails(!showDetails);
     };
@@ -58,7 +59,7 @@ function OrderCard({ order}) {
       
           try {
             setLoading(true);
-            const response = await axios.patch(`https://api.pikkro.com/api/orders/${_id}`, statusValue);
+            const response = await axios.patch(url+`/api/orders/${_id}`, statusValue);
             const result = response.data;
       
             if (result.updatedDocument["canceled"] === true) {

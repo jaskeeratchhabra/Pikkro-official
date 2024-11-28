@@ -12,6 +12,7 @@ import BankDetailsForm from '../components/BankDetailsForm';
 
 const OrderCard=({orders, handleStatusProp})=>{
   
+  const url= import.meta.env.BASE_URL
   const [toggleP,settoggleP] = useState(false);
   const [toggleD,settoggleD] = useState(false);
   const [status,setStatus] = useState("new");
@@ -113,7 +114,7 @@ const OrderCard=({orders, handleStatusProp})=>{
   
     try {
       setLoading(true);
-      const response = await axios.patch(`https://api.pikkro.com/api/orders/${_id}`, statusValue);
+      const response = await axios.patch(url+`/api/orders/${_id}`, statusValue);
       const result = response.data;
   
       if (result.updatedDocument["accepted"] === true) {
@@ -153,7 +154,7 @@ const OrderCard=({orders, handleStatusProp})=>{
       phone = orders.DeliveryDetails.Phone;
     }
     try {
-      const data = (await axios.post("https://api.pikkro.com/api/users/generateOTP", { number: phone })).data;
+      const data = (await axios.post(url+"/api/users/generateOTP", { number: phone })).data;
       console.log(data);
       if (value === "pickup") {
         setOtpPickupStatus("sent");
@@ -384,6 +385,7 @@ const OrderCard=({orders, handleStatusProp})=>{
 
 
 function Riderscreen() {
+  const url= import.meta.env.BASE_URL
   const [option,selectOption] = useState("");
   const [neworders, setNeworders] = useState([]);
   const [loading,setLoading] = useState(false);
@@ -445,7 +447,7 @@ function Riderscreen() {
     const phone = user.phone
     const obj = {phone, onDuty}
      try{
-       await axios.patch(`https://api.pikkro.com/api/users/:${phone}`,obj)
+       await axios.patch(url+`/api/users/:${phone}`,obj)
      }
      catch(error)
      {
@@ -483,7 +485,7 @@ async function displayRazorpay() {
 
   // creating a new order
   console.log(typeof totalAmount)
-  const result = await axios.post("https://api.pikkro.com/api/payments/orders",{price: totalAmount});
+  const result = await axios.post(url+"/api/payments/orders",{price: totalAmount});
   // if(result.status===200)
     // {
     //   handlePaymentStatus("paid")
@@ -512,7 +514,7 @@ async function displayRazorpay() {
               razorpaySignature: response.razorpay_signature,
           };
 
-          const result = await axios.post("https://api.pikkro.com/api/payments/success", data);
+          const result = await axios.post(url+"/api/payments/success", data);
           if(result.message==="success")
           {
             handlePaymentStatus("paid");
@@ -550,7 +552,7 @@ async function displayRazorpay() {
   const handlePaymentField = async (orderId) => {
     console.log("OrderId:", orderId);
     try {
-      const response = await axios.patch('https://api.pikkro.com/api/orders/updatepaymentfield', {
+      const response = await axios.patch(url+'/api/orders/updatepaymentfield', {
         orderId:orderId
       }).data;
       // setPaymentStatus("paid");
@@ -692,7 +694,7 @@ useEffect(() => {
 
   const getPendingPayments = async ()=>{
     try{
-       const result = (await axios.get("https://api.pikkro.com/api/payments/getrequest")).data;
+       const result = (await axios.get(url+"/api/payments/getrequest")).data;
        setIncompleteRequests(result);
        console.log(result)
     }
@@ -710,7 +712,7 @@ useEffect(() => {
                    amount : total
                   }
       try{
-         const data = (await axios.post("https://api.pikkro.com/api/payments/settlement", paymentData));
+         const data = (await axios.post(url+"/api/payments/settlement", paymentData));
          console.log(data);
          if(data.status===200)
          { 
@@ -738,7 +740,7 @@ useEffect(() => {
  
   const PaymentDone=async(reqId)=>{
     try{
-      const data= (await axios.patch(`https://api.pikkro.com/api/payments/${reqId}`)).data;
+      const data= (await axios.patch(url+`/api/payments/${reqId}`)).data;
       setPaymentDone(true);
       console.log(data);
     }
@@ -755,7 +757,7 @@ useEffect(() => {
     async function getOrders(){
       try{
         setLoading(true)
-        const result =  (await axios.get("https://api.pikkro.com/api/orders/getorder")).data;
+        const result =  (await axios.get(url+"/api/orders/getorder")).data;
         const newOrders= result.filter((order)=>(order.accepted===false && order.canceled===false ));
         const MyPickedOrders = result.filter((order)=>(order.RiderPhone === RiderContact && order.accepted===true))
         const ActiveOrders =   result.filter((order)=>(order.canceled===false && order.RiderPhone === RiderContact && order.accepted===true && order.completed===false))
