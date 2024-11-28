@@ -12,7 +12,7 @@ import BankDetailsForm from '../components/BankDetailsForm';
 
 const OrderCard=({orders, handleStatusProp})=>{
   
-  const url= import.meta.env.BASE_URL
+   const url= import.meta.env.VITE_BASE_URL
   const [toggleP,settoggleP] = useState(false);
   const [toggleD,settoggleD] = useState(false);
   const [status,setStatus] = useState("new");
@@ -385,7 +385,7 @@ const OrderCard=({orders, handleStatusProp})=>{
 
 
 function Riderscreen() {
-  const url= import.meta.env.BASE_URL
+   const url= import.meta.env.VITE_BASE_URL
   const [option,selectOption] = useState("");
   const [neworders, setNeworders] = useState([]);
   const [loading,setLoading] = useState(false);

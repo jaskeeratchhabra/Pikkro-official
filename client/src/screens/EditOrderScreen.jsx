@@ -11,7 +11,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const EditOrderScreen = ({ order }) => {
   const map_key = import.meta.env.VITE_MAP_API_KEY;
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
   
   const [pickupName,setPickupName] = useState(order.PickupDetails.name);
   const [deliveryName,setDeliveryName] = useState(order.DeliveryDetails.name);

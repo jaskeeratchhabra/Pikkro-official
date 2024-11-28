@@ -6,7 +6,7 @@ const BankDetailsForm = ({role}) => {
 
   const RiderName = JSON.parse(localStorage.getItem("user")).name;
   const RiderPhone = JSON.parse(localStorage.getItem("user")).phone
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
 
   const [success,setSuccess] = useState(false);
   const [formData, setFormData] = useState({

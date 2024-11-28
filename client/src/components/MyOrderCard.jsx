@@ -17,7 +17,7 @@ function OrderCard({ order}) {
     const [orderStatus,setStatus]  = useState("");
     const [showOrderTracking, setShowOrderTracking] = useState(false);
     const [editStatus,setEditStatus] = useState(false)
-    const url= import.meta.env.BASE_URL
+    const url= import.meta.env.VITE_BASE_URL
     const toggleDetails = () => {
         setShowDetails(!showDetails);
     };

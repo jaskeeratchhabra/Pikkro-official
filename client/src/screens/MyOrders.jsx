@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 function MyOrders() {
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
   const [orders,setOrders] =useState([]);
   const [loading,setLoading] = useState(false);
   const loggedIn = useSelector(state=>state.authReducer.status)

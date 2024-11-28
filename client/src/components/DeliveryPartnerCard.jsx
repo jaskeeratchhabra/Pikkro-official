@@ -13,7 +13,7 @@ const DeliveryPartnerCard = ({ deliveryPartner }) => {
   
     const [status,setStatus] = useState("");
     const [userData,setData] =useState({})
-      const url= import.meta.env.BASE_URL
+    const url= import.meta.env.VITE_BASE_URL
 
   const openImageModal = (image) => {
     setSelectedImage(image);

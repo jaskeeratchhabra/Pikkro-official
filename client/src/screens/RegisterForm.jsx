@@ -10,7 +10,7 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 const RegisterForm = () => {
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
   const dispatch = useDispatch();
   const [Cpassword,setCPassword]= useState(false);
   const [emailValid, setEmailValid] = useState(true);

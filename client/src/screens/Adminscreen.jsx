@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom"
 import OnlinePartners from '../components/OnlinePartners';
 import RiderBankCard from '../components/RiderBankCard';
 const AdminScreen = () => {
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
   const [requestsType, setRequestsType] = useState('new');
   const [requests, setRequests] = useState([]);
   const [newRequest, setNew] =useState([]);

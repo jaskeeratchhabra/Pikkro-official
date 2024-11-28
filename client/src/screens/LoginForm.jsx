@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import {login} from "../store/authSlice"
 
 const LoginForm = () => {
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
   const [loading,setLoading]=useState(false);
   const [showPassword,setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);

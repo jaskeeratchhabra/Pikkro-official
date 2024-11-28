@@ -7,7 +7,8 @@ import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
 
 const ForgotPassword = () => {
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
+  console.log(url);
   const [loading,setLoading]=useState(false);
   const [showPassword,setShowPassword] = useState(false);
   const [success, setSuccess] = useState("");
@@ -50,7 +51,6 @@ const ForgotPassword = () => {
       e.preventDefault();
       const phone = formData.phone;
       const data = (await axios.post(url+"/api/users/generateOTP",{number:phone})).data;
-      console.log(data)
       setCode(data); 
       setSuccess("sent")
       setStatus("recieved");
@@ -60,8 +60,6 @@ const ForgotPassword = () => {
          console.log( otp.join(''), code)
          if(otp.join('')=== String(code))
           {
-            console.log(otp , code , typeof otp, typeof code)
-            console.log("otp verified successfully");
             setStatus("verified");
             setSuccess("verified")
           }

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const DeliveryPartnerForm = () => {
 
-  const url= import.meta.env.BASE_URL
+  const url= import.meta.env.VITE_BASE_URL
   const [loading,setLoading]=useState(false);
   const [success,setSuccess] =useState(false)
   const [formData, setFormData] = useState({
